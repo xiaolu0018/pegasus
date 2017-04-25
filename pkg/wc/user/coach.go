@@ -15,10 +15,14 @@ import (
 var nilStruct struct{} = struct{}{}
 
 //用户缓存数据
-var IDCache Cache = NewCache(1800)
+var IDCache Cache
+
+func Init() error {
+	IDCache = NewCache(1800)
+	return IDCache.(*cache).Init()
+}
 
 type Cache interface {
-	Init() error
 	GetWorkingToken(id string) (bool, string)
 	CacheToken(id, token string) error
 	Auth(string) (bool, string)

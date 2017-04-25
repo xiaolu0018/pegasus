@@ -27,14 +27,14 @@ func Test(t *testing.T) {
 	}
 	for rows.Next() {
 		var row = new(types.PrintInfo)
-		if err := rows.Scan(&row.Ex_No, &row.Group, &row.Enterprise, &row.Ex_CkDate, &row.Name, &row.Sex, &row.CardNo, &row.Status);err !=nil{
+		if err := rows.Scan(&row.Ex_No, &row.Group, &row.Enterprise, &row.Ex_CkDate, &row.Name, &row.Sex, &row.CardNo, &row.Status); err != nil {
 			fmt.Errorf("GetQueryAll: sql rows.Scan%v\n", err)
 		}
 		rowsdate = append(rowsdate, *row)
 	}
-	fmt.Println("rowsdate",len(rowsdate),rowsdate)
+	fmt.Println("rowsdate", len(rowsdate), rowsdate)
 
-	if rows.Err() != nil{
+	if rows.Err() != nil {
 		fmt.Errorf("GetQueryAll: sql rows.Err() %v\n", err)
 	}
 

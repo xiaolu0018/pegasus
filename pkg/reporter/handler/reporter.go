@@ -1,21 +1,20 @@
 package handler
 
 import (
+	"fmt"
+	"strconv"
 	"net/http"
-
 	"database/sql"
 	"encoding/json"
 
-	"github.com/1851616111/util/message"
 	"github.com/golang/glog"
+	"github.com/1851616111/util/message"
+	httputil "github.com/1851616111/util/http"
+
 	"github.com/julienschmidt/httprouter"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/model"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
-
-	"fmt"
-	httputil "github.com/1851616111/util/http"
-	"strconv"
 	//"192.168.199.199/bjdaos/pegasus/pkg/common/util/safe"
 )
 
@@ -51,7 +50,26 @@ func GetReport(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	report, err := model.GetReporterByExNo(ex_no)
+	//status, err := model.GetExaminationStatus(ex_no)
+	//if err != nil {
+	//	if err == sql.ErrNoRows {
+	//		httputil.Response(w, 404, "Not Found")
+	//	} else {
+	//		httputil.Response(w, 404, err)
+	//	}
+	//	return
+	//}
+	//
+	//var ifSync bool
+	//switch status {
+	//case 1999, 1123, 1120, 1112, 1111, 1110, 1100, 1090, 1080:
+	//	//ifSync = false
+	//	ifSync = true
+	//default:
+	//	ifSync = true
+	//}
+
+	report, err := model.GetReporterByExNo(ex_no, true)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			httputil.Response(w, 404, "Not Found")
@@ -60,7 +78,6 @@ func GetReport(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 		return
 	}
-
 	//b, err := json.Marshal(report)
 	//if err != nil {
 	//	httputil.Response(w, 400, err)
