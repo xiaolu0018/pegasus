@@ -118,8 +118,9 @@ func ListOrganizations(page_index, page_size int) ([]Organization, error) {
 
 func GetOrgByCode(code string) (*Organization, error) {
 	org := Organization{}
-	if err := db.GetDB().QueryRow(fmt.Sprintf("SELECT org_code, id, name FROM " + TABLE_ORG + "WHERE org_code = '%s'", code)).
+	if err := db.GetDB().QueryRow(`SELECT org_code, id, name FROM ` + TABLE_ORG + ` WHERE org_code = $1`, code).
 		Scan(&org.Code, &org.ID, &org.Name); err != nil {
+
 		return nil, err
 	}
 

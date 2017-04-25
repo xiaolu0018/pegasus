@@ -10,11 +10,13 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
 	"time"
+	"github.com/golang/glog"
+	"database/sql"
 )
 
 var (
 	ErrBasicConfigInvalid    = errors.New("ConfigBasic Invalid")
-	ErrAppointChannelInvalid = errors.New("appoint channer invalid")
+	ErrAppointChannelInvalid = errors.New("appoint channel invalid")
 	ErrAppointTimeInvalid    = errors.New("appint time invalid")
 	ErrAppointMerryStatusInvalid = errors.New("appoint merry status invalid")
 )
@@ -25,10 +27,12 @@ func (a *Appointment) Validate() error {
 	}
 
 	if err := a.validateOrg(); err != nil {
+		glog.Errorf("appointment.validateOrg: get organization by code %s err %v\n", a.OrgCode, err)
 		return err
 	}
 
 	if err := a.validatePlan(); err != nil {
+		glog.Errorf("appointment.validatePlan: get plan by code %s err %v\n", a.OrgCode, err)
 		return err
 	}
 
@@ -44,13 +48,12 @@ func (a *Appointment) validateOrg() error {
 		return FieldEmpty("org_code")
 	}
 
-	org, err := organization.GetOrgByCode(a.OrgCode)
+	_, err := organization.GetOrgByCode(a.OrgCode)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("organization code=%s not found", a.OrgCode)
+		}
 		return err
-	}
-
-	if len(org.Code) == 0 {
-		return fmt.Errorf("organization code=%s not found", org.Code)
 	}
 
 	return nil
@@ -58,16 +61,15 @@ func (a *Appointment) validateOrg() error {
 
 func (a *Appointment) validatePlan() error {
 	if len(strings.TrimSpace(a.PlanId)) == 0 {
-		return FieldEmpty("planid")
+		return nil
 	}
 
 	pl, err := GetPlanByID(a.PlanId)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("plan id=%s not found", pl.ID)
+		}
 		return err
-	}
-
-	if len(pl.ID) == 0 {
-		return fmt.Errorf("plan id=%s not exist", a.PlanId)
 	}
 
 	return nil
@@ -151,6 +153,10 @@ func (a *Appointment) validateAppointInfo() error {
 	orgbasic := &organization.Config_Basic{}
 	var err error
 	if orgbasic, err = organization.GetConfigBasic(a.OrgCode); err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("organization basic config empty")
+		}
+		fmt.Errorf("appointment.validateAppointInfo() get basic config err %v\n", err)
 		return ErrBasicConfigInvalid
 	}
 
