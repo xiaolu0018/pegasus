@@ -168,6 +168,9 @@
       			access();
 
 				$.getJSON("http://www.elepick.com/api/branches",function(data){
+					 if (typeof data === 'string') {
+						    data = JSON.parse(data);
+						  }
 					if(data==null){
 						
 					}else{
@@ -194,8 +197,10 @@
 								localStorage.branchid=DEPART.id;
 								//根据分院设置日期状态
 								$.getJSON("http://www.elepick.com/api/branch/"+DEPART.id+"/offday",function(data){
-									data=eval(data);
-									mui.alert(data);
+									if (typeof data === 'string') {
+									     data = JSON.parse(data);
+									}
+									console.log(data);
 									if(data==null){
 										//数据为空
 									}else{

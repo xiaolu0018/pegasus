@@ -1,95 +1,29 @@
 package user
 
 import (
-	"fmt"
-
-	"net/http"
-
-	"encoding/json"
-
-	"gopkg.in/mgo.v2/bson"
-
-	"github.com/golang/glog"
-	"github.com/julienschmidt/httprouter"
-
-	httputil "github.com/1851616111/util/http"
-
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"fmt"
 )
 
-//保存或更新用户的个人基本信息
-// curl --data '{"mobile":"12345678910","idcard":"34052419800101001X","name":"张三"}' http://www.elepick.com/api/user
-func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	u := User{}
-	//u := make(map[string]interface{})
-	glog.Errorf("enter UpsertInfoHandler")
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		glog.Errorf("UpsertInfoHandler err", err.Error())
-		httputil.ResponseJson(w, 400, "params invalid"+err.Error())
-		return
+func (u *User) Upsert() error {
+	sqlStr := fmt.Sprintf("INSERT INTO %s(id,openid,cardtype,cardno,mobile,name,merrystatus,address_province,address_city,address_district,address_details,ifonlyneed_electronic_report,healthid) "+
+		"VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') ON CONFLICT (id) DO UPDATE SET cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,"+
+		"mobile=EXCLUDED.mobile,name=EXCLUDED.name,merrystatus=EXCLUDED.merrystatus,address_province=EXCLUDED.address_province,address_city=EXCLUDED.address_city,"+
+		"address_city=EXCLUDED.address_city,address_district=EXCLUDED.address_district,address_details=EXCLUDED.address_details,ifonlyneed_electronic_report=EXCLUDED.ifonlyneed_electronic_report",
+		TABLE_USER, u.ID, u.OpenID, u.CardType, u.CardNo, u.Mobile, u.Name, u.IsMarry, u.Address.Province, u.Address.City, u.Address.District,
+		u.Address.Details, u.IsDianziReport, "")
+
+	if _, err := db.GetDB().Exec(sqlStr); err != nil {
+		return err
 	}
-	//if err := u.CreateValidate(); err != nil {
-	//	glog.Errorf("CreateValidate err",err.Error())
-	//	httputil.ResponseJson(w, 400, err.Error())
-	//	return
-	//}
-	u.ID = bson.ObjectIdHex(ps.ByName(common.AuthHeaderKey))
-	glog.Errorln("upsert u,id", ps.ByName(common.AuthHeaderKey))
-	if err := u.UpsertBasicInfo(db.User()); err != nil {
-		glog.Errorf("user.UpsertInfoHandler: user(%v) err %v\n", u, err)
-		httputil.ResponseJson(w, 400, err)
-		return
-	}
-	glog.Errorf("u_map,%v", u)
-	httputil.ResponseJson(w, 200, "ok")
+	return nil
 }
 
-//保存或更新用户的label
-// curl --data '{"bingshi":{"gaoxueya","gaoxuezhi"},"jiazushi":{"guanxinbing","naogeng"}}' http://www.elepick.com/api/user/12345678910/health
-func UpdateLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	l := make(map[string][]string)
-	userid := ps.ByName(common.AuthHeaderKey)
-
-	if err := json.NewDecoder(r.Body).Decode(&l); err != nil {
-		httputil.ResponseJson(w, 404, "params invalid")
-		return
+func (h *Health) Upsert() error {
+	sqlStr := fmt.Sprintf("INSERT INTO %s (id,past_history,family_medical_history,exam_frequency,past_exam_exception,psychological_pressure,food_habits,eating_habits,drink_habits,smoke_history)VALUES('%v','%v','%v','%v','%v','%v','%v','%v','%v','%v') ON CONFLICT (id) DO UPDATE SET id=EXCLUDED.id,past_history=EXCLUDED.past_history,family_medical_history=EXCLUDED.family_medical_history,exam_frequency=EXCLUDED.exam_frequency,past_exam_exception=EXCLUDED.past_exam_exception,psychological_pressure=EXCLUDED.psychological_pressure,food_habits=EXCLUDED.food_habits,eating_habits=EXCLUDED.eating_habits,drink_habits=EXCLUDED.drink_habits,smoke_history=EXCLUDED.smoke_history",
+		TABLE_HEALTH, h.Id, h.Past_history, h.Family_medical_history, h.Exam_frequency, h.Past_exam_exception, h.Psychological_pressure, h.Food_habits, h.Eating_habits, h.Drink_habits, h.Smoke_history)
+	if _, err := db.GetDB().Exec(sqlStr); err != nil {
+		return err
 	}
-
-	glog.Errorf("l__err", l)
-
-	if err := UpdateLabel(db.User(), bson.ObjectIdHex(userid), l); err != nil {
-		glog.Errorf("user.UpdateLabelHandler: updatelabel(%v) err %v\n", userid, err)
-		httputil.ResponseJson(w, 400, err)
-		return
-	}
-	httputil.ResponseJson(w, 200, "ok")
-}
-
-func GetLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	userid := ps.ByName(common.AuthHeaderKey)
-	if u, err := Get(bson.ObjectIdHex(userid)); err != nil {
-		glog.Errorf("user.GetHandler:err %v\n", err)
-		httputil.ResponseJson(w, 400, err)
-		return
-	} else {
-		httputil.ResponseJson(w, 200, u.Label.Health)
-	}
-
-}
-
-//得到用户信息
-//curl http://www.elepick.com/api/user/12345678910/health
-func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	userid := ps.ByName(common.AuthHeaderKey)
-
-	fmt.Println("GetHandler", ps.ByName(common.AuthHeaderKey))
-	if u, err := Get(bson.ObjectIdHex(userid)); err != nil {
-		glog.Errorf("user.GetHandler:err %v\n", err)
-		httputil.ResponseJson(w, 400, err)
-		return
-	} else {
-		httputil.ResponseJson(w, 200, u)
-	}
+	return nil
 }

@@ -67,8 +67,8 @@
     	mui.init();    	    	
     	$(function(){
     		//页面加载数据
-    		access();
-    		console.log("执行了");
+    		access();    		
+    		
     	});   
     	
     	
@@ -86,11 +86,16 @@
 							//什么也不做，返回页面
 						}
 					});
+    			}else if($(this).parents("ul")==$("#list")){
+    				
     			}else{
     				window.location.href=this.href;
     			}
     		});
-
+			$("#list").on('tap','a.mui-card-content>img',function(e){
+				localStorage.indexdet=$(this).attr("href");
+				window.location.href='indexdetail.html';
+			})
     	
     	//滚动
     	mui('.mui-scroll-wrapper').scroll({
@@ -103,10 +108,12 @@
 			 bounce: true //是否启用回弹
     	});
 		document.body.onload=function(){
-			mui.get('./data/index.json',{},function(data){
+			$.getJSON('http://www.elepick.com/api/banners',function(data){
+//			$.getJSON('data/index.json',function(data){
 					//服务器返回响应，根据响应结果，分析是否登录成功；
-
-//              console.log(data);
+				if (typeof data === 'string') {
+				    data = JSON.parse(data);
+				}
                 var imgArr=data;
                 var imgNum=imgArr.length;
                 var list = document.getElementById("list");
@@ -117,13 +124,14 @@
 				var createFragment = function(count) {
 					var fragment = document.createDocumentFragment();
 					var li;
+					
 					for (var i = 0; i < count; i++) {
 						li = document.createElement('li');
 	                    li.className = 'mui-card';
 	                    if((i<2)||(i==(count-1))){
-	                    	 li.innerHTML = '<a class="mui-card-content" href='+imgArr[i].redirectUrl+'><img src='+imgArr[i].imageUrl+'></a>';
+	                    	 li.innerHTML = '<a class="mui-card-content"><img href='+imgArr[i].redirectUrl+' src='+imgArr[i].imageUrl+'></a>';
 	                    }else{
-	                    	 li.innerHTML = '<a class="mui-card-content" href='+imgArr[i].redirectUrl+'><img data-lazyload='+imgArr[i].imageUrl+'></a>';
+	                    	 li.innerHTML = '<a class="mui-card-content"><img href='+imgArr[i].redirectUrl+' data-lazyload='+imgArr[i].imageUrl+'></a>';
 	                    }
 	                    fragment.appendChild(li);
 					}

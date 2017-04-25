@@ -18,6 +18,7 @@ import (
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
 	"github.com/1851616111/util/message"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
 	"bytes"
 	"fmt"
 	"time"
@@ -42,6 +43,8 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		glog.Errorln("Appointment GetAppointmentConfirmHandler SuccessI err", err.Error())
 		return
 	}
+	cache.Set(CACHE_TP, cm.ID.Hex(), cm)
+
 	return
 }
 
@@ -71,13 +74,14 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 
 func GetAppointmentConfirmHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	appid := ps.ByName("appointid")
-	u := user.User{}
-	a, err := Get(bson.ObjectIdHex(appid))
+
+	a, err := cache.Get(CACHE_TP, appid)
 	if err != nil {
-		glog.Errorln("Appointment GetAppointmentConfirmHandler Get err", err.Error())
-		httputil.Response(w, 400, err)
+		glog.Errorln("Appointment GetAppointmentConfirmHandler cache.Get err ", err.Error())
+		httputil.Response(w, 400, err.Error())
 		return
 	}
+	u := user.User{}
 	if u, err = user.Get(bson.ObjectIdHex(ps.ByName(common.AuthHeaderKey))); err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler user.Get err", err.Error())
 		httputil.Response(w, 400, err)
@@ -85,7 +89,7 @@ func GetAppointmentConfirmHandler(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	var appoint_user *Appoint_User
-	if appoint_user, err = CreatAppoint_User(*a, u); err != nil {
+	if appoint_user, err = CreatAppoint_User(a.(Appointment), u); err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler appoint_user err", err.Error())
 		httputil.Response(w, 400, err)
 		return
@@ -100,12 +104,20 @@ func GetAppointmentConfirmHandler(w http.ResponseWriter, r *http.Request, ps htt
 
 func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	appid := ps.ByName("appointid")
-	app, err := Get(bson.ObjectIdHex(appid))
+
+	app_interface, err := cache.Get(CACHE_TP, appid)
 	if err != nil {
-		glog.Errorln("CapacityManage ConfirmCreatHandler Get", err.Error())
-		httputil.Response(w, 400, err)
+		glog.Errorln("Appointment GetAppointmentConfirmHandler cache.Get err ", err.Error())
+		httputil.Response(w, 400, err.Error())
 		return
 	}
+	//app, err := Get(bson.ObjectIdHex(appid))
+	//if err != nil {
+	//	glog.Errorln("CapacityManage ConfirmCreatHandler Get", err.Error())
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
+	app := app_interface.(Appointment)
 	if err = app.UpdateStatus(db.Appointment(), app.SpecialItem); err != nil {
 		glog.Errorln("CapacityManage ConfirmCreatHandler UpdateStatus", err.Error())
 		httputil.Response(w, 400, err)

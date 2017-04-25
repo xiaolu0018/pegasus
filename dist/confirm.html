@@ -99,7 +99,9 @@
 				//页面加载数据
 				access();
 				$.getJSON("http://www.elepick.com/api/appointment/"+localStorage.appointid+"/confirm",{},function(data){
-					data=eval(data);
+					if (typeof data === 'string') {
+					    data = JSON.parse(data);
+					}
 					if(data==null){
 						//数据为空
 					}else{

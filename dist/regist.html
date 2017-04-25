@@ -87,7 +87,7 @@
 		       <form class="mui-input-group" name="profile">
 		       		<div class="repueried mui-card-content-inner">
 		       			<div class="mui-input-row"  id="useID">
-		       					<select name="useID" class="mui-btn mui-btn-block">
+		       					<select name="cardtype" class="mui-btn mui-btn-block">
 		       						<option value="1">身份证</option>
 		       						<option value="2">军官证</option>
 		       						<option value="3">警察证</option>
@@ -124,8 +124,8 @@
 		       			<div class="mui-table-view-cell mui-collapse mui-active">
 		       				<a href="#">
 		       					<div class="mui-checkbox">
-		       						<label for="emailAddress">仅需电子报告</label>
-		       						<input type='checkbox' id='emailAddress' name='emailAddress' value="yesEmail">
+		       						<label for="isdianzireport">仅需电子报告</label>
+		       						<input type='checkbox' id='isdianzireport' name='isdianzireport' value="false">
 		       					</div>
 		       				</a>
 		       				<div class="address mui-card-content-inner mui-collapse-content" style="margin-bottom:0;">
@@ -179,13 +179,15 @@
 				//页面文件加载         
 				access();
 				$.getJSON("http://www.elepick.com/api/user",{},function(data){
-					data=eval(data);
+					if (typeof data === 'string') {
+					    data = JSON.parse(data);
+					}
 					if(data==null){
 						//数据为空
 					}else{
 //							data={address:{city:"天津市",details:"hghghg",district:"和平区",province:"天津市"},
 //									details:"hghghg",
-//									emailAddress:false,
+//									isdianzireport:false,
 //									idcard:"14230119831122053X",
 //									ismarry:"marry",
 //									mobile:"15035836695",
@@ -196,18 +198,18 @@
 						
 						formTest=[true,true,true,true,true]
 						formVal=true;
-						if(data.emailAddress){
-							$("#emailAddress").attr("checked","checked");
+						if(data.isdianzireport){
+							$("#isdianzireport").attr("checked","checked");
 							//地址栏清空
 							$("#showCityPicker3").val("");
 							$("input[name='details']").val("");
 							
 						}
-						if(data.Address.city){
-							$("#showCityPicker3").val(data.Address.province+" "+data.Address.city+" "+data.Address.district);						
-							$("input[name='details']").val(data.details);
+						if(data.address.city){
+							$("#showCityPicker3").val(data.address.province+" "+data.address.city+" "+data.address.district);						
+							$("input[name='details']").val(data.address.details);
 						}
-						$("select[name='useID']>option[value="+data.useID+"]").attr("selected","true");
+						$("select[name='cardtype']>option[value="+data.cardtype+"]").attr("selected","true");
 						$("input[name='idcard']").val(data.idcard);
 						$("input[name='name']").val(data.name);
 						$("input[name='mobile']").val(data.mobile);
@@ -251,7 +253,7 @@
 				var formTest=[false,false,false,false,false];
 				var formVal=false;
 				//身份证
-				$("select[name='useID']").on('input',function(){
+				$("select[name='cardtype']").on('input',function(){
 					if($("input[name='idcard']").val().length<=0){
 							formTest[0]=false;
 						}
@@ -274,7 +276,7 @@
 						formTest[0]=false;
 					}
 					//选择填写身份证
-					if($("select[name='useID']").val()=="1"){
+					if($("select[name='cardtype']").val()=="1"){
 						var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/; 
 						if(reg.test($(this).val())){
 							formTest[0]=true;							
@@ -291,7 +293,7 @@
 						mui.alert("证件号不能为空");
 					}
 					//选择填写身份证
-					if($("select[name='useID']").val()=="1"){
+					if($("select[name='cardtype']").val()=="1"){
 						var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/; 
 						if(reg.test($(this).val())){
 							formTest[0]=true;
@@ -374,7 +376,7 @@
 	//				e.stopPropagation();
 					if(this==$("#footer>a").get(0)){
 						//地址栏验证
-//						if($("#emailAddress").prop("checked")){
+//						if($("#isdianzireport").prop("checked")){
 //							
 //						}else{
 //							if($("#showCityPicker3").val().length<=0){
@@ -392,9 +394,16 @@
 							//注册合法，ajax,跳转下一步
 							//提交表单,跳转
 						var formArr=$("form").serializeObject();
-							formArr.emailAddress=$("#emailAddress").prop("checked");
-							formArr.Address=adds;
-							formArr.Address.details=$("input[name='details']").val();
+							formArr.isdianzireport=$("#isdianzireport").prop("checked");
+							formArr.address=adds;
+							formArr.address.details=$("input[name='details']").val();
+							if(formArr.ismarry=='0'){
+								formArr.ismarry='';
+							}
+							if(formArr.sex=="0"){
+								formArr.sex='';
+							}
+							console.log(formArr);
 							$.ajax({
 								type:"post",
 								url:"http://www.elepick.com/api/user",
@@ -447,12 +456,12 @@
 				//电子报告复选框
 				$(".mui-table-view-cell.mui-collapse>a").on('tap',function(){
 					if($(this).parent(".mui-collapse").hasClass("mui-active")){
-						$("#emailAddress").attr("checked","checked");
+						$("#isdianzireport").attr("checked","checked");
 						//地址栏清空
 						$("#showCityPicker3").val("");
 						$("input[name='details']").val("");
 					}else{
-						$("#emailAddress").removeAttr("checked");
+						$("#isdianzireport").removeAttr("checked");
 					}
 				});
 			});

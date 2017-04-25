@@ -9,6 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/cobra"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/handler"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/manager"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/token"
@@ -30,12 +31,18 @@ func startCmd() *cobra.Command {
 	var appID, appSecret string
 	var base string
 	var dist string
+	var dbuser, passwd, ip, port, dbname string
 	var start = &cobra.Command{
 		Use:   "start",
 		Short: "Start weichat internet service",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if err := validateDist(dist); err != nil {
 				glog.Errorf("wc start: validate dist path err %v\n", err)
+				os.Exit(1)
+			}
+
+			if err := db.Init(dbuser, passwd, ip, port, dbname); err != nil {
+				glog.Errorf("appointment init db err %v\n", err)
 				os.Exit(1)
 			}
 
@@ -84,6 +91,12 @@ func startCmd() *cobra.Command {
 	//IndexUrl = "http://www.elepick.com:8080/pegasus/dist"
 
 	flags := start.Flags()
+
+	flags.StringVar(&dbuser, "db_user", "postgres", "Database user for the Application.")
+	flags.StringVar(&passwd, "db_passwd", "postgres190@", "Database passwd for the Application.")
+	flags.StringVar(&ip, "db_ip", "10.1.0.190", "Database ip for the Application.")
+	flags.StringVar(&port, "db_port", "5432", "Database port for the Application.")
+	flags.StringVar(&dbname, "db_name", "pinto", "Database name for the Application.")
 
 	flags.StringVar(&addr, "listen", ":9000", "TCP network address to listen on, to serve incomming http request.")
 	flags.StringVar(&appSecret, "name", "bjdaos", "The Weichat Official Accounts app name, must meed to set")

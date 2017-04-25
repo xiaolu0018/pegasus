@@ -76,41 +76,41 @@
 		<div class="mui-content mui-row mui-fullscreen">
 			<div class="mui-col-xs-3" style="height:100%;">
 				<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical" style="height:100%;">
-					<a href="#jiwan" class="mui-control-item mui-active">
+					<a href="#past_history" class="mui-control-item mui-active">
 						<span>既往史</span>
 					</a>
-					<a href="#jiazu" class="mui-control-item">
+					<a href="#family_medical_history" class="mui-control-item">
 						<span>家族病史</span>
 					</a>
-					<a href="#tijian" class="mui-control-item">
+					<a href="#exam_frequency" class="mui-control-item">
 						<span>体检情况</span>
 					</a>
-					<a id="item4" href="#yichang" class="mui-control-item">
+					<a id="item4" href="#past_exam_exception" class="mui-control-item">
 						<span>既往体检
 							异常情况</span>
 					</a>
-					<a href="#xinli" class="mui-control-item">
+					<a href="#psychological_pressure" class="mui-control-item">
 						<span>心理压力</span>
 					</a>
-					<a href="#yinshi" class="mui-control-item">
+					<a href="#food_habits" class="mui-control-item">
 						<span>饮食习惯</span>
 					</a>
-					<a href="#jinshi" class="mui-control-item">
+					<a href="#eating_habits" class="mui-control-item">
 						<span>进食习惯</span>
 					</a>
-					<a href="#yinjiu" class="mui-control-item">
+					<a href="#drink_habits" class="mui-control-item">
 						<span>饮酒习惯</span>
 					</a>
-					<a href="#xiyan" class="mui-control-item">
+					<a href="#smoke_history" class="mui-control-item">
 						<span>吸烟史</span>
 					</a>
-					<a href="#shuimian" class="mui-control-item">
+					<a href="#sleep_quality" class="mui-control-item">
 						<span>睡眠情况</span>
 					</a>
 				</div>
 			</div>
 			<div id="segmentedControlContents" class="mui-col-xs-9">
-				<div id="jiwan" class="mui-control-content mui-active">
+				<div id="past_history" class="mui-control-content mui-active">
 					<button class="mui-btn">高血压</button>
 					<button class="mui-btn">脑卒中</button>
 					<button class="mui-btn">冠心病</button>
@@ -129,7 +129,7 @@
 					<button class="mui-btn">无</button>
 					<button class="mui-btn">其他</button>
 				</div>
-				<div id="jiazu" class="mui-control-content">
+				<div id="family_medical_history" class="mui-control-content">
 					<button class="mui-btn">未知</button>
 					<button class="mui-btn">肝硬化</button>
 					<button class="mui-btn">结核病</button>
@@ -143,13 +143,13 @@
 					<button class="mui-btn">其他疾病</button>
 					<button class="mui-btn">无</button>
 				</div>
-				<div id="tijian" class="mui-control-content">
+				<div id="exam_frequency" class="mui-control-content">
 					<button class="mui-btn">每年一次</button>
 					<button class="mui-btn">两年一次</button>
 					<button class="mui-btn">两年以上</button>
 					<button class="mui-btn">从未体检</button>
 				</div>
-				<div id="yichang" class="mui-control-content">
+				<div id="past_exam_exception" class="mui-control-content">
 					<button class="mui-btn">血压高</button>
 					<button class="mui-btn">空腹血糖高</button>
 					<button class="mui-btn">血脂异常</button>
@@ -164,35 +164,35 @@
 					<button class="mui-btn">其他异常</button>
 					<button class="mui-btn">无</button>
 				</div>
-				<div id="xinli" class="mui-control-content">
+				<div id="psychological_pressure" class="mui-control-content">
 					<button class="mui-btn">大</button>
 					<button class="mui-btn">一般</button>
 					<button class="mui-btn">小</button>
 				</div>
-				<div id="yinshi" class="mui-control-content">
+				<div id="food_habits" class="mui-control-content">
 					<button class="mui-btn">嗜甜</button>
 					<button class="mui-btn">嗜咸</button>
 					<button class="mui-btn">辛辣</button>
 					<button class="mui-btn">清淡</button>
 				</div>
-				<div id="jinshi" class="mui-control-content">
+				<div id="eating_habits" class="mui-control-content">
 					<button class="mui-btn">有早餐习惯</button>
 					<button class="mui-btn">无早餐习惯</button>
 					<button class="mui-btn">有夜宵习惯</button>
 				</div>
-				<div id="yinjiu" class="mui-control-content">
+				<div id="drink_habits" class="mui-control-content">
 					<button class="mui-btn">不饮</button>
 					<button class="mui-btn">适量</button>
 					<button class="mui-btn">过度(高度白酒每日>一两)</button>
 				</div>
-				<div id="xiyan" class="mui-control-content">
+				<div id="smoke_history" class="mui-control-content">
 					<button class="mui-btn">不吸</button>
 					<button class="mui-btn">偶尔吸</button>
 					<button class="mui-btn">经常吸</button>
 					<button class="mui-btn">已戒烟</button>
 					<button class="mui-btn">被动吸</button>
 				</div>
-				<div id="shuimian" class="mui-control-content">
+				<div id="sleep_quality" class="mui-control-content">
 					<button class="mui-btn">很差</button>
 					<button class="mui-btn">差</button>
 					<button class="mui-btn">一般</button>
@@ -222,38 +222,46 @@
         
 		//数据
 		var medicdata={
-			"jiwan":[],
-			"jiazu":[],
-			"tijian":[],
-			"yichang":[],
-			"xinli":[],
-			"yinshi":[],
-			"jinshi":[],
-			"xiyan":[],
-			"yinjiu":[],
-			"shuimian":[]
+			"past_history":[],
+			"family_medical_history":[],
+			"exam_frequency":[],
+			"past_exam_exception":[],
+			"psychological_pressure":[],
+			"food_habits":[],
+			"eating_habits":[],
+			"drink_habits":[],
+			"smoke_history":[],
+			"sleep_quality":[]
 		}
-		var iftap=true;//重复提交判断
 		
-			//页面加载数据
+		
+			
 			
 			
 		$(function(){	
 			access();
     		//get页面数据并渲染,if有的话
     		$.getJSON("http://www.elepick.com/api/user/label",{},function(data){
-    			data=eval(data);
+    			if (typeof data === 'string') {
+				    data = JSON.parse(data);
+				}
 				if(data==null){
 					//数据为空
 				}else{
-					$.each(data,function(i,n){
-						var len=n.length;
+					$.each(data,function(keys,vals){
+						var len=vals.length;
 						for(var g=0;g<len;g++){
-							$("#"+i).children("button").eq(n[g]).addClass("mybtn-checked");
+							if($("#"+keys).children("button:contains("+vals[g]+")")){
+								$("#"+keys).children("button:contains("+vals[g]+")").addClass("mybtn-checked");
+							}else{
+								console.log('匹配不到');
+							}
+							
 						}
 					});
 				};			
 			});
+			var iftap=true;//重复提交判断
 			mui('body').on('tap','a',function(e){
 				if(this==$("#footer>a").get(0)){
 					//ajax
@@ -288,12 +296,12 @@
 					window.location.href="package.html";
 				}				
 			});
-            function changeData(id,index){
+            function changeData(id,item){
             	var medarr=medicdata[id];
-            	if(jQuery.inArray(index,medarr)>=0){
-            		medarr.splice(jQuery.inArray(index,medarr),1);
+            	if(jQuery.inArray(item,medarr)>=0){
+            		medarr.splice(jQuery.inArray(item,medarr),1);
             	}else{
-            		medarr.push(index);
+            		medarr.push(item);
             	}
             	console.log(medicdata)
             }
@@ -302,10 +310,10 @@
          		if($(this).hasClass("mybtn-checked")){
          			//取消选中
          			$(this).removeClass("mybtn-checked");
-         			changeData($(this).parent("div[id]").attr("id"),String($(this).index()));
+         			changeData($(this).parent("div[id]").attr("id"),String($(this).html()));
          		}else{
          			$(this).addClass("mybtn-checked");
-         			changeData($(this).parent("div[id]").attr("id"),String($(this).index()));
+         			changeData($(this).parent("div[id]").attr("id"),String($(this).html()));
          		}
          	});
 	        

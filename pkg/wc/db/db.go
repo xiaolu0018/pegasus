@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	db               = "pegasus"
+	database         = "pegasus"
 	c_user           = "user"
 	c_plan           = "plan"
 	c_branch         = "branch"
@@ -25,26 +25,26 @@ func init() {
 }
 
 func User() *mgo.Collection {
-	return session.DB(db).C(c_user)
+	return session.DB(database).C(c_user)
 }
 
 func Banner() *mgo.Collection {
-	return session.DB(db).C(c_banner)
+	return session.DB(database).C(c_banner)
 }
 
 //套餐数据库连接
 func Plan() *mgo.Collection {
-	return session.DB(db).C(c_plan)
+	return session.DB(database).C(c_plan)
 }
 
 func Branch() *mgo.Collection {
-	return session.DB(db).C(c_branch)
+	return session.DB(database).C(c_branch)
 }
 
 func CapacityManage() *mgo.Collection {
-	return session.DB(db).C(C_capacityManage)
+	return session.DB(database).C(C_capacityManage)
 }
 
 func Appointment() *mgo.Collection {
-	return session.DB(db).C(C_appointment)
+	return session.DB(database).C(C_appointment)
 }

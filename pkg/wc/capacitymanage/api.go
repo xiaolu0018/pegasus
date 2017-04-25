@@ -161,14 +161,18 @@ func afterMonths(year, month, n int) []yearAndMonth {
 func FilterOffDays(cms []CapacityManage) map[string]interface{} {
 	result := make(map[string]interface{})
 	offdays := make(map[string][]int)
-	capatityman := make(map[string][]string)
+	capatityman := make(map[string][]int)
 	for _, cm := range cms {
 		offdays[strconv.Itoa(cm.Year)+monthToString(cm.Month)] = cm.OffDays
 
-		cap := make([]string, 0, len(cm.DayOfCapacity))
+		cap := make([]int, 0, len(cm.DayOfCapacity))
 		for k, v := range cm.DayOfCapacity {
 			if v == 0 {
-				cap = append(cap, k)
+				kint, err := strconv.Atoi(k)
+				if err != nil {
+					return nil
+				}
+				cap = append(cap, kint)
 			}
 		}
 		capatityman[strconv.Itoa(cm.Year)+monthToString(cm.Month)] = cap

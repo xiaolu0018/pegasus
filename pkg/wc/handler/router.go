@@ -24,8 +24,8 @@ func CreateHttpRouter(dist string) http.Handler {
 	r.GET("/api/user/label", authUser(user.GetLabelHandler))
 	r.GET("/api/user", authUser(user.GetHandler))
 
-	r.PUT("/banner", authAdmin(banner.UpsertHandler))
-	r.GET("/banners", banner.GetHandler)
+	r.PUT("/api/banner", authAdmin(banner.UpsertHandler))
+	r.GET("/api/banners", banner.GetHandler)
 
 	r.PUT("/api/plan", authAdmin(plan.UpsertHandler))
 	r.GET("/api/plans", plan.GetPlansHandler)

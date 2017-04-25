@@ -112,6 +112,6 @@ func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {
 	au.AppointDate = a.AppointDate
 	au.Name = u.Name
 	au.Mobile = u.Mobile
-	au.CardID = u.IDCard
+	au.CardID = u.CardNo
 	return &au, nil
 }

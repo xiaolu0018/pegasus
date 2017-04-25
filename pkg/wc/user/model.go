@@ -12,12 +12,13 @@ import (
 func (u *User) UpsertBasicInfo(c *mgo.Collection) (err error) {
 	err = c.UpdateId(u.ID, bson.M{
 		"$set": bson.M{
-			"name":    u.Name,
-			"idcard":  u.IDCard,
-			"mobile":  u.Mobile,
-			"adress":  u.Address,
-			"sex":     u.Sex,
-			"ismarry": u.IsMarry,
+			"name":     u.Name,
+			"idcard":   u.CardNo,
+			"cardtype": u.CardType,
+			"mobile":   u.Mobile,
+			"address":  u.Address,
+			"sex":      u.Sex,
+			"ismarry":  u.IsMarry,
 		},
 	})
 	return

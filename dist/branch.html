@@ -168,7 +168,10 @@
 			//页面加载数据
 			$(function(){
 				access();
-				$.getJSON('http://www.elepick.com/api/branches',{},function(data){
+				$.getJSON('http://www.elepick.com/api/branches',{},function(data){					
+					if (typeof data === 'string') {
+					    data = JSON.parse(data);
+					}
 					if(data==null){
 						
 					}else{
@@ -177,28 +180,28 @@
 						
 						
 						//滑动切换图片
-						(function($) {
+						
 							$('.mui-scroll-wrapper').scroll({
 								indicators: true //是否显示滚动条
 							});
 							var piclen=htmls.length;
-							var picranges='';
+							var picranges=$("#slider>.mui-slider-group").html();
 							for(var g=1;g<piclen;g++){
 								picranges+='<div id=item"'+(g+1)+'" class="mui-slider-item mui-control-content"><div id="scroll'+(g+1)+'" class="mui-scroll-wrapper"><div class="mui-scroll"><div class="mui-loading"><div class="mui-spinner"></div></div></div></div></div>'
 							}
-							$("#slider>.mui-slider-group").append(picranges);
+							$("#slider>.mui-slider-group").html(picranges);
 							document.getElementById('slider').addEventListener('slide', function(e) {
-								var picNum=e.detail.slideNumber+1;								
-								if ($("#item"+picNum).find(".mui-loading")) {
+								var picNum=e.detail.slideNumber;
+								if ($("#slider>.mui-slider-group>div[id^='item']").eq(picNum).find(".mui-loading")) {
 									setTimeout(function() {
-										$("#item"+picNum).find('.mui-scroll').html('<img src="'+html[picNum+1].imageUrl+'" alt="'+html[picNum+1].name+' '+html[picNum+1].desc+'" />');
+										$("#slider>.mui-slider-group>div[id^='item']").eq(picNum).find('.mui-scroll').html('<img src="'+htmls[picNum].imageUrl+'" alt="'+htmls[picNum].name+' '+htmls[picNum].desc+'" />');
 									}, 500);
 								}
 								 
 							
 							});
 			//				
-						})(mui);
+						
 						//图片切换end
 						
 					}
