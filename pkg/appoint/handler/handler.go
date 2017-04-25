@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"encoding/json"
-	"net/http"
 	"strconv"
+	"net/http"
+	"encoding/json"
 
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
@@ -15,7 +15,7 @@ import (
 
 func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	code := ps.ByName("code")
-	if code == "" {
+	if len(code) == 0 {
 		glog.Errorln("orgnization.CreateBasicHandler organization code not found")
 		httputil.Response(rw, 400, "organization code not found")
 		return
@@ -29,8 +29,8 @@ func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	cfg.Org_Code = code
-	if (&cfg).Validate() != nil {
-		glog.Errorf("orgnization.CreateBasicHandler validate req params err %v\n", cfg.Validate().Error())
+	if err := cfg.Validate(); err != nil {
+		glog.Errorf("orgnization.CreateBasicHandler validate req params err %v\n", err)
 		httputil.Response(rw, 400, cfg.Validate())
 		return
 	}
@@ -78,10 +78,10 @@ func CreateSpecialHandler(rw http.ResponseWriter, r *http.Request, ps httprouter
 
 func ListHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	index, size := r.FormValue("index"), r.FormValue("size")
-	if size == "" {
+	if len(size) == 0 {
 		size = "10"
 	}
-	if index == "" {
+	if len(index) == 0 {
 		index = "0"
 	}
 

@@ -14,7 +14,7 @@ func (o *Config_Basic) Create() error {
 	return err
 }
 
-func GetConfigBasic(orgcode string) (*Config_Basic, error) {
+func  GetConfigBasic(orgcode string) (*Config_Basic, error) {
 	sqlStr := fmt.Sprintf(`SELECT org_code,capacity,warnnum,offdays,avoidnumbers FROM %s WHERE org_code = '%s'`, TABLE_ORG_CON_BASIC, orgcode)
 	var org_code string
 	var capacity, warnnum int
@@ -26,14 +26,13 @@ func GetConfigBasic(orgcode string) (*Config_Basic, error) {
 		return nil, err
 	}
 
-	c := &Config_Basic{
+	return &Config_Basic{
 		Org_Code:     org_code,
 		Capacity:     capacity,
 		WarnNum:      warnnum,
 		OffDays:      []string(offDays),
 		AvoidNumbers: []int64(avoidNumbers),
-	}
-	return c, nil
+	}, nil
 }
 func (o *Config_Special) Create() error {
 	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, SALE_CODE, CAPACITY) VALUES ($1, $2, $3)`, TABLE_ORG_CON_SPECIAL)
