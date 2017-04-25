@@ -1,15 +1,15 @@
 package handler
 
 import (
-	"fmt"
-	"strconv"
-	"net/http"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"net/http"
+	"strconv"
 
-	"github.com/golang/glog"
-	"github.com/1851616111/util/message"
 	httputil "github.com/1851616111/util/http"
+	"github.com/1851616111/util/message"
+	"github.com/golang/glog"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -27,11 +27,8 @@ func AuthHandler(handler func(w http.ResponseWriter, r *http.Request, ps httprou
 		//}
 		r.ParseForm()
 		url_ := r.Form
-		glog.Errorln("r.FOrm %v", url_)
 		user := url_.Get("username")
 		passwd := url_.Get("password")
-
-		glog.Errorln("user, passwd", user, passwd)
 
 		if hosCode, err := model.Auth(user, passwd); err != nil {
 			glog.Errorf("auth reporter err %v\n", err)
@@ -112,12 +109,9 @@ func ReportListHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 
-	var status int
-	state_no := r.FormValue("state_no")
-	if state_no == "" || state_no == "0" {
-		status = 1080
-	} else {
-		status = 1090
+	var ifAlreadyReported bool = false
+	if state_no := r.FormValue("state_no"); state_no == "1" {
+		ifAlreadyReported = true
 	}
 
 	ex_no := r.FormValue("examination_no")
@@ -126,7 +120,7 @@ func ReportListHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	endtime := r.FormValue("endtime")
 	sex := r.FormValue("sex")
 
-	Rets, err := model.GetQueryAll(page_index, ex_no, name, sex, status, begintime, endtime, ps.ByName("hos_code"))
+	Rets, err := model.GetQueryAll(page_index, ex_no, name, sex, ifAlreadyReported, begintime, endtime, ps.ByName("hos_code"))
 	if err != nil {
 		if err == sql.ErrNoRows {
 			httputil.Response(w, 404, "Not Found")

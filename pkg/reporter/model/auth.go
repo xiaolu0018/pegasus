@@ -13,7 +13,7 @@ func Auth(username string, password string) (string, error) {
 
 	sql := fmt.Sprintf(`select (SELECT count(*) FROM manager where account='%s' and password='%s') as num, hos_code FROM manager where account='%s' and password ='%s'`,
 		username, password, username, password)
-	glog.Errorln("Auth sql ", sql)
+
 	var count int
 	var hosCode string
 	row := DB.QueryRow(sql)

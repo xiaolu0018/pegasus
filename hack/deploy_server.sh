@@ -58,9 +58,9 @@ function deployPublicKey() {
 init_Dir
 deployDist
 deployPublicKey
-startTarget wc
+#startTarget wc
 startTarget rpt
-startTarget app
+#startTarget app
 clean
 
 
