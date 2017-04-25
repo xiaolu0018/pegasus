@@ -101,7 +101,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="item2mobile" class="mui-slider-item mui-control-content">
+					<!--<div id="item2mobile" class="mui-slider-item mui-control-content">
 						<div id="scroll2" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<div class="mui-loading">
@@ -122,7 +122,7 @@
 							</div>
 						</div>
 
-					</div>
+					</div>-->
 				</div>
 			</div>
 
@@ -147,8 +147,7 @@
 			            <li class="mui-col-xs-4"></li>
 			            <li class="mui-col-xs-4 leftborder"></li>
 			           	<li class="mui-col-xs-4"></li> 
-		    	</ul>
-	
+		    </ul>	
 		<script src="js/mui.min.js"></script>
 		 <script src="js/jquery-2.1.4.min.js"></script>
 		 <script type="text/javascript" src="js/bear-token.js"></script>
@@ -157,19 +156,6 @@
             mui.init({
               swipeBack:false,
             });
-			
-				//页面加载数据
-				$(function(){
-					access();
-					$.getJSON('http://www.elepick.com/api/branches',{},function(data){
-						mui.alert(data);
-					});
-				});
-		
-			document.getElementById("myMask").addEventListener('tap',function(){
-				document.getElementById("myMask").style.display="none";
-			});
-
             mui.plusReady(function(){
             	var ws=plus.webview.currentWebview();
             	ws.setStyle({'popGesture':'none'});
@@ -177,39 +163,56 @@
             mui('.mui-scroll-wrapper').scroll({
                 deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
             });
-			$('body').on('tap','a',function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				document.location.href=this.href;
-			});
-			//滑动切换图片
-			(function($) {
-				$('.mui-scroll-wrapper').scroll({
-					indicators: true //是否显示滚动条
-				});
-
-				var html2 = '<img src="img/branch2.jpg" alt="" />';
-				var html3 = '<img src="img/branch4.jpg" alt="" />';
-				var item2 = document.getElementById('item2mobile');
-				var item3 = document.getElementById('item3mobile');
-				document.getElementById('slider').addEventListener('slide', function(e) {
-					if (e.detail.slideNumber === 1) {
-						if (item2.querySelector('.mui-loading')) {
-							setTimeout(function() {
-								item2.querySelector('.mui-scroll').innerHTML = html2;
-							}, 500);
-						}
-					} else if (e.detail.slideNumber === 2) {
-						if (item3.querySelector('.mui-loading')) {
-							setTimeout(function() {
-								item3.querySelector('.mui-scroll').innerHTML = html3;
-							}, 500);
-						}
+            
+			var htmls=[];
+			//页面加载数据
+			$(function(){
+				access();
+				$.getJSON('http://www.elepick.com/api/branches',{},function(data){
+					if(data==null){
+						
+					}else{
+						data=eval(data);
+						htmls=data;
+						
+						
+						//滑动切换图片
+						(function($) {
+							$('.mui-scroll-wrapper').scroll({
+								indicators: true //是否显示滚动条
+							});
+							var piclen=htmls.length;
+							var picranges='';
+							for(var g=1;g<piclen;g++){
+								picranges+='<div id=item"'+(g+1)+'" class="mui-slider-item mui-control-content"><div id="scroll'+(g+1)+'" class="mui-scroll-wrapper"><div class="mui-scroll"><div class="mui-loading"><div class="mui-spinner"></div></div></div></div></div>'
+							}
+							$("#slider>.mui-slider-group").append(picranges);
+							document.getElementById('slider').addEventListener('slide', function(e) {
+								var picNum=e.detail.slideNumber+1;								
+								if ($("#item"+picNum).find(".mui-loading")) {
+									setTimeout(function() {
+										$("#item"+picNum).find('.mui-scroll').html('<img src="'+html[picNum+1].imageUrl+'" alt="'+html[picNum+1].name+' '+html[picNum+1].desc+'" />');
+									}, 500);
+								}
+								 
+							
+							});
+			//				
+						})(mui);
+						//图片切换end
+						
 					}
 				});
-//				
-			})(mui);
-			
+				document.getElementById("myMask").addEventListener('tap',function(){
+					document.getElementById("myMask").style.display="none";
+				});
+				$('body').on('tap','a',function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					document.location.href=this.href;
+				});
+			});
+					
 		</script>
 	</body>
 </html>

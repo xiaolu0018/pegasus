@@ -37,7 +37,7 @@ func CreateHttpRouter(dist string) http.Handler {
 	r.POST("/api/appointments/:id/cancel", authUser(appointment.CancelHandler))
 	r.GET("/api/appointments", authUser(appointment.ListAppointmentHandler))
 	//
-	r.GET("/api/branch/:id/offday", capacitymanage.GetOffDaysHandle)
+	r.GET("/api/branch/:id/offday", capacitymanage.GetOffDaysHandler)
 	r.POST("/api/manage/branch", authAdmin(branch.CreateHandler))
 	r.PUT("/api/manage/branch/:id", authAdmin(branch.UpdateHandler))
 	r.GET("/api/branches", branch.ListHandler)

@@ -120,30 +120,36 @@
 					//数据为空
 				}else{
 					data=eval(data);
-					
 					var len=data.length;
 					var ranges='';
 					for(var g=0;g<len;g++){
 						ranges+='<li class="mui-table-view-cell"><div class="mui-input-row mui-radio mui-left"><label>'+data[g].name+'</label><input id="'+data[g].Id+'" name="package" value="'+data[g].name+'" type="radio"></div><img href="'+data[g].detailsUrl+'" src="'+data[g].imageUrl+'"></li>'
 					}
-					console.log(ranges)
 					$("form>ul.mui-table-view-radio").html(ranges);
 					
 				}						
 			});
 			//套餐选择，取消			
-				$(".mui-table-view>li>div.mui-radio").on('tap',function(e){
+			$(".mui-table-view>li>div.mui-radio").on('tap',function(e){
+				
+				if(e&&e.preventDefault){
 					e.preventDefault();
 					e.stopPropagation();
-					if($(this).children('input').prop('checked')){
-						$(this).children('input').prop('checked',false);
-						packages=0;
-					}else{
-						$(this).children('input').prop('checked',true);
-						packages=$(this).children('input').attr("id");
-					}
-					localStorage.packageid=packages;
-				});
+				}else{
+					window.event.returnValue=false;
+					window.event.cancelBubble=true;
+				}
+				e.stopImmediatePropagation();
+				if($(this).children('input').prop('checked')){
+					$(this).children('input').prop('checked',false);
+					packages=0;
+				}else{
+					$(this).children('input').prop('checked',true);
+					packages=$(this).children('input').attr("id");
+				}
+				console.log(packages);
+				localStorage.packageid=packages;
+			});
 			//详情页链接进入
 			$("ul>li").on('tap','img',function(){
 				localStorage.imgdec=$(this).attr("href");

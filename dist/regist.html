@@ -203,8 +203,10 @@
 							$("input[name='details']").val("");
 							
 						}
-						$("#showCityPicker3").val(data.address.province+" "+data.address.city+" "+data.address.district);
-						$("input[name='details']").val(data.details);
+						if(data.Address.city){
+							$("#showCityPicker3").val(data.Address.province+" "+data.Address.city+" "+data.Address.district);						
+							$("input[name='details']").val(data.details);
+						}
 						$("select[name='useID']>option[value="+data.useID+"]").attr("selected","true");
 						$("input[name='idcard']").val(data.idcard);
 						$("input[name='name']").val(data.name);
@@ -217,7 +219,12 @@
 			
 				
 				//					//级联示例
-				var adds={};
+				var adds={
+					"province":"",
+					"city":"",
+					"district":"",
+					"details":""
+				};
 				mui.ready(function(){
 					var cityPicker3 = new mui.PopPicker({
 							layer: 3
@@ -386,8 +393,8 @@
 							//提交表单,跳转
 						var formArr=$("form").serializeObject();
 							formArr.emailAddress=$("#emailAddress").prop("checked");
-							formArr.address=adds;
-							formArr.address.details=$("input[name='details']").val();
+							formArr.Address=adds;
+							formArr.Address.details=$("input[name='details']").val();
 							$.ajax({
 								type:"post",
 								url:"http://www.elepick.com/api/user",

@@ -8,22 +8,27 @@
 	    <meta http-equiv="X-UA-Compatible" content="edge" />
 	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
 	    <link rel="stylesheet" href="css/footer.css" />	
-	    <link rel="stylesheet" href="css/datahead.css" />   	  
+	    <link rel="stylesheet" href="css/datahead.css" /> 
+	    <style>
+	    	.mui-content{
+	    		padding-bottom:0;
+	    	}
+	    </style>
 	</head>
-	<body onload='pageload()'>
+	<body>
 		<!--页面主结构开始-->
 		<!--顶部LOGO-->
 		<header class="mui-bar mui-bar-nav">   
 	    	<img style="height:45px;" src="img/jj.png" alt="" />
-	    	<h1>当前位置：评价<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<h1>当前位置：首页详情<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
 	    	<p>
 		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
 		    </p>
 		</header>
 		<!--底部导航-->
-		<nav id="footer" class="mui-bar mui-bar-tab">
+		<!--<nav id="footer" class="mui-bar mui-bar-tab">
 	        <a>提交</a>
-	    </nav>
+	    </nav>-->
 		<!--正文-->		
 		<div class="mui-scroll-wrapper">
 		<div class="mui-scroll">
@@ -54,23 +59,19 @@
 			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
 			 bounce: true //是否启用回弹
     	});
-            function pageload(){
+             
+			$(function(){
+				//页面数据加载
 				access();
 				$("div.mui-content img").attr("src",localStorage.imgdec);
-			}   
-			$(function(){
-								
+				
 				var iftap=true;//重复提交判断
 				mui('body').on('tap','a',function(e){
 	//				e.stopPropagation();
-					if(this==$("#footer>a").get(0)){
-						
-					
-					
-					}else if(this==$("h1>a").get(0)){
+					if(this==$("h1>a").get(0)){
 						window.history.back();
 					}else if(this==$("header p>a#icon-help").get(0)){
-						mui.toast("欢迎体检预约");
+						mui.toast("帮助中心");
 					}				
 				});
 				

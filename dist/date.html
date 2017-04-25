@@ -166,22 +166,20 @@
         	//页面加载数据
         	$(function(){
       			access();
-//      		data={
-//		        	'capatityed':{'201704':[27],
-//					        	'201705':[8,4],
-//					        	'201706':[1,5,28]
-//					        	},
-//		        	'offdays':{'201705':[1,15,18],'201706':[1,20,28,30],'201704':[21,25,30]}
-//		        };
-				$.getJSON("http://www.elepick.com/api/branches",{},function(data){
-					var leg=data.length;
-					for(var i=0;i<leg;i++){
-						allDep.push({
-									text:data[i].name,
-									value:data[i].id
-								});
-					};
-//					mui.ready(function() {
+
+				$.getJSON("http://www.elepick.com/api/branches",function(data){
+					if(data==null){
+						
+					}else{
+						var leg=data.length;
+						for(var i=0;i<leg;i++){
+							allDep.push({
+										text:data[i].name,
+										value:data[i].id
+									});
+						};
+					}					
+					mui.ready(function() {
 						//分院数据解析
 						var departPicker = new mui.PopPicker();
 						departPicker.setData(allDep);
@@ -195,12 +193,12 @@
 								DEPART.id=items[0].value;
 								localStorage.branchid=DEPART.id;
 								//根据分院设置日期状态
-								$.getJSON("http://www.elepick.com/api/branch/"+DEPART.id+"/offday",{},function(data){
+								$.getJSON("http://www.elepick.com/api/branch/"+DEPART.id+"/offday",function(data){
 									data=eval(data);
+									mui.alert(data);
 									if(data==null){
 										//数据为空
 									}else{
-										
 										capatityed=data.capatityed;
 										offdays=data.offdays;
 										showDay(year,month);
@@ -212,7 +210,7 @@
 								//return false;
 							});
 						}, false);
-//					});
+					});
 					
         		});
         		
@@ -236,16 +234,11 @@
 										'branchid':DEPART.id,
 										'appointdate':DataYear+"-"+DataMonth+"-"+DataDay,									
 									}),
-									success:function(data, textStatus, xhr){
-	//									mui.alert("成功状态码===="+xhr.status);
-	//									console.log("数据==="+data);
+									success:function(data, textStatus, xhr){	
 										iftap=true;
 										if(xhr.status=="200"){
-											
 											data=jQuery.parseJSON(data);
 											localStorage.appointid=data.appointid;
-											console.log(localStorage.appointid);
-											
 											window.location.href='confirm.html';
 										}else{
 											mui.alert(textStatus+"-"+xhr.status);
