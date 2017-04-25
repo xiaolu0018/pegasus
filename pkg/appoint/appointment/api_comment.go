@@ -20,7 +20,7 @@ func (c *Comment) Create(appid string) (err error) {
 		tx.Commit()
 	}()
 	var setcommentidToAppointmentSQL string
-	setcommentidToAppointmentSQL = fmt.Sprintf("UPDATE %s SET commentid = '%s' WHERE id = '%s'", TABLE_Appointment, c.ID, appid)
+	setcommentidToAppointmentSQL = fmt.Sprintf("UPDATE %s SET commentid = '%s' WHERE id = '%s'", TABLE_APPOINTMENT, c.ID, appid)
 	var createcomment string
 	createcomment = fmt.Sprintf("INSERT INTO %s (id,environment,attitude,breakfase,details) VALUES($1,$2,$3,$4,$5)", TABLE_Appoint_Comment)
 	if _, err = tx.Exec(setcommentidToAppointmentSQL); err != nil {

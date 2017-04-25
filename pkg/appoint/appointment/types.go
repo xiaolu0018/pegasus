@@ -1,22 +1,32 @@
 package appointment
 
-var TABLE_Appointment = "go_appoint_appointment"
+const TABLE_APPOINTMENT = "go_appoint_appointment"
+
+const VALIDATE_CHANNEL_WC = "微信"
+const VALIDATE_CHANNEL_400 = "400"
+const VALIDATE_CARD_TYPE_ID = "身份证"
+const VALIDATE_CARD_TYPE_PASSPORT = "身份证"
+const VALIDATE_CARD_TYPE_OFFICER = "军官证"
+const VALIDATE_CARD_TYPE_STU = "学生证"
+const VALIDATE_MERRY_NO =  "未婚"
+const VALIDATE_MERRY_YES =  "未婚"
+
 var ErrAppointmentString = "Can't make an appointment"
 
 type Appointment struct {
 	ID          string `json:"id"`
 	PlanId      string `json:"planid"` //套餐
 	AppointTime int64  `json:"appointtime"`
-	OrgCode     string `json:"orgcode"` //分院
+	OrgCode     string `json:"org_code"` //分院
 
 	CardNo               string `json:"cardno"`
 	CardType             string `json:"cardtype"`
 	Mobile               string `json:"mobile"`
 	Appointor            string `json:"appointor"`
+	Address 	     string `json:"address"`
 	MerryStatus          string `json:"merrystatus"`
 	Status               string `json:"status"`
 	Appoint_Channel      string `json:"appoint_channel"`      //预约渠道
-	Channel_Appointor_ID string `json:"channel_appointor_id"` //不同渠道预约人的id
 
 	Company      string `json:"company"`
 	Group        string `json:"group"`
@@ -68,6 +78,6 @@ type Plan struct {
 	Name      string
 	AvatarImg string
 	DetailImg string
-	Sales     []string //一个套餐中应该含有几种检查类型
+	Checkups  []string //一个套餐中应该含有几种检查类型
 	IfShow    bool     //是否显示  false 显示  ture 隐藏
 }
