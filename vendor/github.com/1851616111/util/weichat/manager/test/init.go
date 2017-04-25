@@ -1,0 +1,5 @@
+package Test
+
+var Dev_Basic_Token string = "9wGPLKvtYL4TApPJ698OCE9qwyLihFWMOE3PyqgD04s2uHj3QuP3WAr23j4SrXxVZWfZXIH_JDjq4Dc9g7Kmz1LPACexM7c2xG0ifofRUwWadL1yvIKSgOpej1LwWFkGXAKeAFAGJT"
+
+var Dev_User_OpenID string = "oH4HtwGsY-0JSjhNhJLA7jYYOMsQ"

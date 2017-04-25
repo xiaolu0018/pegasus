@@ -1,0 +1,137 @@
+#offCanvasShow{
+	position:fixed;
+	right:20px;
+	bottom:100px;
+	z-index: 100001;
+	background-color:rgba(85,213,167,0.6);
+	color:#fff;
+	border-radius: 50%;
+	width:60px;
+	height:60px;
+	text-align: center;
+	padding: 0;
+	margin:0;
+	padding-top:8px;
+	
+}
+#offCanvasShow:active{
+	background-color:rgba(85,213,167,0.8);
+}
+#offCanvasShow>p{
+	margin:0;
+	color:#fff;
+}
+div.mui-inner-wrap>.mui-content{
+	background-color:#fff;
+}
+
+#offCanvasSide{
+	background-color:#fff;
+	border-right:1px solid #ccc;
+	color:#bbb;
+	width:40%;
+	box-shadow:1px 0 2px #ccc;
+}
+.mui-segmented-control .mui-control-item{
+	width:100%;
+	border:none !important;
+}
+.mui-segmented-control.mui-segmented-control-inverted .mui-control-item {
+    color: #888;
+}
+.mui-segmented-control.mui-segmented-control-inverted .mui-control-item>p{
+	color:inherit;
+}
+.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+	color:#42aa85;
+}
+
+
+.mui-bar{
+	background:#ebebeb;	
+	height:30px;
+}
+.mui-bar>.mui-title{
+	text-align: left;
+	font-size:15px;
+	line-height: 30px;
+	left:5px;
+}
+.mui-bar-nav~.mui-content {
+    padding-top:34px;
+}
+.mui-control-content table{
+	font-size:14px;
+}
+.mui-control-content table>thead{
+	white-space: nowrap;
+	line-height: 40px;
+	text-align: left;
+	background:#42aa85;
+	color:#fff;
+	
+}
+.mui-control-content table>thead th{
+	width:20%;
+	padding-left:5px;
+	border-right:1px solid #fff;
+	font-weight: 300;
+}
+.mui-control-content table td{
+	line-height: 1;
+	padding-left:5px;
+	height:40px;
+	color:#333;
+}
+.mui-control-content table>thead th:last-of-type{
+	width:8%;
+	padding-left:0;
+}
+.mui-control-content table tr>td:last-of-type{
+	text-align: center;
+	padding-left:0;
+}
+
+.mui-control-content table>thead th:first-of-type{
+	width:22%;
+}
+.mui-control-content table>thead th:nth-of-type(4){
+	width:20%;
+}
+.mui-control-content table>tfoot tr>td{
+	text-align: right !important;
+	padding-right:5px;
+	height:30px;
+	background:#42aa85;
+	color:#fff;
+}
+.abn,.sum{
+	display: inline-block;
+	line-height: 20px;
+	width:20px;
+	border-radius:50%;
+	background:#FE4F54;
+	color:#fff;
+	text-align: center;
+}
+.sum{
+	background:#5AACE4;
+}
+#segmentedControls .abn,#segmentedControls .sum{
+	margin-right:5px;
+}
+#backford{
+	position:absolute;
+	z-index: 100000;
+	left:0;
+	bottom:0;
+	background:rgba(255,255,255,1);
+	height:40px;
+	line-height: 40px;
+	text-align: center;
+	width:100%;
+	box-shadow: 0 -1px 2px #ccc;
+}
+#backford a{
+	color:#42aa85;
+}

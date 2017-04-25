@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>体检套餐推荐</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/footer.css" />	
+	    <link rel="stylesheet" href="css/datahead.css" />
+	    <style>
+	   		ul>li{
+	   			font-size:18px;
+	   		}
+	   		.mui-input-group .mui-input-row:after {
+	   			height:0;
+	   		}
+	   		.mui-table-view-cell:after {
+	    		height:0;
+			}
+			.mui-table-view-cell>img{
+				width:100%;
+			}
+			.mui-table-view-radio .mui-table-view-cell {
+    			 padding-right: 15px; 
+			}
+			.mui-checkbox input[type=checkbox]:checked:before, .mui-radio input[type=radio]:checked:before {
+			    color: #42aa85;
+			}
+			.mui-radio input[checked='true']:before{
+				content:'\e441';
+			}
+	    </style>
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:45px;" src="img/jj.png" alt="" />
+	    	<h1>当前位置：体检套餐推荐<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<p>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>点击跳过</a>		    	
+		    </p>
+		</header>
+		<!--底部导航-->
+		<nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>下一步</a>
+	    </nav>
+		<!--正文-->		
+		<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<!--这里放置真实显示的DOM内容-->
+			<div class="mui-content">
+		    	<form class="mui-input-group">
+		    		<ul class="mui-table-view mui-table-view-radio">
+		    			<!--<li class="mui-table-view-cell">
+		    				<div class="mui-input-row mui-radio mui-left">
+		    					<label>基础套餐</label>
+		    					<input name="package" value="base" type="radio" />
+		    				</div>
+		    				<img href="img/pacdet1.jpg" src="img/pack1.png"/>
+		    			</li>
+		    			<li class="mui-table-view-cell">
+		    				<div class="mui-input-row mui-radio mui-left">
+		    					<label>三人套餐</label>
+		    					<input name="package" type="radio" value="sr" class="mui-selected"/>
+		    				</div>
+		    				<img href="img/pacdet2.jpg" src="img/pack2.png"/>
+		    			</li>
+		    			<li class="mui-table-view-cell">
+		    				<div class="mui-input-row mui-radio mui-left">
+		    					<label>基础套餐</label>
+		    					<input name="package" value='bas2' type="radio" />
+		    				</div>
+		    				<img href="img/pacdet3.jpg" src="img/pack1.png"/>
+		    			</li>
+		    			<li class="mui-table-view-cell">
+		    				<div class="mui-input-row mui-radio mui-left">
+		    					<label>迪安套餐</label>
+		    					<input name="package" value="dian" type="radio" />
+		    				</div>
+		    				<img href="img/pacdet1.jpg"  src="img/pack2.png"/>
+		    			</li>-->
+		    		</ul>
+		    	</form>
+			</div>
+    
+		</div>
+	</div>
+		
+	<!--页面主结构结束-->
+	<script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/mui.min.js"></script>
+    <script type="text/javascript" src="js/bear-token.js"></script>		
+	<script src="js/mui.picker.min.js"></script>
+	<script type="text/javascript" src="js/city.data-3.js"></script>		
+	<script type="text/javascript">
+		//页面加载数据		
+	var packages=0;	
+        mui.init({
+          swipeBack:false,
+        });
+        mui('.mui-scroll-wrapper').scroll({
+		 scrollY: true, //是否竖向滚动
+		 scrollX: false, //是否横向滚动
+		 startX: 0, //初始化时滚动至x
+		 startY: 0, //初始化时滚动至y
+		 indicators: true, //是否显示滚动条
+		 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+		 bounce: true //是否启用回弹
+	});           
+		
+		
+		
+		$(function(){	
+			access();
+			$.getJSON("http://www.elepick.com/api/plans",{},function(data){
+				if(data==null){
+					//数据为空
+				}else{
+					data=eval(data);
+					
+					var len=data.length;
+					var ranges='';
+					for(var g=0;g<len;g++){
+						ranges+='<li class="mui-table-view-cell"><div class="mui-input-row mui-radio mui-left"><label>'+data[g].name+'</label><input id="'+data[g].Id+'" name="package" value="'+data[g].name+'" type="radio"></div><img href="'+data[g].detailsUrl+'" src="'+data[g].imageUrl+'"></li>'
+					}
+					console.log(ranges)
+					$("form>ul.mui-table-view-radio").html(ranges);
+					
+				}						
+			});
+			//套餐选择，取消			
+				$(".mui-table-view>li>div.mui-radio").on('tap',function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					if($(this).children('input').prop('checked')){
+						$(this).children('input').prop('checked',false);
+						packages=0;
+					}else{
+						$(this).children('input').prop('checked',true);
+						packages=$(this).children('input').attr("id");
+					}
+					localStorage.packageid=packages;
+				});
+			//详情页链接进入
+			$("ul>li").on('tap','img',function(){
+				localStorage.imgdec=$(this).attr("href");
+				window.location.href="packageDetail.html";
+			});
+			var iftap=true;//重复提交判断
+			mui('body').on('tap','a',function(e){
+//				e.stopPropagation();
+				if(this==$("#footer>a").get(0)){
+					//点击下一步跳转
+					if((packages!=0)&&(iftap)){
+						iftap=false;
+						localStorage.packageid=packages.id;
+						window.location.href='date.html';					 	
+					}else if(packages==0){
+						mui.toast("未选择套餐，您可以点击右上角跳过此步骤");
+					}
+											
+					
+				
+				}else if(this==$("h1>a").get(0)){
+					//返回上一页
+					window.history.back();
+				}else if(this==$("header p>a#icon-help").get(0)){
+					//跳过此步骤
+					window.location.href="date.html";
+				}				
+			});
+			
+		});
+		
+     
+     	
+	</script>
+</body>
+
+</html>

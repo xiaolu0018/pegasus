@@ -1,0 +1,50 @@
+body,html{
+	
+	font-family:"microsoft yahei","微软雅黑","Heiti SC";
+	font-weight:400;
+	color:#000;
+}
+ul,li{
+	padding:0;
+	marging:0;
+	list-style: none;
+}
+#footer{
+	/*padding:4px 0;*/
+}
+#footer.mui-bar-tab{
+	color:#666;
+	background:#f2f1f1;
+}
+.mui-bar-tab .mui-tab-item.mui-active {
+    color: #42aa85;
+}
+.mui-bar-tab .mui-tab-item{
+	color:#666;
+}
+.mui-bar .mui-icon-extra {
+    font-size: 28px;
+    position: relative;
+    z-index: 20;
+}
+.mui-bar-tab .mui-tab-item .mui-icon{
+	width:28px;
+	height:28px;
+	font-size:28px;
+}
+.mui-bar-tab .mui-tab-item .mui-icon-extra {
+    top: 3px;
+    width: 28px;
+    height:28px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label {
+    font-size: 14px;
+}
+.mui-bar-tab .mui-tab-item .mui-icon-extra~.mui-tab-label {
+    font-size: 14px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

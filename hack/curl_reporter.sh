@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+
+curl -u cnadmin:202cb962ac59075b964b07152d234b70 192.168.199.198:9100/api/report/list

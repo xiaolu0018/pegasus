@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>体检套餐详情页</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/footer.css" />	
+	    <link rel="stylesheet" href="css/datahead.css" />   	  
+	</head>
+	<body onload='pageload()'>
+		<!--页面主结构开始-->
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:45px;" src="img/jj.png" alt="" />
+	    	<h1>当前位置：体检套餐详情<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<p>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
+		    </p>
+		</header>
+		<!--底部导航-->
+		<nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>确认使用该套餐</a>
+	    </nav>
+		<!--正文-->		
+		<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<!--这里放置真实显示的DOM内容-->
+			<div class="mui-content">
+		    	<div class="mui-content-padded">
+		    		<img src="" style="width:100%"/>
+		    	</div>
+			</div>   
+		</div>
+	</div>
+		
+		<!--页面主结构结束-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>		
+	    <script type="text/javascript" src="js/bear-token.js"></script>		
+		<script type="text/javascript">
+		var DEPART=0;
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    	});
+            function pageload(){
+				access();
+				$("div.mui-content img").attr("src",localStorage.imgdec);
+			}   
+			$(function(){
+								
+				var iftap=true;//重复提交判断
+				mui('body').on('tap','a',function(e){
+	//				e.stopPropagation();
+					if(this==$("#footer>a").get(0)){
+						
+					
+					
+					}else if(this==$("h1>a").get(0)){
+						window.history.back();
+					}else if(this==$("header p>a#icon-help").get(0)){
+						mui.toast("这是使用帮助");
+					}				
+				});
+				
+			});
+			
+         
+         	
+		</script>
+	</body>
+
+</html>

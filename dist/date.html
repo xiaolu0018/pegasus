@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>预约分院</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/footer.css" />		
+	    <link rel="stylesheet" href="css/dateplug.css" />
+	    <link rel="stylesheet" href="css/mui.picker.min.css" />
+	    <link rel="stylesheet" href="css/datahead.css" />
+	   <style>
+	   	#showDepartPicker{
+			padding-left:10px;
+			padding-right:10px;
+			font-size:16px;
+			border-right:none;
+			border-left:none;
+		}
+		#showDepartPicker>span{
+			float:left;
+		}
+		#showDepartPicker>#departResult{
+			float:right;
+			color:#888;
+		}
+	   </style>
+	</head>
+	<body>
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+		    	<img style="height:45px;" src="img/jj.png" alt="" />
+		    	<h1>当前位置：预约分院<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+		    	<p>
+		    		<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
+		    	</p>
+		</header>
+		<!--底部导航-->
+		 <nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>下一步</a>
+	    </nav>
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="mui-content">
+			
+					<!--正文内容-->
+					<button id="showDepartPicker" class="mui-btn mui-btn-block" type="button">
+						<span>预约分院</span>
+						<span id="departResult">点击选择</span>		
+					</button>
+					<!--预约时间-->
+					<div class="myDate">
+						<h3 class="dateTitle">
+							<span class="mui-icon mui-icon-arrowleft mui-pull-left"></span>
+							<a>2017年04月</a>
+							<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>
+						</h3>
+						<table>
+							<caption>
+								<div>
+									<p>
+										可以预约
+									</p>
+									<p>
+										不可预约
+									</p>
+								</div>
+							</caption>
+							<thead>
+								<tr>
+									<td >日</td>
+									<td >一</td>
+									<td>二</td>
+									<td>三</td>
+									<td>四</td>
+									<td>五</td>
+									<td>六</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!--date结束-->
+				</div>
+			</div>	
+		</div>
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="js/bear-token.js"></script>
+		<script src="js/mui.picker.min.js"></script>
+		<script src="js/datePlug.js"></script>
+		<script type="text/javascript">
+		var allDep=[];
+		var DEPART={id:"",name:"0"};//用户选择的分院名
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    		});
+           
+        	//页面加载数据
+        	$(function(){
+      			access();
+//      		data={
+//		        	'capatityed':{'201704':[27],
+//					        	'201705':[8,4],
+//					        	'201706':[1,5,28]
+//					        	},
+//		        	'offdays':{'201705':[1,15,18],'201706':[1,20,28,30],'201704':[21,25,30]}
+//		        };
+				$.getJSON("http://www.elepick.com/api/branches",{},function(data){
+					var leg=data.length;
+					for(var i=0;i<leg;i++){
+						allDep.push({
+									text:data[i].name,
+									value:data[i].id
+								});
+					};
+//					mui.ready(function() {
+						//分院数据解析
+						var departPicker = new mui.PopPicker();
+						departPicker.setData(allDep);
+						var showDepartPickerButton = document.getElementById('showDepartPicker');
+						var departResult = document.getElementById('departResult');
+						showDepartPickerButton.addEventListener('tap', function(event) {
+							
+							departPicker.show(function(items) {
+								departResult.innerText = items[0].text;
+								DEPART.name=items[0].text;
+								DEPART.id=items[0].value;
+								localStorage.branchid=DEPART.id;
+								//根据分院设置日期状态
+								$.getJSON("http://www.elepick.com/api/branch/"+DEPART.id+"/offday",{},function(data){
+									data=eval(data);
+									if(data==null){
+										//数据为空
+									}else{
+										
+										capatityed=data.capatityed;
+										offdays=data.offdays;
+										showDay(year,month);
+									}
+									
+								});
+								
+								//返回 false 可以阻止选择框的关闭
+								//return false;
+							});
+						}, false);
+//					});
+					
+        		});
+        		
+	        	var iftap=true;
+				mui('body').on('tap','a',function(e){
+					e.stopPropagation();
+					console.log(DataCheck)
+					if(this==$("#footer>a").get(0)){
+						if((DEPART.name==0)||(!DataCheck)){
+							mui.toast("请选择分院和日期");
+						}else{
+							//跳转下一步,ajax
+							mui.toast(DEPART.name+"-"+DataYear+"."+DataMonth+"."+DataDay);
+							localStorage.appointdate=DataYear+"-"+DataMonth+"-"+DataDay;
+							iftap=false;
+								$.ajax({
+									type:"put",
+									url:"http://www.elepick.com/api/appointment",
+									data:JSON.stringify({
+										'planid':localStorage.packageid,
+										'branchid':DEPART.id,
+										'appointdate':DataYear+"-"+DataMonth+"-"+DataDay,									
+									}),
+									success:function(data, textStatus, xhr){
+	//									mui.alert("成功状态码===="+xhr.status);
+	//									console.log("数据==="+data);
+										iftap=true;
+										if(xhr.status=="200"){
+											
+											data=jQuery.parseJSON(data);
+											localStorage.appointid=data.appointid;
+											console.log(localStorage.appointid);
+											
+											window.location.href='confirm.html';
+										}else{
+											mui.alert(textStatus+"-"+xhr.status);
+										}
+										
+									},
+									error:function(xhr, textStatus){
+										iftap=true;
+										console.log(xhr);
+	                                    mui.alert(textStatus);
+									}
+	
+							 	});
+						}
+					}else if(this==$("h1>a").get(0)){
+						//返回
+						window.history.back();
+					}else if(this==$("header p>a#icon-help").get(0)){
+						mui.toast("请选择预约分院和日期");
+					}				
+				});	
+		           
+        	});
+
+
+          		
+       		
+          
+				
+			
+         
+		</script>
+	</body>
+</html>

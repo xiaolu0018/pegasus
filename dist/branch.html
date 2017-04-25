@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>分院介绍</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/icons-extra.css" />
+	    <link rel="stylesheet" href="css/footer.css" />
+		<style>
+			.mui-content{
+				height:100%;
+				position:absolute;
+				top:0;
+				left:0;
+				bottom:0;
+				right:0;
+				width:100%;
+			}
+			.mui-slider,.mui-slider-group,.mui-slider-item{
+				height:100%;
+				width:100%;
+			}
+			/*.mui-slider-group{*/
+				/*width:auto;*/
+			/*}*/
+			#slider .mui-scroll{
+				padding:6px 16px 0;
+			}
+			
+			#myMask.mui-row{
+    		position:fixed;
+    		top:0;
+    		left:0;
+    		right:0;
+    		bottom:0;
+    		z-index: 998;
+    		height:100%;
+    		padding:0;
+    		margin:0;
+    		background:rgba(0,0,0,.6);
+    	}
+    	#myMask.mui-row>.mui-col-xs-4{
+    		height:33.333%;
+    		color:#fff;
+    		border:none;
+    		padding:0;
+    		text-align: center;
+    		position:relative;
+    	}
+    	#myMask.mui-row>.mui-col-xs-4>span{
+    		position:absolute;
+    		top:50%;
+    		font-size:36px;
+    		margin-top:-18px;
+    		width:100%;
+    		left:0;
+    		
+    	}
+    	#myMask.mui-row>.allborder>span{
+    		margin-top:-10.5px;
+    		font-size:18px;
+    	}
+    	#myMask .rightborder{
+    		border-right:1px solid #fff !important;
+    	}
+    	#myMask .allborder{
+    		border:1px solid #fff !important;
+    	}
+    	#myMask .leftborder{
+    		border-left:1px solid #fff !important;
+    	}
+		</style>
+	</head>
+
+	<body>
+		 <nav id="footer" class="mui-bar mui-bar-tab">
+	        <a class="mui-tab-item" id="index" href="index.html">
+	            <span class="mui-icon-extra mui-icon-extra-heart-filled"></span>
+	            <span class="mui-tab-label">首页</span>
+	        </a>
+	        <a class="mui-tab-item mui-active">
+	            <span class="mui-icon-extra mui-icon-extra-class"></span>
+	            <span class="mui-tab-label">分院</span>
+	        </a>
+	        <a class="mui-tab-item" href="myRep.html">
+	            <span class="mui-icon mui-icon-contact"></span>
+	            <span class="mui-tab-label">我的</span>
+	        </a>
+	    </nav>
+
+		<div class="mui-content">
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<img src="img/branch3.jpg" alt="" />
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll2" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="mui-loading">
+									<div class="mui-spinner">
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div id="item3mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll3" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="mui-loading">
+									<div class="mui-spinner">
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+		<!--遮罩蒙板-->
+		<ul id="myMask" class="mui-row">
+		        	
+			            <li class="mui-col-xs-4"></li>		                   
+			            <li class="mui-col-xs-4 rightborder"></li>
+			            <li class="mui-col-xs-4"></li>
+			            <li class="mui-col-xs-4">
+			            	<span class="mui-icon mui-icon-arrowleft"></span>
+			            </li>
+			            <li class="mui-col-xs-4 allborder">
+			            	<span>可以左右滑动</span>
+			            </li>
+			            <li class="mui-col-xs-4">
+			            	<span class="mui-icon mui-icon-arrowright"></span>
+			            </li>
+			            <li class="mui-col-xs-4"></li>
+			            <li class="mui-col-xs-4 leftborder"></li>
+			           	<li class="mui-col-xs-4"></li> 
+		    	</ul>
+	
+		<script src="js/mui.min.js"></script>
+		 <script src="js/jquery-2.1.4.min.js"></script>
+		 <script type="text/javascript" src="js/bear-token.js"></script>
+		<script type="text/javascript">
+		
+            mui.init({
+              swipeBack:false,
+            });
+			
+				//页面加载数据
+				$(function(){
+					access();
+					$.getJSON('http://www.elepick.com/api/branches',{},function(data){
+						mui.alert(data);
+					});
+				});
+		
+			document.getElementById("myMask").addEventListener('tap',function(){
+				document.getElementById("myMask").style.display="none";
+			});
+
+            mui.plusReady(function(){
+            	var ws=plus.webview.currentWebview();
+            	ws.setStyle({'popGesture':'none'});
+            });
+            mui('.mui-scroll-wrapper').scroll({
+                deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+            });
+			$('body').on('tap','a',function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				document.location.href=this.href;
+			});
+			//滑动切换图片
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+
+				var html2 = '<img src="img/branch2.jpg" alt="" />';
+				var html3 = '<img src="img/branch4.jpg" alt="" />';
+				var item2 = document.getElementById('item2mobile');
+				var item3 = document.getElementById('item3mobile');
+				document.getElementById('slider').addEventListener('slide', function(e) {
+					if (e.detail.slideNumber === 1) {
+						if (item2.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								item2.querySelector('.mui-scroll').innerHTML = html2;
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 2) {
+						if (item3.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								item3.querySelector('.mui-scroll').innerHTML = html3;
+							}, 500);
+						}
+					}
+				});
+//				
+			})(mui);
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的报告</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/icons-extra.css" />	
+	    <link rel="stylesheet" href="css/footer.css" />	  
+	    <link rel="stylesheet" href="css/myrep.css" />	
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:51px;" src="img/jj.png" alt="" />
+	    	<h1 class="mui-row">	    		
+				<div class="mui-col-xs-9">
+					<a class="mui-pull-left">
+						<img src="img/me.jpg" alt="" />
+					</a>
+					<div class="mui-pull-right">
+						<h4>
+							<span>伊凡</span>(<span>男</span>)
+						</h4>
+						<p>WeChar : <span>lxl121348946</span></p>
+					</div>
+				</div>
+				<div class="mui-col-xs-3" style="text-align: right;">
+					<a href="regist.html" class="mui-btn mui-btn-outlined">个人信息</a>
+					<a href="datepage.html" class="mui-btn mui-btn-outlined">健康档案</a>
+				</div>							
+	    	</h1>
+	    	<div class="delive-line"></div>
+		</header>
+		<!--底部导航-->
+		 <nav id="footer" class="mui-bar mui-bar-tab">
+	        <a class="mui-tab-item" href="index.html">
+	            <span class="mui-icon-extra mui-icon-extra-heart-filled"></span>
+	            <span class="mui-tab-label">首页</span>
+	        </a>
+	        <a class="mui-tab-item" href="branch.html">
+	            <span class="mui-icon-extra mui-icon-extra-class"></span>
+	            <span class="mui-tab-label">分院</span>
+	        </a>
+	        <a class="mui-tab-item mui-active">
+	            <span class="mui-icon mui-icon-contact"></span>
+	            <span class="mui-tab-label">我的</span>
+	        </a>
+	    </nav>
+		<!--正文-->		
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--这里放置真实显示的DOM内容-->
+				<div class="mui-content">
+			    	<div class="mui-content-padded">
+			    		<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+			    			<a class="mui-control-item my-btnkey mui-active" href="#myreport">我的报告</a>
+			    			<a class="mui-control-item my-btnkey" href="#mydate">我的预约</a>			    			
+			    		</div>
+			    		<div id="segmentedControlContents">
+			    			<div id="myreport" class="mui-control-content mui-active">
+			    				<ul class="mui-table-view">
+			    					<li class="mui-table-view-cell mui-media">
+			    						<a href="javascript:;">
+											<img class="mui-media-object mui-pull-left" src="img/rep.png">
+											<div class="mui-media-body">
+												<div class="mui-pull-left">
+													<p>伊凡</p>
+													<p class="mui-ellipsis">2017年3月20日</p>
+													<p>温州体检中心</p>
+												</div>
+												<div class="mui-pull-right">
+													<p type='button' class="mui-btn mui-btn-outlined">查看报告</p>
+												</div>
+											</div>
+										</a>
+			    					</li>
+			    					<li class="mui-table-view-cell mui-media">
+			    						<a href="javascript:;">
+											<img class="mui-media-object mui-pull-left" src="img/rep.png">
+											<div class="mui-media-body">
+												<div class="mui-pull-left">
+													<p>伊凡</p>
+													<p class="mui-ellipsis">2017年3月20日</p>
+													<p>温州体检中心</p>
+												</div>
+												<div class="mui-pull-right">
+													<p>未出报告</p>
+												</div>
+											</div>
+										</a>
+			    					</li>
+			    					<li class="mui-table-view-cell mui-media">
+			    						<a href="javascript:;">
+											<img class="mui-media-object mui-pull-left" src="img/rep.png">
+											<div class="mui-media-body">
+												<div class="mui-pull-left">
+													<p>伊凡</p>
+													<p class="mui-ellipsis">2017年3月20日</p>
+													<p>温州体检中心</p>
+												</div>
+												<div class="mui-pull-right">
+													<p type='button' class="mui-btn mui-btn-outlined">查看报告</p>
+												</div>
+											</div>
+										</a>
+			    					</li>
+			    				</ul>
+			    			</div>
+			    			<div id="mydate" class="mui-control-content">
+			    				<ul class="mui-table-view">
+			    					<li class="mui-table-view-cell mui-media">
+			    						<div class="mui-media-body mui-row">
+											<div class="mui-pull-left mui-col-xs-6">
+												<p><span>杭州韩诺体检中心</span></p>
+												<p>体检日期:<span>2017-3-20</span></p>
+												<p>预约日期:<span>2017-3-20</span></p>
+											</div>
+											<div class="mui-pull-right mui-col-xs-6">
+												<p><span>伊凡</span></p>
+												<p>
+													<button class="mui-btn mui-btn-success">
+														<span class="mui-icon mui-icon-phone"></span>
+													</button>
+													<button class="changedate mui-btn mui-btn-primary">改约</button>
+													<button class="deldate mui-btn mui-btn-primary">取消</button>
+												</p>
+											</div>
+										</div>
+			    					</li>
+			    					<li class="mui-table-view-cell">
+			    						<div class="mui-media-body mui-row">
+											<div class="mui-pull-left mui-col-xs-6">
+												<p><span>杭州韩诺体检中心</span></p>
+												<p>体检日期:<span>2017-3-20</span></p>
+												<p>预约日期:<span>2017-3-20</span></p>
+											</div>
+											<div class="mui-pull-right mui-col-xs-6">
+												<p><span>伊凡</span></p>
+												<p>
+													<button class="mui-btn mui-btn-success">
+														<span class="mui-icon mui-icon-phone"></span>
+													</button>
+													<button class="mui-btn mui-btn-warning myjudge">待评价</button>
+												</p>
+											</div>
+										</div>
+			    					</li>
+			    					<li class="mui-table-view-cell">
+			    						<div class="mui-media-body mui-row">
+											<div class="mui-pull-left mui-col-xs-6">
+												<p><span>杭州韩诺体检中心</span></p>
+												<p>体检日期:<span>2017-12-20</span></p>
+												<p>预约日期:<span>2017-12-20</span></p>
+											</div>
+											<div class="mui-pull-right mui-col-xs-6">
+												<p><span>伊凡</span></p>
+												<p>
+													<button class="mui-btn mui-btn-success">
+														<span class="mui-icon mui-icon-phone"></span>
+													</button>
+													<span class="mydel">已取消</span>
+												</p>
+											</div>
+										</div>
+			    					</li>
+			    					<li class="mui-table-view-cell">
+			    						<div class="mui-media-body mui-row">
+											<div class="mui-pull-left mui-col-xs-6">
+												<p><span>杭州韩诺体检中心</span></p>
+												<p>体检日期:<span>2017-12-20</span></p>
+												<p>预约日期:<span>2017-12-20</span></p>
+											</div>
+											<div class="mui-pull-right mui-col-xs-6">
+												<p><span>伊凡</span></p>
+												<p>
+													<button class="mui-btn mui-btn-success">
+														<span class="mui-icon mui-icon-phone"></span>
+													</button>
+													<span class="myfinish">已评价</span>
+												</p>
+											</div>
+										</div>
+			    					</li>
+			    					<li class="mui-table-view-cell">
+			    						<div class="mui-media-body mui-row">
+											<div class="mui-pull-left mui-col-xs-6">
+												<p><span>杭州韩诺体检中心</span></p>
+												<p>体检日期:<span>2017-12-20</span></p>
+												<p>预约日期:<span>2017-12-20</span></p>
+											</div>
+											<div class="mui-pull-right mui-col-xs-6">
+												<p><span>伊凡</span></p>
+												<p>
+													<button class="mui-btn mui-btn-success">
+														<span class="mui-icon mui-icon-phone"></span>
+													</button>
+													<span class="mying">体检中</span>
+												</p>
+											</div>
+										</div>
+			    					</li>
+			    				</ul>
+			    			</div>
+			    		</div>
+			    	</div>
+				</div>   
+			</div>
+	</div>
+
+		<!--页面主结构结束-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>		
+	    <script type="text/javascript" src="js/bear-token.js"></script>		
+		<script type="text/javascript">
+		var DEPART=0;
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    	});
+            
+			
+			
+			$(function(){
+				//页面数据加载			
+				access();
+				$.getJSON('http://www.elepick.com/api/appointments',{},function(data){
+					
+				});
+				var snum=60;
+				var time1=null;
+				
+				
+				//查看报告点击出现弹框
+				$("#myreport>ul>li").on('tap','.mui-pull-right>.mui-btn',function(e){
+					clearInterval(time1);
+//					e.detail.gesture.preventDefault(); //修复iOS 8.x平台存在的bug，使用plus.nativeUI.prompt会造成输入法闪一下又没了
+					var btnArray = ['确定', '取消'];					
+					mui.prompt('短信已发送至<span>150</span>****<span>6695</span>', '', '请输入短信验证码', btnArray, null,'div');
+					$(".mui-popup-input").html('<input id="checknum" type="text" autofocus="" placeholder=""><button id="sendnum"  type="button" class="mui-btn mui-disabled">发送验证码</button>');
+					$(".mui-popup-text").css("visibility",'hidden');
+					$(".mui-popup-buttons").hide();
+					$(".mui-popup-input>button").removeAttr("disabled").removeClass('mui-disabled');
+					
+				});
+				//发送验证码点击按钮事件
+				
+				$("body").on('tap','#sendnum',function(e){
+					if($(this).attr('disabled')=="disabled"){
+						return false;
+					}else{
+						clearInterval(time1);
+						snum=60;
+						//发送验证码
+						
+						//发送成功，倒计时
+						$(".mui-popup-text").css("visibility",'visible');
+						time1=setInterval(function(){
+							$(".mui-popup-input>button").attr("disabled",'true');
+							snum--;
+							$(".mui-popup-input>button").html(snum+"s后重发");
+							if(snum<=0){
+								snum=0;
+								$(".mui-popup-text").css("visibility",'hidden');
+								$(".mui-popup-input>button").removeAttr("disabled").removeClass('mui-disabled').html("重新发送");
+								return clearInterval(time1);
+							}
+						},1000);
+					}
+					
+				});
+				//验证码输入匹配函数
+				$("body").on('input','#checknum',function(){
+					//验证码匹配
+					if((snum>0)&&(snum<60)){
+						if($(this).val()=='1111'){
+							mui.toast("加载检查报告中");
+							window.location.href='report.html';
+						}
+					}
+					
+				});
+				$("div.mui-popup-backdrop.mui-active").on('tap',function(e){
+					clearInterval(time1);
+					mui.closePopups();
+				});
+				
+				var iftap=true;//重复提交判断
+				mui('body').on('tap','a',function(e){
+					if(($(this).parent('nav').html()==$("#footer").html())||($(this).parents("header").html()==$("header").html())){
+						window.location.href=this.href;
+					}	
+				});
+				
+			});
+			
+         
+         	
+		</script>
+	</body>
+
+</html>

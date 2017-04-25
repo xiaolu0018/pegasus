@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>评价</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/icons-extra.css" />
+	    <link rel="stylesheet" href="css/footer.css" />	
+	    <link rel="stylesheet" href="css/datahead.css" />  
+	    <style>
+	    	header.mui-bar-nav{
+	    		    box-shadow: 0 10px 0px #ebebeb;
+	    	}
+	    	.mui-scroll-wrapper{
+				background:#fff;
+			}
+			.mui-content{
+				padding-top:150px;
+	    		padding-bottom:50px;	
+				background-color:inherit;
+			}
+			.mui-content-padded{
+				overflow: hidden;
+			}
+			.mui-row{
+				padding-top:25px;
+				text-align: center;
+			}
+			.judge{
+				width:20%;
+				line-height:1.5;
+				border-radius:20px;	
+				background:transparent;	
+				padding:2px 12px;
+				border:none;	
+				box-sizing:content-box;	
+			}
+			.judge>.mui-icon-extra{
+				padding:3px;
+				color:#fff;
+				border-radius: 50%;
+			}
+			.judge>span:last-of-type{
+				position:relative;
+				bottom:3px;
+			}
+			.good{
+				color:#FF5105;
+				
+			}
+			.normal{
+				color:#FEB200;
+			}
+			.bad{
+				color:#989898;
+			}
+			.good>.mui-icon-extra{
+				background:#FF5105;				
+			}
+			.normal>.mui-icon-extra{
+				background:#FEB200;
+			}
+			.bad>.mui-icon-extra{
+				background:#989898;
+			}
+			/*选中样式*/
+			.mysel>.mui-icon-extra{
+				background:transparent;
+			}
+			.good.mysel{
+				background:#FF5105;
+				color:#fff;
+			}
+			
+			.normal.mysel{
+				background:#FEB200;
+				color:#fff;
+			}
+			.bad.mysel{
+				background:#989898;
+				color:#fff;
+			}	
+			.mui-row>textarea{
+				width:85%;
+				margin-bottom: 0;
+				border-color:#333;
+				font-size:14px;
+			}	
+			#advSel>div{
+				width:85%;
+				margin:0 auto;
+				text-align: left;
+			}
+			#advSel p{
+				display:inline-block;
+				min-width:36%;
+				padding:0 18px 0 0;
+				text-align: right;
+				font-size:17px;
+				color:#333;
+			}	
+			#advSel span{
+				color:#f00;
+			}
+	    </style>
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:45px;" src="img/jj.png" alt="" />
+	    	<h1>当前位置：评价<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<p>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
+		    </p>
+		</header>
+		<!--底部导航-->
+		<nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>提交</a>
+	    </nav>
+		<!--正文-->		
+		<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<!--这里放置真实显示的DOM内容-->
+			<div class="mui-content">
+		    	<div class="mui-content-padded">
+		    		<div class="mui-row">
+		    			<button class='judge good active'>
+		    				<span class='mui-icon-extra mui-icon-extra-lamp'></span>
+		    				<span>好评</span>
+		    			</button>
+		    			<button class='judge normal'>
+		    				<span class='mui-icon-extra mui-icon-extra-lamp'></span>
+		    				<span>中评</span>
+		    			</button>
+		    			<button class='judge bad'>
+		    				<span class='mui-icon-extra mui-icon-extra-lamp'></span>
+		    				<span>差评</span>
+		    			</button>
+		    		</div>
+		    		<div class="mui-row">
+		    			<textarea name="advice" rows="5" placeholder="欢迎提出宝贵建议"></textarea>
+		    		</div>
+		    		<div class="mui-row" id='advSel'>
+		    			<div>
+		    				<p>医院环境: </p>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    			</div>
+		    			<div>
+		    				<p>服务态度: </p>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    			</div>
+		    			<div>
+		    				<p>早餐满意度: </p>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				
+		    			</div>
+		    		</div>
+		    	</div>
+			</div>   
+		</div>
+	</div>
+		
+		<!--页面主结构结束-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>		
+	    <script type="text/javascript" src="js/bear-token.js"></script>		
+		<script type="text/javascript">
+		var DEPART=0;
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    	});
+			//页面获取数据，加载数据
+				$(function(){
+					access();
+				})
+				
+  
+			$(function(){
+								
+				var iftap=true;//重复提交判断
+				mui('body').on('tap','a',function(e){
+	//				e.stopPropagation();
+					if(this==$("#footer>a").get(0)){
+						
+					
+					
+					}else if(this==$("h1>a").get(0)){
+						window.history.back();
+					}else if(this==$("header p>a#icon-help").get(0)){
+						mui.toast("请对这次体检进行评价");
+					}				
+				});
+				mui('body').on('tap','button.judge',function(e){						
+						$(this).addClass("mysel").siblings('.judge').removeClass('mysel');
+					
+				});
+				
+			});
+			
+         
+         	
+		</script>
+	</body>
+
+</html>

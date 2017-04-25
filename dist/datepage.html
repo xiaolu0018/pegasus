@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>完善健康资料</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/footer.css" />	
+	    <link rel="stylesheet" href="css/datahead.css" />	    
+	    <style>
+	    	header>p>a.mui-pull-right{
+	    		line-height:43px;
+	    	}
+	    	.mui-bar-nav~.mui-content {
+			    padding-top: 140px;
+			    background-color:#fff;
+			}
+	    	#segmentedControls>a{
+	    		width:100%;
+	    	}
+	    	#segmentedControlContents>div[id]{
+	    		padding:20px 10px;
+	    	}
+	    	#segmentedControlContents>div[id]>button{
+	    		min-width:82px;
+	    		border-radius:4px;
+	    		margin-bottom:10px;
+	    	}
+	    	.mybtn-checked{
+	    		color:#fff;
+	    		border-color:#42aa85;
+	    		background-color:#42aa85;
+	    	}
+	    	
+	    	#segmentedControls #item4.mui-control-item>span{
+	    		display:inline-block;
+	    		white-space: pre-wrap;
+			    max-height:100%;
+			    line-height:0.8;
+			    vertical-align:-webkit-baseline-middle;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item, .mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item.mui-active {
+			   border:none;
+			   border-left:2px solid transparent;
+			   background-color:#efeff4;
+			   height:10%;
+			   vertical-align: middle;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item span, .mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item.mui-active span {
+			  
+			   vertical-align: -webkit-baseline-middle;
+			}
+			#segmentedControls.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+    			color: #42aa85;
+    			border-color:#42aa85;
+    			background-color:#fff;
+    		}
+	    </style>
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:45px;" src="img/jj.png" alt="" />
+	    	<h1>当前位置：完善健康资料<a><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<p>
+	    		<a class="mui-pull-right" id="icon-help">点击跳过</a>		    	
+	    	</p>
+		</header>
+		<!--底部导航-->
+		<nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>下一步</a>
+	    </nav>
+		<!--正文-->		
+		<div class="mui-content mui-row mui-fullscreen">
+			<div class="mui-col-xs-3" style="height:100%;">
+				<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical" style="height:100%;">
+					<a href="#jiwan" class="mui-control-item mui-active">
+						<span>既往史</span>
+					</a>
+					<a href="#jiazu" class="mui-control-item">
+						<span>家族病史</span>
+					</a>
+					<a href="#tijian" class="mui-control-item">
+						<span>体检情况</span>
+					</a>
+					<a id="item4" href="#yichang" class="mui-control-item">
+						<span>既往体检
+							异常情况</span>
+					</a>
+					<a href="#xinli" class="mui-control-item">
+						<span>心理压力</span>
+					</a>
+					<a href="#yinshi" class="mui-control-item">
+						<span>饮食习惯</span>
+					</a>
+					<a href="#jinshi" class="mui-control-item">
+						<span>进食习惯</span>
+					</a>
+					<a href="#yinjiu" class="mui-control-item">
+						<span>饮酒习惯</span>
+					</a>
+					<a href="#xiyan" class="mui-control-item">
+						<span>吸烟史</span>
+					</a>
+					<a href="#shuimian" class="mui-control-item">
+						<span>睡眠情况</span>
+					</a>
+				</div>
+			</div>
+			<div id="segmentedControlContents" class="mui-col-xs-9">
+				<div id="jiwan" class="mui-control-content mui-active">
+					<button class="mui-btn">高血压</button>
+					<button class="mui-btn">脑卒中</button>
+					<button class="mui-btn">冠心病</button>
+					<button class="mui-btn">肺心病</button>
+					<button class="mui-btn">心肌梗塞</button>
+					<button class="mui-btn">糖尿病</button>
+					<button class="mui-btn">脂肪肝</button>
+					<button class="mui-btn">结核病</button>
+					<button class="mui-btn">胆囊疾病</button>
+					<button class="mui-btn">肾脏疾病</button>
+					<button class="mui-btn">肝炎</button>
+					<button class="mui-btn">手术</button>
+					<button class="mui-btn">外伤</button>
+					<button class="mui-btn">肿瘤</button>
+					<button class="mui-btn">妇科疾病</button>
+					<button class="mui-btn">无</button>
+					<button class="mui-btn">其他</button>
+				</div>
+				<div id="jiazu" class="mui-control-content">
+					<button class="mui-btn">未知</button>
+					<button class="mui-btn">肝硬化</button>
+					<button class="mui-btn">结核病</button>
+					<button class="mui-btn">血液病</button>
+					<button class="mui-btn">恶性肿瘤</button>
+					<button class="mui-btn">糖尿病</button>
+					<button class="mui-btn">高血压</button>
+					<button class="mui-btn">脑卒中</button>
+					<button class="mui-btn">冠心病</button>
+					<button class="mui-btn">心肌梗塞</button>
+					<button class="mui-btn">其他疾病</button>
+					<button class="mui-btn">无</button>
+				</div>
+				<div id="tijian" class="mui-control-content">
+					<button class="mui-btn">每年一次</button>
+					<button class="mui-btn">两年一次</button>
+					<button class="mui-btn">两年以上</button>
+					<button class="mui-btn">从未体检</button>
+				</div>
+				<div id="yichang" class="mui-control-content">
+					<button class="mui-btn">血压高</button>
+					<button class="mui-btn">空腹血糖高</button>
+					<button class="mui-btn">血脂异常</button>
+					<button class="mui-btn">肝囊肿</button>
+					<button class="mui-btn">胆囊结石</button>
+					<button class="mui-btn">胆囊息肉</button>
+					<button class="mui-btn">肾结石</button>
+					<button class="mui-btn">肾囊肿</button>
+					<button class="mui-btn">妇科炎症</button>
+					<button class="mui-btn">卵巢囊肿</button>
+					<button class="mui-btn">子宫肌瘤</button>
+					<button class="mui-btn">其他异常</button>
+					<button class="mui-btn">无</button>
+				</div>
+				<div id="xinli" class="mui-control-content">
+					<button class="mui-btn">大</button>
+					<button class="mui-btn">一般</button>
+					<button class="mui-btn">小</button>
+				</div>
+				<div id="yinshi" class="mui-control-content">
+					<button class="mui-btn">嗜甜</button>
+					<button class="mui-btn">嗜咸</button>
+					<button class="mui-btn">辛辣</button>
+					<button class="mui-btn">清淡</button>
+				</div>
+				<div id="jinshi" class="mui-control-content">
+					<button class="mui-btn">有早餐习惯</button>
+					<button class="mui-btn">无早餐习惯</button>
+					<button class="mui-btn">有夜宵习惯</button>
+				</div>
+				<div id="yinjiu" class="mui-control-content">
+					<button class="mui-btn">不饮</button>
+					<button class="mui-btn">适量</button>
+					<button class="mui-btn">过度(高度白酒每日>一两)</button>
+				</div>
+				<div id="xiyan" class="mui-control-content">
+					<button class="mui-btn">不吸</button>
+					<button class="mui-btn">偶尔吸</button>
+					<button class="mui-btn">经常吸</button>
+					<button class="mui-btn">已戒烟</button>
+					<button class="mui-btn">被动吸</button>
+				</div>
+				<div id="shuimian" class="mui-control-content">
+					<button class="mui-btn">很差</button>
+					<button class="mui-btn">差</button>
+					<button class="mui-btn">一般</button>
+					<button class="mui-btn">良好</button>
+				</div>
+			</div>
+
+		</div>
+
+		<!--页面主结构结束-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>
+	    <script type="text/javascript" src="js/bear-token.js"></script>	    		
+		<script type="text/javascript">		
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    	});
+        
+		//数据
+		var medicdata={
+			"jiwan":[],
+			"jiazu":[],
+			"tijian":[],
+			"yichang":[],
+			"xinli":[],
+			"yinshi":[],
+			"jinshi":[],
+			"xiyan":[],
+			"yinjiu":[],
+			"shuimian":[]
+		}
+		var iftap=true;//重复提交判断
+		
+			//页面加载数据
+			
+			
+		$(function(){	
+			access();
+    		//get页面数据并渲染,if有的话
+    		$.getJSON("http://www.elepick.com/api/user/label",{},function(data){
+    			data=eval(data);
+				if(data==null){
+					//数据为空
+				}else{
+					$.each(data,function(i,n){
+						var len=n.length;
+						for(var g=0;g<len;g++){
+							$("#"+i).children("button").eq(n[g]).addClass("mybtn-checked");
+						}
+					});
+				};			
+			});
+			mui('body').on('tap','a',function(e){
+				if(this==$("#footer>a").get(0)){
+					//ajax
+					iftap=false;
+					$.ajax({
+						type:"post",
+						url:"http://www.elepick.com/api/user/label",
+						data:JSON.stringify(medicdata),
+						success:function(data, textStatus, xhr){
+//									mui.alert("成功状态码===="+xhr.status);
+//									console.log("数据==="+data);
+							iftap=true;
+							if(xhr.status=="200"){
+								window.location.href="package.html";
+							}else{
+								mui.alert(textStatus+"-"+xhr.status);
+							}
+							
+						},
+						error:function(xhr, textStatus){
+							iftap=true;
+							console.log(xhr);
+                            mui.alert(textStatus);
+						}
+
+					});
+					
+					
+				}else if(this==$("h1>a").get(0)){
+					window.history.back();
+				}else if(this==$("header p>a#icon-help").get(0)){
+					window.location.href="package.html";
+				}				
+			});
+            function changeData(id,index){
+            	var medarr=medicdata[id];
+            	if(jQuery.inArray(index,medarr)>=0){
+            		medarr.splice(jQuery.inArray(index,medarr),1);
+            	}else{
+            		medarr.push(index);
+            	}
+            	console.log(medicdata)
+            }
+         	$("#segmentedControlContents>div[id]>button").on('tap',function(){
+         		
+         		if($(this).hasClass("mybtn-checked")){
+         			//取消选中
+         			$(this).removeClass("mybtn-checked");
+         			changeData($(this).parent("div[id]").attr("id"),String($(this).index()));
+         		}else{
+         			$(this).addClass("mybtn-checked");
+         			changeData($(this).parent("div[id]").attr("id"),String($(this).index()));
+         		}
+         	});
+	        
+			
+			
+			
+			
+			
+			
+		});
+			
+
+		</script>
+	</body>
+</html>

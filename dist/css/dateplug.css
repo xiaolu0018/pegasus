@@ -1,0 +1,100 @@
+
+.myDate{
+	margin:10px 0 0;
+	padding:3px 10px;
+	width:100%;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size:16px;
+	font-weight:400;
+	color:#333;
+	background:#fff;
+	text-align: center;	
+}
+.myDate>h3.dateTitle{
+	border-top:1px solid #eee;
+	border-bottom:1px solid #eee;
+	padding:6px 0;
+	overflow:hidden;
+	margin:0;
+	font-size:16px;
+}
+.myDate>h3.dateTitle>a{
+	color:#333;
+	font-weight: 400;
+	line-height:24px;
+	
+}
+.myDate>table>caption{
+	caption-side: bottom;
+	padding:8px 0;
+	overflow: hidden;
+}
+.myDate>table{
+	border:none;
+	table-layout: fixed;
+	width:100%;
+	empty-cells:show;
+	border-collapse: separate;
+	border-spacing:3px;
+}
+.myDate>table>thead>tr>td{
+	background:#fff;
+	color:#107AC1;
+	font-size:14px;
+	height:auto !important;
+	padding:1px 0 3px;
+}
+.myDate>table tr>td{
+	border:2px solid transparent;
+	background:#eee;
+	
+}
+.myDate>table>tbody>tr>.permit{
+	background:#26BCD5;
+	border-color:#transparent;
+}
+.myDate>table>tbody>tr>.full{
+	background:#A7DCE0 url(../img/full.png) bottom right no-repeat;
+	background-size:45%;
+	border-color:#transparent;
+}
+.myDate>table>tbody>tr>.reset{
+	background:#A7DCE0 url(../img/reset.png) bottom right no-repeat;
+	background-size:45%;
+	border-color:#transparent;
+}
+.myDate>table>tbody>tr>.checked{
+	background:#1C7887 url(../img/checked.png) bottom right no-repeat;
+	border-color:#ffcc00;
+	color:#fff;
+	background-size:45%;
+}
+.myDate>table>tbody>tr>.part{
+	background:#A7DCE0 url(../img/part.png) bottom right no-repeat;
+	background-size:45%;
+	border-color:#transparent;
+}
+.myDate>table>caption>div{
+	overflow:hidden;
+}
+.myDate caption>div>p{
+	float:left;
+	margin-bottom:0;
+	text-indent: 1em;
+}
+.myDate caption>div>p:first-of-type:before{
+	width:1em;
+	height:1em;
+	content:"";
+	background:#26BCD5;
+	display: inline-block;
+	vertical-align: middle;
+}
+.myDate caption>div>p:last-of-type:before{
+	width:1em;
+	height:1em;
+	content:"";
+	background:#A7DCE0;
+	display:inline-block;
+	vertical-align: middle;
+}

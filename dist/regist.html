@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>完善个人资料</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="css/mui.picker.min.css"/>
+	    <link rel="stylesheet" href="css/footer.css" />	
+	    <link rel="stylesheet" href="css/datahead.css" />	    
+	   <style>
+		   	.mui-scroll-wrapper{
+		   		background-color:#ebebeb;
+		   	}
+	   		#useID>select.mui-btn{
+	   			width:35%;
+	   			float:left;
+	   			margin:0;
+	   			background:url(img/select.png) 52px no-repeat; 
+	   			background-size:contain;
+	   			background-origin: content-box;
+	   		}
+	   		form.mui-input-group{
+	   			background: inherit;
+	   			overflow: hidden;
+	   		}
+	   		form>.mui-card-content-inner{
+	   			background:#fff;
+	   			margin-bottom:10px;
+	   		}
+	   		form h3{
+	   			font-weight:normal;
+	   			font-size:17px;
+	   		}
+	   		.mui-input-group .mui-input-row{
+	   			border:1px solid #ccc;
+	   			margin-top:8px;
+	   			border-radius:4px;
+	   		}
+	   		.address>.mui-input-row{
+	   			border:none;
+	   			border-bottom:1px solid #ccc;
+	   		}
+	   		.mui-input-group .mui-input-row:after{
+	   			height:0;
+	   		}
+	   		.mui-table-view-cell.mui-collapse{
+	   			padding:12px 15px;
+	   			margin-top:8px;
+	   		}
+	   		.mui-table-view-cell.mui-collapse.mui-active{
+	   			margin-top:8px;
+	   			background-color:inherit;
+	   		}
+	   		.mui-checkbox input[type=checkbox]{
+	   			top:-2px;
+	   		}
+			.mui-checkbox input[checked]:before {
+			    content: '\e442';
+			}
+			.mui-checkbox input[checked]:before{
+			    color: #42aa85 !important;
+			}
+	   </style>
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:45px;" src="img/jj.png" alt="" />
+	    	<h1>当前位置：完善个人资料<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<p>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
+		    </p>
+		</header>
+		<!--底部导航-->
+		<nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>下一步</a>
+	    </nav>
+		<!--正文-->		
+		<div class="mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<!--这里放置真实显示的DOM内容-->
+			<div class="mui-content">
+		       <form class="mui-input-group" name="profile">
+		       		<div class="repueried mui-card-content-inner">
+		       			<div class="mui-input-row"  id="useID">
+		       					<select name="useID" class="mui-btn mui-btn-block">
+		       						<option value="1">身份证</option>
+		       						<option value="2">军官证</option>
+		       						<option value="3">警察证</option>
+		       						<option value="4">护照</option>
+		       						<option value="5">其他</option>
+		       					</select>
+		       				
+		       				<input name="idcard" type="text" required="required" class="mui-input-clear" placeholder="请输入证件号码" style="width:65%;"/>
+		       			</div>
+		       			<div class="mui-input-row">
+		       				<label>检客姓名</label>
+		       				<input name="name" type="text" class="mui-input-clear" placeholder="请输入受检人姓名"/>
+		       			</div>
+		       			<div class="mui-input-row">
+		       				<label>手机号码</label>
+		       				<input name="mobile" pattern="" type="text" class="mui-input-clear" placeholder="请输入受检人手机"/>
+		       			</div>
+		       			<div class="mui-input-row">
+		       				<label for="male">性 &nbsp;&nbsp;别</label>
+		       				<select name="sex" id="male">
+		       					<option value="0">请选择性别</option>
+		       					<option value="male">男</option>
+		       					<option value="female">女</option>
+		       				</select>
+		       			</div>
+		       			<div class="mui-input-row">
+		       				<label>婚 &nbsp;&nbsp;否</label>
+		       				<select name="ismarry" id="ismarry">
+		       					<option value="0">请选择婚否</option>
+		       					<option value="marry">已婚</option>
+		       					<option value="noMarry">未婚</option>
+		       				</select>
+		       			</div>
+		       			<div class="mui-table-view-cell mui-collapse mui-active">
+		       				<a href="#">
+		       					<div class="mui-checkbox">
+		       						<label for="emailAddress">仅需电子报告</label>
+		       						<input type='checkbox' id='emailAddress' name='emailAddress' value="yesEmail">
+		       					</div>
+		       				</a>
+		       				<div class="address mui-card-content-inner mui-collapse-content" style="margin-bottom:0;">
+				       			<h3>收件地址</h3>
+				       			<div class="mui-input-row">
+				       					<input name="address" type="text" id='showCityPicker3' placeholder="省 市 区"/>
+				       			</div>
+				       			<div class="mui-input-row">
+				       				<input name="details" type="text" placeholder="请输入详细门牌地址"/>
+				       			</div>
+				       		</div>	
+		       			</div>
+		       		</div>
+		       		
+		       		
+		       </form>
+		    </div>
+    
+		</div>
+	</div>
+		
+		<!--页面主结构结束-->
+		<script src="js/jquery-2.1.4.min.js"></script>	  
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/bear-token.js"></script>
+		<script src="js/mui.picker.min.js"></script>
+		<script type="text/javascript" src="js/city.data-3.js"></script>		
+		<script type="text/javascript">
+		var DEPART=0;
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    	});
+    	
+    	
+ 
+            
+            
+            
+
+			
+			$(function(){ 
+				//页面文件加载         
+				access();
+				$.getJSON("http://www.elepick.com/api/user",{},function(data){
+					data=eval(data);
+					if(data==null){
+						//数据为空
+					}else{
+//							data={address:{city:"天津市",details:"hghghg",district:"和平区",province:"天津市"},
+//									details:"hghghg",
+//									emailAddress:false,
+//									idcard:"14230119831122053X",
+//									ismarry:"marry",
+//									mobile:"15035836695",
+//									name:"123",
+//									sex:"male",
+//									useID:"2"
+//								}
+						
+						formTest=[true,true,true,true,true]
+						formVal=true;
+						if(data.emailAddress){
+							$("#emailAddress").attr("checked","checked");
+							//地址栏清空
+							$("#showCityPicker3").val("");
+							$("input[name='details']").val("");
+							
+						}
+						$("#showCityPicker3").val(data.address.province+" "+data.address.city+" "+data.address.district);
+						$("input[name='details']").val(data.details);
+						$("select[name='useID']>option[value="+data.useID+"]").attr("selected","true");
+						$("input[name='idcard']").val(data.idcard);
+						$("input[name='name']").val(data.name);
+						$("input[name='mobile']").val(data.mobile);
+						$("select[name='sex']>option[value="+data.sex+"]").prop("selected",true);
+						$("select[name='ismarry']>option[value="+data.ismarry+"]").attr("selected","true");
+					}
+					
+				});
+			
+				
+				//					//级联示例
+				var adds={};
+				mui.ready(function(){
+					var cityPicker3 = new mui.PopPicker({
+							layer: 3
+						});
+						cityPicker3.setData(cityData3);
+						var showCityPickerButton = document.getElementById('showCityPicker3');
+						var cityResult3 = document.getElementById('cityResult3');
+						showCityPickerButton.addEventListener('tap', function(event) {
+							cityPicker3.show(function(items) {
+								showCityPickerButton.value=(items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+								adds={
+									"province":(items[0] || {}).text,
+									"city":(items[1] || {}).text,
+									"district":(items[2] || {}).text,
+									"details":""
+								}
+								//返回 false 可以阻止选择框的关闭
+								//return false;
+							});
+						}, false);	
+				});
+				
+				//表单验证
+				var formTest=[false,false,false,false,false];
+				var formVal=false;
+				//身份证
+				$("select[name='useID']").on('input',function(){
+					if($("input[name='idcard']").val().length<=0){
+							formTest[0]=false;
+						}
+					if($(this).val()=="1"){
+						var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/; 
+						if(reg.test($("input[name='idcard']").val())){
+							formTest[0]=true;							
+						}else{
+							formTest[0]=false;						
+						}
+					}else if($("input[name='idcard']").val().length>0){
+							formTest[0]=true;
+					}
+						
+					
+					
+				});
+				$("input[name='idcard']").on("input",function(){
+					if($(this).val().length<=0){
+						formTest[0]=false;
+					}
+					//选择填写身份证
+					if($("select[name='useID']").val()=="1"){
+						var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/; 
+						if(reg.test($(this).val())){
+							formTest[0]=true;							
+						}else{
+							formTest[0]=false;						
+						}
+					}else if($(this).val().length>0){
+						formTest[0]=true;
+					}
+				});
+				$("input[name='idcard']").on("change",function(){
+					if($(this).val().length<=0){
+						formTest[0]=false;
+						mui.alert("证件号不能为空");
+					}
+					//选择填写身份证
+					if($("select[name='useID']").val()=="1"){
+						var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/; 
+						if(reg.test($(this).val())){
+							formTest[0]=true;
+							
+						}else{
+							formTest[0]=false;
+							mui.alert("身份证格式不正确");
+						}
+					}else if($(this).val().length>0){
+						formTest[0]=true;
+					}
+					
+				});
+				//姓名
+				$("input[name='name']").on("input",function(){
+					if($(this).val().length<=0){
+						mui.alert("姓名不能为空");
+					}else{
+						formTest[1]=true;
+					}
+					
+				});
+				//手机号码
+				$("input[name='mobile']").on("input",function(){
+					if($(this).val().length<=0){}
+					else if(!(/^1[34578]\d{9}$/.test($(this).val()))){}
+					else{
+							formTest[2]=true;
+					}
+					
+				});
+				$("input[name='mobile']").on("change",function(){
+					if($(this).val().length<=0){
+						mui.alert("手机号不能为空");
+					}else if(!(/^1[34578]\d{9}$/.test($(this).val()))){
+						mui.alert("手机号不合法");
+					}else{
+							formTest[2]=true;
+					}
+					
+				});
+				//性别||婚否选择
+				$("#male").on('input',function(){
+					if($(this).val()=="0"){
+						formTest[3]=false;
+						mui.alert("请选择性别");
+					}else{
+						formTest[3]=true;
+					}
+					
+				});
+				$("#ismarry").on('input',function(){
+					if($(this).val()==0){
+						formTest[4]=false;
+						mui.alert("请选择婚否");
+					}else{
+						formTest[4]=true;
+					}
+					
+				});
+				
+				
+				//form表单序列化为对象
+				$.prototype.serializeObject = function() {  
+				    var a, o, h, i, e;  
+				    a = this.serializeArray();  
+				    o = {};  
+				    h = o.hasOwnProperty;  
+				    for (i = 0; i < (a.length); i++) {  
+				        e = a[i];  
+				        if (!h.call(o, e.name)) {  
+				            o[e.name] = e.value;  
+				        }  
+				    }  
+				    return o;  
+				};  
+				var iftap=true;//重复提交判断
+				mui('body').on('tap','a',function(e){
+					
+	//				e.stopPropagation();
+					if(this==$("#footer>a").get(0)){
+						//地址栏验证
+//						if($("#emailAddress").prop("checked")){
+//							
+//						}else{
+//							if($("#showCityPicker3").val().length<=0){
+//								mui.alert("纸质报告需要填写收件地址");
+//							}
+//							if($("#showCityPicker3").val().length<=0){
+//								mui.alert("请填写详细地址");
+//							}
+//						}
+						
+						
+						formVal=formTest[0]&&formTest[1]&&formTest[2]&&formTest[3]&&formTest[4];
+						if(formVal&&iftap){
+							iftap=false;
+							//注册合法，ajax,跳转下一步
+							//提交表单,跳转
+						var formArr=$("form").serializeObject();
+							formArr.emailAddress=$("#emailAddress").prop("checked");
+							formArr.address=adds;
+							formArr.address.details=$("input[name='details']").val();
+							$.ajax({
+								type:"post",
+								url:"http://www.elepick.com/api/user",
+								data:JSON.stringify(formArr),
+								success:function(data, textStatus, xhr){
+//									mui.alert("成功状态码===="+xhr.status);
+//									console.log("数据==="+data);
+									
+									iftap=true;
+									if(xhr.status=="200"){
+										window.location.href="datepage.html";
+									}else{
+										mui.alert(textStatus+"-"+xhr.status);
+									}
+									
+								},
+								error:function(xhr, textStatus){
+									iftap=true;
+									console.log(xhr);
+                                    mui.alert(textStatus);
+								}
+
+							});
+									
+									
+						}else{
+							//不符合要求
+							if(formTest[0]==false){
+								mui.alert("证件号为空或者不合法");
+							}else if(formTest[1]==false){
+								mui.alert("姓名不能为空");
+							}else if(formTest[2]==false){
+								mui.alert("手机号为空或者不合法");
+							}else if(formTest[3]==false){
+								mui.alert("请选择性别");
+							}else if(formTest[4]==false){
+								mui.alert("请选择婚否");
+							}
+						}
+						
+						
+					}else if(this==$("h1>a").get(0)){
+						window.history.back();
+					}else if(this==$("header p>a#icon-help").get(0)){
+						mui.toast("仅需电子报告，地址可以不填");
+					}				
+				});
+			
+			
+				//电子报告复选框
+				$(".mui-table-view-cell.mui-collapse>a").on('tap',function(){
+					if($(this).parent(".mui-collapse").hasClass("mui-active")){
+						$("#emailAddress").attr("checked","checked");
+						//地址栏清空
+						$("#showCityPicker3").val("");
+						$("input[name='details']").val("");
+					}else{
+						$("#emailAddress").removeAttr("checked");
+					}
+				});
+			});
+			
+         
+         	
+		</script>
+	</body>
+
+</html>

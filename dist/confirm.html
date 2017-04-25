@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>确认预约</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="edge" />
+	    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+	    <link rel="stylesheet" href="css/footer.css" />	
+	    <link rel="stylesheet" href="css/datahead.css" />	    
+	   <style>
+	   		.mui-bar-nav~.mui-content {
+			    padding-top: 150px;
+			    height:100%;
+			    position:absolute;
+			    top:0;
+			    left:0;
+			    right:0;
+			    bottom:0;
+			}
+	   		#confirm{
+	   			height:100%;
+	   			background:#fff;
+	   			font-size:16px;
+	   			padding-top:20px;
+	   		}
+	   		#confirm>.mui-table-view>.mui-table-view-cell{
+	   			padding:15px;
+	   		}
+	   		#confirm>ul>li>span{
+	   			color:#42aa85;
+	   		}
+	   </style>
+	</head>
+	<body>
+		<!--页面主结构开始-->
+		<!--顶部LOGO-->
+		<header class="mui-bar mui-bar-nav">   
+	    	<img style="height:45px;" src="img/jj.png" alt="" />
+	    	<h1>当前位置：确认预约<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
+	    	<p>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
+		    </p>
+		</header>
+		<!--底部导航-->
+		<nav id="footer" class="mui-bar mui-bar-tab">
+	        <a>确认</a>
+	    </nav>
+		<!--正文-->		
+		
+		<!--这里放置真实显示的DOM内容-->
+		<div class="mui-content">
+	    	<div id="confirm">
+	    		<ul class="mui-table-view">
+					 <li class="mui-table-view-cell">
+					 	预约分院: <span></span>
+					 </li>
+			         <li class="mui-table-view-cell">
+			         	预约体检日期: <span></span>
+			         </li>
+			         <li class="mui-table-view-cell">
+			         	预约套餐: <span></span>
+			         </li>
+			         <li class="mui-table-view-cell">
+			         	证&ensp;件&ensp;号: <span></span>
+			         </li>
+			         <li class="mui-table-view-cell">
+			         	姓&emsp;&emsp;名: <span></span>
+			         </li>
+			         <li class="mui-table-view-cell">
+			         	手&ensp;机&ensp;号: <span></span>
+			         </li>
+				</ul>
+	    	</div>
+		</div>
+		
+		
+		<!--页面主结构结束-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="js/mui.min.js"></script>
+	    <script type="text/javascript" src="js/bear-token.js"></script>				
+		<script type="text/javascript">
+		var DEPART=0;
+            mui.init({
+              swipeBack:false,
+            });
+            mui('.mui-scroll-wrapper').scroll({
+			 scrollY: true, //是否竖向滚动
+			 scrollX: false, //是否横向滚动
+			 startX: 0, //初始化时滚动至x
+			 startY: 0, //初始化时滚动至y
+			 indicators: true, //是否显示滚动条
+			 deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+			 bounce: true //是否启用回弹
+    	});
+            				
+			$(function(){	
+				//页面加载数据
+				access();
+				$.getJSON("http://www.elepick.com/api/appointment/"+localStorage.appointid+"/confirm",{},function(data){
+					data=eval(data);
+					if(data==null){
+						//数据为空
+					}else{
+//						data={'appointdate':"2017-4-15",'branchname':"北京第一体检中心2",'cardid':"14230119831122053X",
+//'mobile':"15035836695",'name':"123",'planname':"基础套餐"};
+						
+						$("ul.mui-table-view>li").eq(0).children('span').html(data.branchname);
+						$("ul.mui-table-view>li").eq(1).children('span').html(data.appointdate);
+						$("ul.mui-table-view>li").eq(2).children('span').html(data.planname);
+						$("ul.mui-table-view>li").eq(3).children('span').html(data.cardid);
+						$("ul.mui-table-view>li").eq(4).children('span').html(data.name);
+						$("ul.mui-table-view>li").eq(5).children('span').html(data.mobile);
+						
+					}
+				});	
+				mui('body').on('tap','a',function(e){
+					//e.stopPropagation();
+					if(this==$("#footer>a").get(0)){
+						$.ajax({
+							url:"http://www.elepick.com/api/appointment/"+localStorage.appointid+"/confirm",
+							type:"post",
+							data:JSON.stringify({
+								appointid:localStorage.appointid
+							}),
+							success:function(data,textstatus,xhr){
+								if(xhr.status=="200"){
+									mui.alert("预约成功!");
+									mui.later(function(){
+										  window.location.href="index.html";
+									},500);
+								}else{
+										mui.alert(textstatus+"-"+xhr.status);
+								}
+							},
+							error:function(xhr,textstatus){
+								console.log(xhr);
+                                mui.alert(textstatus);
+							}
+						});
+						
+					}else if(this==$("h1>a").get(0)){
+						window.history.back();
+					}else if(this==$("header p>a#icon-help").get(0)){
+						mui.toast("这是使用帮助");
+					}			
+				});								
+			});
+			
+         	
+		</script>
+	</body>
+
+</html>

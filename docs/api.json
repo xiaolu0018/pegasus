@@ -1,0 +1,1184 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "迪安开元",
+    "version": "1.0.0",
+    "title": "迪安开元微信移动",
+    "contact": {
+      "email": "panxy@bjdaos.com"
+    }
+  },
+  "host": "api.elepick.com",
+  "basePath": "/oapi",
+  "tags": [
+    {
+      "name": "Banner",
+      "description": "微信Banner"
+    },
+    {
+      "name": "User",
+      "description": "预约者信息"
+    },
+    {
+      "name": "Branch",
+      "description": "分院信息"
+    },
+    {
+      "name": "Plan",
+      "description": "套餐信息"
+    },
+    {
+      "name": "Appointment",
+      "description": "预约信息"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/banner": {
+      "put": {
+        "tags": [
+          "Banner"
+        ],
+        "summary": "创建一个Banner\n更新一个Banner",
+        "description": "创建与更新都要传pos参数",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Banner的json对象",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Banner"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/banners": {
+      "get": {
+        "tags": [
+          "Banner"
+        ],
+        "summary": "查询所有Banner列表",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Banner"
+              }
+            }
+          },
+          "400": {
+            "description": "Server into error"
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "用户信息完善",
+        "description": "用户信息完善",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "mobile",
+            "description": "用户手机号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "name",
+            "description": "用户姓名",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "idcard",
+            "description": "用户身份证号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in":"body",
+            "name":"sex",
+            "description":"性别",
+            "required":false,
+            "type":"string"
+          },
+          {
+            "in":"body",
+            "name":"ismary",
+            "description":"是否结婚",
+            "required":false,
+            "type":"string"
+          },
+          {
+            "in":"body",
+            "name":"收件地址",
+            "type": "object",
+            "$ref": "#/definitions/Address"
+          },
+          {
+            "in":"body",
+            "name":"isdianzireport",
+            "description":"",
+            "type":"bool"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/user/label":{
+      "post":{
+        "tags":[
+          "User"
+        ],
+        "summary":"用户信息",
+        "description":"用户健康信息",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "pasthistory",
+            "description": "健康信息——既往史",
+            "required": false,
+            "type": "array"
+          },
+          {
+            "in":"body",
+            "name":"familyhistory",
+            "description":"健康信息--家族病史",
+            "required":false,
+            "type":"array"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/user/":{
+      "get":{
+        "tags":[
+          "User"
+        ],
+        "summary": "查询个人信息",
+        "description": "查询个人信息",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/branch": {
+      "post": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "新增分院",
+        "description": "新增分院",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "新增分院内容",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Branch"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/branches": {
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "查询所有分院",
+        "description": "新增分院",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "新增分院内容",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Branch"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/branch/{id}": {
+      "put": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "更新分院",
+        "description": "更新分院",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "分院更新内容",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Branch"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "根据ID查询分院信息",
+        "description": "根据ID查询分院信息",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "分院ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Branch"
+            }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "删除某个分院",
+        "description": "删除某个分院",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "目标分院ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/branch/{id}/capacity": {
+      "put": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "更新分院容量（目前只支持人数）",
+        "description": "更新分院容量（目前只支持人数）",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "分院ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "更新分院容量（目前只支持人数, 未来详细到项目上）",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Capacity"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/branch/{id}/offday": {
+      "put": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "更新分院休息日",
+        "description": "更新分院休息日",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "分院ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "更新分院休息日",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OffDay"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "查询某个分院休息日",
+        "description": "查询某个分院休息日",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "分院ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/OffDay"
+            }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/plan": {
+      "put": {
+        "tags": [
+          "Plan"
+        ],
+        "summary": "创建一个plan\n更新一个plan",
+        "description": "创建一个plan\n更新一个plan",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Plan的json对象",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Plan"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/plans": {
+      "get": {
+        "tags": [
+          "Plan"
+        ],
+        "summary": "查询所有套餐",
+        "description": "查询所有套餐",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/Plan"
+            }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/appointment": {
+      "put": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "创建一个Appointment预约",
+        "description": "创建一个Appointment预约",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Plan的json对象",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Appointment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/appointment/{appointid}/confirm": {
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "得到预约确认信息",
+        "description": "得到预约确认信息，以便确认",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AppointConfirm"
+            }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "确认预约",
+        "description": "确认预约",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "appointid",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      },
+    },
+    "/api/appointment/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "取消预约",
+        "description": "取消预约",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/appointments": {
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "查询我的预约列表",
+        "description": "查询我的预约列表",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Appointment"
+              }
+            }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Banner": {
+      "type": "object",
+      "required": [
+        "pos",
+        "imageUrl",
+        "redirectUrl"
+      ],
+      "properties": {
+        "pos": {
+          "type": "integer",
+          "format": "int32",
+          "example": "1",
+          "description": "Banner位置,从0开始"
+        },
+        "imageUrl": {
+          "type": "string",
+          "example": "http://www.elepick.com/dist/Banner001.png",
+          "description": "Banner图片绝对地址"
+        },
+        "redirectUrl": {
+          "type": "string",
+          "example": "http://www.baidu.com",
+          "description": "Banner跳转的地址"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "mobile",
+        "name",
+        "idcard"
+      ],
+      "properties": {
+        "mobile": {
+          "type": "string",
+          "example": "17700000009",
+          "description": "手机"
+        },
+        "name": {
+          "type": "string",
+          "example": "name",
+          "description": "姓名"
+        },
+        "idcard":{
+          "type":"string",
+          "example":"532823198603168137",
+          "description":"身份证号"
+        },
+        "sex":{
+          "type":"string",
+          "example":"男",
+          "description":"性别"
+        },
+        "address":{
+          "type": "object",
+          "$ref": "#/definitions/Address"
+        },
+        "label":{
+          "properties": {
+            "type": "object",
+            "$ref": "#/definition/Label"
+          }
+        }
+      }
+    },
+    "Branch": {
+      "type": "object",
+      "required": [
+        "name",
+        "description",
+        "phone",
+        "address"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "北京第一体检中心",
+          "description": "分院名称"
+        },
+        "description": {
+          "type": "string",
+          "example": "北京第一体检中心成立于1980年, 位于北京市海淀区。",
+          "description": "分院描述"
+        },
+        "address": {
+          "type": "object",
+          "$ref": "#/definitions/Address"
+        },
+        "tel": {
+          "type": "string",
+          "example": "010-55555555",
+          "description": "分院联系电话"
+        },
+        "id": {
+          "type": "string",
+          "example": "056151615616",
+          "description": "分院ID"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "分院头像图片地址",
+          "example": "www.baidu.com/xxx.jpg"
+        }
+
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "province": {
+          "type": "string",
+          "description": "省份",
+          "example": "北京"
+        },
+        "city": {
+          "type": "string",
+          "description": "城市",
+          "example": "北京"
+        },
+        "district": {
+          "type": "string",
+          "description": "区",
+          "example": "海淀"
+        },
+        "details": {
+          "type": "string",
+          "description": "详细地址",
+          "example": "金源小区91#1-1-2"
+        }
+      }
+    },
+    "Capacity": {
+      "type": "object",
+      "properties": {
+        "maxExam": {
+          "type": "integer",
+          "format": "int32",
+          "example": 120,
+          "description": "该分院允许体检最大人数"
+        },
+        "maxAppoint": {
+          "type": "integer",
+          "format": "int32",
+          "example": 30,
+          "description": "该分院允许预约最大人数"
+        }
+      }
+    },
+    "OffDay": {
+      "type": "object",
+      "properties": {
+        "January": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "February": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "March": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "April": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "May": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "June": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "July": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "August": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "September": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "October": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "November": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        },
+        "December": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            1,
+            8,
+            19,
+            25
+          ]
+        }
+      }
+    },
+    "Plan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "套餐ID"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "套餐名称",
+          "example": "教师节套餐"
+        },
+        "origPrice": {
+          "type": "string",
+          "required": true,
+          "description": "套餐原价",
+          "example": "1000"
+        },
+        "discount": {
+          "type": "string",
+          "description": "套餐折扣",
+          "example": "3.5"
+        },
+        "presentPrice": {
+          "type": "string",
+          "description": "套餐现价",
+          "example": "350"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "套餐显示图片地址",
+          "example": "http://www.baidu.com/xxx.jpg"
+        },
+        "detailsUrl": {
+          "type": "string",
+          "description": "套餐链接地址",
+          "example": "http://192.168.199.199/xxxxxxx"
+        },
+        "ifShow": {
+          "type": "Boolean",
+          "description": "该套餐是否显示",
+          "example": false
+        }
+      }
+    },
+    "Appointment": {
+      "type": "object",
+      "properties": {
+        "planid": {
+          "required": false,
+          "type": "string"
+        },
+        "payInfo": {
+          "required": false,
+          "type": "string",
+          "description": "目前暂不清楚这块填写啥"
+        },
+        "branchid": {
+          "required": false,
+          "type": "string"
+        },
+        "appointdate": {
+          "required": false,
+          "type": "string",
+          "description": "预约日期，请严格按照YYYY-MM-DD",
+          "example": "2017-03-05"
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Label":{
+      "type":"object",
+      "properties": {
+        "jiwangshi": {
+          "type": "array",
+          "item":{
+            "type": "string"
+          },
+          "example": [
+            "高血压",
+            "高血脂"
+          ]
+        },
+        "家族病史":{
+          "type": "array",
+          "item":{
+            "type":"string"
+          },
+          "example": [
+            "高血压",
+            "高血脂"
+          ]
+        }
+      }
+    },
+    "AppointConfirm":{
+      "type": "object",
+      "properties": {
+        "branchname": {
+          "type": "string"
+        },
+        "appointdate": {
+          "type": "string"
+        },
+        "planname": {
+          "type": "string"
+        },
+        "name":{
+          "type": "string"
+        },
+        "cardid":{
+          "type": "string"
+        },
+        "mobile":{
+          "type": "string"
+        }
+      }
+    }
+  }
+}

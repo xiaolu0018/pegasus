@@ -1,0 +1,204 @@
+header.mui-bar{
+	height:174px;
+	box-shadow: none;
+}
+header>img{
+	padding-top:10px;
+	box-sizing: content-box;
+}
+header h1.mui-row{
+	background:url(../img/headbg.png) no-repeat;	
+	background-size:cover;
+	overflow: hidden; 
+	padding:16px 10px;  	
+	position:relative;
+	top:0;
+	left:0;	
+	font-weight:400;	
+	margin-bottom:1px; 			
+}
+.delive-line{
+	clear:both;
+	border:1px solid #d9d9d9;
+	content:"";
+	background-image: linear-gradient(#f8f6f6,#dfdfdf);
+	height:8px;	   			
+}
+header h4{
+	font-weight: 400;
+	color:#333;
+	margin:10px 0;
+}
+header p{
+	color:#333;
+}
+header h4>span:first-child{
+	padding-right:5px;
+}
+header h4>span:last-child{
+	padding:0 5px;
+}
+header a.mui-pull-left{
+	width:25%;
+}
+header .mui-pull-right{
+	width:70%;
+	padding:0 10px;
+}
+header .mui-pull-right>p,header h4{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow:hidden;
+}
+header a.mui-pull-left>img{
+	width:100%;
+	border-radius: 4px;	   			
+}
+header.mui-bar .mui-btn{
+	border-color:#333;
+	color:#333;
+	padding:1px 6px 2px;	   			
+	top:auto;
+	bottom:-10px;
+}
+header h1>.mui-col-xs-3{
+	line-height:0.9;
+	position: absolute;
+	bottom:10px;
+	right:10px;
+}
+
+/*内容区复用样式*/
+.mui-scroll-wrapper{
+	background:#fff;
+}
+.mui-content{
+	padding-top:174px;
+	padding-bottom:50px;
+	background-color:inherit;
+}
+.mui-content-padded{
+	overflow: hidden;
+}
+.mui-content #segmentedControls{
+	border:2px solid #42AA85;
+	border-radius:6px;
+	width:88%;
+	margin:8px auto 15px;
+	box-sizing: border-box;
+	display: block;
+	padding:0;
+}
+.mui-content #segmentedControls>a.my-btnkey{
+	width:50%;
+	float:left;
+	color:#fff;
+	background:#42aa85;
+	border-bottom: 0;
+}
+.mui-content #segmentedControls.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item.mui-active {
+background:#fff;
+color:#42aa85;
+border-bottom:0;
+}
+
+
+
+#myreport .mui-table-view .mui-media-object {
+    line-height: 55px;
+    max-width: 42px;
+    height: 55px;
+}
+#myreport .mui-table-view-cell{
+	line-height:1;
+}
+#myreport .mui-table-view .mui-media-body .mui-pull-left>p{
+	line-height:1.4;	
+}
+#myreport .mui-table-view .mui-media-body .mui-pull-right{
+	width:30%;
+}
+#myreport .mui-table-view .mui-media-body .mui-pull-right>p{
+	text-align: center;
+	color:#42aa85;
+	margin-top:12px;
+	border-color:#42aa85;
+	padding:6px 12px;
+}
+#myreport .mui-table-view .mui-media-body .mui-pull-right>p:active{
+	color:#fff;
+	background:#42aa85;
+}
+
+#mydate  .mui-table-view .mui-media-body .mui-pull-left>p{
+	color:#333;	
+	line-height:1.6;
+	font-size:14px;
+}
+#mydate  .mui-table-view .mui-media-body .mui-pull-left>p:first-of-type{
+	font-size:16px;
+}
+#mydate  .mui-table-view .mui-media-body .mui-pull-right>p{
+	text-align:center;
+	color:#333;
+}
+/*#mydate  .mui-table-view .mui-media-body .mui-pull-right>p:first-of-type{
+	padding:6px 0;
+}*/
+#mydate  .mui-table-view .mui-media-body .mui-pull-right>p>button.mui-btn-primary{
+	background-color:#107ac1;
+}
+#mydate  .mui-table-view .mui-media-body .mui-pull-right>p>button.mui-btn{
+	padding:0;
+	width:36px;
+	height:36px;
+	line-height:36px;
+}
+#mydate  .mui-table-view .mui-media-body .mui-pull-right>p>button.mui-btn:first-of-type{
+	font-size:33px;
+	line-height:24px;
+	padding:0;
+	width:36px;
+	height:36px;
+	margin:0;
+}
+#mydate  .mui-table-view .mui-media-body .mui-pull-right>p>span{
+	line-height:36px;
+	padding-left:1em;
+}
+.myfinish{
+	color:#42aa85 !important;
+}
+.myjudge{
+	width:auto !important;
+	padding:0 3px!important;
+}
+.mying{
+	color:darkorange !important;
+}
+.mydel{
+	color:#F00!important;
+}
+
+/*短信验证框*/
+.mui-popup-input{
+	border:1px solid #ccc;
+	padding:5px;
+}
+.mui-popup-input input{
+	width:55%;
+	margin:0;
+	border:none;
+	outline: none;
+}
+.mui-popup-input button{
+	background:#42aa85;
+	color:#fff;
+}
+.mui-popup-button{
+	color:#42aa85;
+}
+.mui-popup-title+.mui-popup-text{
+	color:#888;
+	margin: 5px 0;
+}
