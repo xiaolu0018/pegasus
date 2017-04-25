@@ -47,7 +47,7 @@ CREATE TABLE go_appoint_plan(
     name VARCHAR(30),
     avatar_img VARCHAR(50),
     detail_img VARCHAR(),
-    sales VARCHAR(30)[],
+    checkups VARCHAR(30)[],
     ifshow boolean
 );
 

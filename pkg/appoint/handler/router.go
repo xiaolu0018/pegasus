@@ -14,7 +14,7 @@ func CreateHttpRouter() http.Handler {
 	r.PUT("/api/organazation/:code/config/basic", CreateBasicHandler)
 	r.POST("/api/organazation/:code/config/special", CreateSpecialHandler)
 
-	r.POST("/api/appointment", appointment.CreateAppointmenHandler)
+	r.POST("/api/appointment", appointment.CreateAppointmentHandler)
 	r.POST("/api/appointment/:appointid/cancel", appointment.CancelAppointmentHandler)
 	r.POST("/api/appointment/:appointid/comment", appointment.CreateCommentHandler)
 	r.PUT("/api/appointment", appointment.UpdateAppointmentHandler)

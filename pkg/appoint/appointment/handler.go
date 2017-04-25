@@ -2,11 +2,10 @@ package appointment
 
 import (
 	"time"
-
-	"net/http"
 	"strconv"
-
+	"net/http"
 	"encoding/json"
+
 	"github.com/golang/glog"
 
 	"github.com/julienschmidt/httprouter"
@@ -14,17 +13,17 @@ import (
 	httputil "github.com/1851616111/util/http"
 )
 
-func CreateAppointmenHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func CreateAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	a := Appointment{}
 	if err := json.NewDecoder(r.Body).Decode(&a); err != nil {
-		glog.Errorf("orgnization.CreateHandle Decode req params err %v\n", err.Error())
+		glog.Errorf("appointment.CreateAppointmentHandler Decode req params err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
 		return
 	}
 
-	if a.Validate() != nil {
-		glog.Errorf("orgnization.CreateHandle Validate req params err %v\n", a.Validate().Error())
-		httputil.Response(rw, 400, a.Validate())
+	if err := a.Validate(); err != nil {
+		glog.Errorf("appointment.CreateAppointmentHandler Validate req params err %v\n", err)
+		httputil.Response(rw, 400, err)
 		return
 	}
 
@@ -37,6 +36,7 @@ func CreateAppointmenHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 		httputil.Response(rw, 400, err)
 		return
 	}
+
 	httputil.Response(rw, 200, "ok")
 }
 

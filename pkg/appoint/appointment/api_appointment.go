@@ -56,7 +56,7 @@ func (a *Appointment) CancelAppointment() (err error) {
 
 	//设置appointment  cancel = 'true'
 	sqlStr := ""
-	sqlStr = fmt.Sprintf(`UPDATE %s SET ifcancel = 'true',status = '取消' WHERE id = '%s'`, TABLE_Appointment, a.ID)
+	sqlStr = fmt.Sprintf(`UPDATE %s SET ifcancel = 'true',status = '取消' WHERE id = '%s'`, TABLE_APPOINTMENT, a.ID)
 	if _, err = tx.Exec(sqlStr); err != nil {
 		glog.Errorln("CancelAppointment update appointment err", err.Error())
 		return
@@ -94,7 +94,7 @@ func (a *Appointment) UpdateAppointment() (err error) {
 
 func GetAppointment(appointid string) (*Appointment, error) {
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE id = '%s'`, TABLE_Appointment, appointid)
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE id = '%s'`, TABLE_APPOINTMENT, appointid)
 
 	var id, org_code, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
 	var appointtime, operatetime int64
@@ -148,16 +148,16 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 		search = fmt.Sprintf("AND ( appointor = '%s' OR mobile = '%s' OR cardno = '%s'", search, search, search)
 	}
 	fmt.Println(",,,,", fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s`,
-		TABLE_Appointment, beginTimeSql, search, org_code, endTimeSql))
+		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql))
 	if err := db.GetDB().QueryRow(fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s`,
-		TABLE_Appointment, beginTimeSql, search, org_code, endTimeSql)).Scan(&totalnums); err != nil {
+		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql)).Scan(&totalnums); err != nil {
 		glog.Errorf("GetQueryAll: sql  err %v\n", err)
 		return nil, 0, err
 	}
 
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
 		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE  %s %s %s %s LIMIT '%d' OFFSET '%d' `,
-		TABLE_Appointment, beginTimeSql, search, org_code, endTimeSql, page_size, page_index)
+		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, page_size, page_index)
 
 	var id, orgcode, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
 	var appointtime, operatetime int64
@@ -218,7 +218,7 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	var sales []string
 	var sqlStr string
 	if a.PlanId != "" {
-		if sales, err = GetSalesByplan(tx, a.PlanId); err != nil {
+		if sales, err = GetCheckupsByplan(tx, a.PlanId); err != nil {
 			fmt.Println("planid err")
 			return
 		}
@@ -290,7 +290,7 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 		"'%s','%s','%s','%s','%s','%d','%s','%s','%d','%v','%v') ON CONFLICT (id)DO UPDATE SET appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid"+
 		`, cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,mobile=EXCLUDED.mobile,appointor=EXCLUDED.appointor,merrystatus=EXCLUDED.merrystatus,status=EXCLUDED.status,appoint_channel=EXCLUDED.appoint_channel,`+
 		`company=EXCLUDED.company,"group"=EXCLUDED."group",remark=EXCLUDED.remark,operator=EXCLUDED.operatetime=EXCLUDED.operatetime,ifsingle=EXCLUDED.ifsingle,ifcancel=EXCLUDED.ifcancel`,
-		TABLE_Appointment, a.ID, a.AppointTime, a.OrgCode, a.PlanId, a.CardType, a.CardNo, a.Mobile, a.Appointor, a.MerryStatus, a.Status,
+		TABLE_APPOINTMENT, a.ID, a.AppointTime, a.OrgCode, a.PlanId, a.CardType, a.CardNo, a.Mobile, a.Appointor, a.MerryStatus, a.Status,
 		a.Appoint_Channel, a.Company, a.Group, a.Remark, a.Operator, a.OperateTime, a.OrderID, a.CommentID, a.AppointedNum, a.IfSingle, a.IfCancel)
 	fmt.Println("sqlStr", sqlStr)
 	if _, err = tx.Exec(sqlStr); err != nil {
@@ -305,7 +305,7 @@ func deleteAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	var salecodes []string
 	var salesUsed map[string]int
 	appointdatestring := time.Unix(a.AppointTime, 0).Format("2006-01-02")
-	if salecodes, err = GetSalesByplan(tx, a.PlanId); err != nil {
+	if salecodes, err = GetCheckupsByplan(tx, a.PlanId); err != nil {
 		glog.Errorln("CancelAPpointment GetSalesByplan err", err.Error())
 		return
 	}
