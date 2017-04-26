@@ -13,37 +13,36 @@ import (
 func parseCheckupItems(data *string) []types.Checkup {
 	sl := strutil.ClipDBArray(data)
 	ret := []types.Checkup{}
-	m := map[string]*types.Checkup{}
+	var oldItemDep string
 	for _, s := range sl {
 		items := strutil.ClipDBObject(&s)
 		if len(items) == 0 {
 			continue
 		}
 
-		_, ok := m[items[0]]
-		if !ok {
-			m[items[0]] = &types.Checkup{
+		newItemDep := items[0]
+		if oldItemDep != newItemDep {
+			ret = append(ret, types.Checkup{
 				Department:     items[0],
 				Items:          []types.Item{},
 				DiagnoseResult: unquote(items[6]),
 				DocterSign:     unquote(items[7]),
 				Username:       items[8],
 				PreviousName:   items[9],
-			}
+			})
+
+			oldItemDep = newItemDep
 		}
 
-		dep := m[items[0]]
-		dep.Items = append(dep.Items, types.Item{
+		index := len(ret) -1
+
+		ret[index].Items = append(ret[index].Items, types.Item{
 			Name:            unquote(items[1]),
 			Value:           unquote(items[2]),
 			ExceptionArrow:  unquote(items[3]),
 			ReferenceDesc:   unquote(items[4]),
 			ExaminationUnit: unquote(items[5]),
 		})
-	}
-
-	for _, v := range m {
-		ret = append(ret, *v)
 	}
 
 	return ret
