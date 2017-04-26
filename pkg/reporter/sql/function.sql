@@ -1,34 +1,3 @@
-DROP TABLE IF EXISTS go_report;
-
-CREATE TABLE go_report(
-   EX_NO            VARCHAR(30),
-   EX_CHECKUPDATE   VARCHAR(30),
-   EX_IMAGE         VARCHAR(255),
-   EX_AGE           INTEGER,
-
-   P_NAME      VARCHAR(30),
-   P_SEX       INTEGER,
-   P_CARDNO    VARCHAR(30),
-   P_BIRTHDAY  VARCHAR(30),
-   P_IFMARRIED VARCHAR(5),
-   P_EMAIL     VARCHAR(30),
-   P_ADDRESS   VARCHAR(255),
-   P_CELLPHONE VARCHAR(30),
-   P_PHONE     VARCHAR(30),
-
-   NATION      VARCHAR(10),
-   ENTERPRISE  VARCHAR(255),
-
-   CONTACT_PHONE VARCHAR(30),
-   CK_DETAILS text,
-   HEALTH_SELECTED text,
-   CK_ITEMS text,
-   ANALYSE_ADVICE text,
-   FINAL_EXAM text,
-   IMAGES  text,
-   SINGLES text
-);
-
 CREATE OR REPLACE FUNCTION arrayToArrStr(arr text[]) RETURNS text AS $$
    BEGIN
     return concat('[^[', array_to_string(arr, '^,^'), ']^]');
@@ -252,36 +221,6 @@ CREATE OR REPLACE FUNCTION getSingles(exam_no varchar) RETURNS text AS $$
           SELECT array_append(tmp, arrayToObjStr(ARRAY[data.checkup_name, data.image_url])) into tmp;
         END LOOP;
         RETURN arrayToArrStr(tmp);
-    END;
-
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION genAllData(exam_no varchar) RETURNS void AS $$
-    DECLARE
-        tmp text;
-    BEGIN
-    INSERT INTO go_report(EX_NO, EX_CHECKUPDATE, EX_IMAGE, EX_AGE,
-    P_NAME, P_SEX, P_CARDNO, P_BIRTHDAY, P_IFMARRIED, P_EMAIL, P_ADDRESS, P_CELLPHONE, P_PHONE,
-    NATION, ENTERPRISE, CONTACT_PHONE)
-       SELECT
-            	EX.examination_no, EX.checkupdate, replace(EX.image_url,'\','/'), EX.age,
-            	P.name, P.sex, P.card_no, P.bithday, P.is_marry, P.email, P.address, P.cellphone, P.phone,
-            	(SELECT nation_name from nation n where n.nation_code = P.nation_code) NATION,
-            	se.enterprise_name ENTERPRISE,
-            	(SELECT T2.contact_phone FROM examination T1, print_template T2 WHERE T1.checkup_hoscode = T2.hos_code AND T1.examination_no = exam_no) CONTACT_PHONE
-       FROM examination EX
-       LEFT JOIN person P ON EX.person_code = P.person_code
-       LEFT JOIN organization o ON EX.hos_code = o.org_code
-       LEFT JOIN sale_order so ON so.order_code = EX.group_code
-       LEFT JOIN sale_enterprise se ON se.enterprise_code = so.enterprise_code
-       WHERE
-	        EX.examination_no = exam_no;
-
-    UPDATE go_report SET CK_DETAILS = getCheckupStr(exam_no), HEALTH_SELECTED = getSelectedStr(exam_no),
-    CK_ITEMS = getCheckAndItems(exam_no), ANALYSE_ADVICE = getFinalDiagoseStr(exam_no), FINAL_EXAM = genFinalExam(exam_no),
-    IMAGES = getImageStr(exam_no), SINGLES = getSingles(exam_no)
-    WHERE go_report.EX_NO = exam_no;
-
     END;
 
 $$ LANGUAGE plpgsql;
