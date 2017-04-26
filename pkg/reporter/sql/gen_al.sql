@@ -78,6 +78,7 @@ CREATE OR REPLACE FUNCTION getCheckupStr(exam_no varchar) RETURNS text AS $$
         LEFT JOIN checkup C ON ec.checkup_code = C .checkup_code
         LEFT JOIN department d ON ec.department_code = d.department_code
         WHERE T .examination_no = exam_no AND C .is_valid = 1
+        ORDER BY ec.checkup_status, ec.checkup_code, d.department_code, C.order_position
    		LOOP
             select array_append(ret,  arrayToObjStr(ARRAY[data.checkup_name, data.department_name, data.checkup_status]::text[])) into ret;
    		END LOOP;
@@ -224,6 +225,9 @@ CREATE OR REPLACE FUNCTION getImageStr(exam_no varchar) RETURNS text AS $$
             FROM examination_checkup ec
             LEFT JOIN checkup c ON ec.checkup_code = c.checkup_code
             WHERE ec.examination_no = exam_no and ec.image_url is not null
+            AND EC.checkup_code NOT IN (
+            SELECT regexp_split_to_table(key_value,',') from con_global_config where  key_name = 'not_print_code' OR  key_name = 'single_print_code'
+            )
 
         LOOP
             select array_append(tmp, arrayToObjStr(ARRAY[data.checkup_name, data.diagnose_result, data.image_url, getItemStr(exam_no, data.checkup_code)])) into tmp;
@@ -281,6 +285,3 @@ CREATE OR REPLACE FUNCTION genAllData(exam_no varchar) RETURNS void AS $$
     END;
 
 $$ LANGUAGE plpgsql;
-
---SELECT genAllData('0001160001473');
---SELECT * FROM go_report;
