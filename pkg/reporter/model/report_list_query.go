@@ -42,7 +42,7 @@ func GetPagesNumLimitPageNo(page_no int, total_row int) types.PagesNumLimitPageN
 	return *Rets
 }
 
-func GetQueryAll(page int, ex_no string, name string, sex string, status int, begintime string, endtime string, hos_code string) (*types.PageAndData, error) {
+func GetQueryAll(page int, ex_no string, name string, sex string, alreadyReport bool, begintime string, endtime string, hos_code string) (*types.PageAndData, error) {
 
 	var totalnums int
 	var rowsdate []types.PrintInfo
@@ -52,6 +52,13 @@ func GetQueryAll(page int, ex_no string, name string, sex string, status int, be
 			return nil, errors.New("EXIST SQL injection attack")
 		}
 		name = fmt.Sprintf("AND p.name LIKE '%%%s%%'", name)
+	}
+
+	var statusReport string
+	if alreadyReport {
+		statusReport = "AND e.status >= 1090 AND e.status <> 1999"
+	} else {
+		statusReport = "AND e.status < 1090"
 	}
 
 	if len(ex_no) != 0 {
@@ -74,19 +81,20 @@ func GetQueryAll(page int, ex_no string, name string, sex string, status int, be
 	}
 
 	if err := DB.QueryRow(fmt.Sprintf(`SELECT COUNT(*) FROM examination AS e, person AS p
-		WHERE e.person_code = p.person_code AND e.hos_code = '%s' AND status= %d
-		%s %s %s %s %s`,
-		hos_code, status, sex, name, ex_no, begintime, endtime)).Scan(&totalnums); err != nil {
+		WHERE e.person_code = p.person_code AND e.hos_code = '%s'
+		%s %s %s %s %s %s`,
+		hos_code, statusReport, sex, name, ex_no, begintime, endtime)).Scan(&totalnums); err != nil {
 		glog.Errorf("GetQueryAll: sql return err %v\n", err)
 		return nil, err
 	}
 
 	iRet := GetPagesNumLimitPageNo(page, totalnums)
-	rows, err := DB.Query(fmt.Sprintf(`SELECT e.examination_no, e.is_group, e.enterprise_name, e.checkupdate, p.name, p.sex, p.card_no, e.status
-		FROM examination AS e , person AS p WHERE e.person_code = p.person_code and e.hos_code= '%s'
-		%s AND status = %d  %s %s %s %s
+	rows, err := DB.Query(fmt.Sprintf(`SELECT e.examination_no, e.is_group, e.enterprise_name, e.checkupdate, p.name, p.sex, p.card_no, es.examination_status_value
+		FROM examination AS e , person AS p, examination_status AS es
+		WHERE e.person_code = p.person_code and e.status = CAST(es.examination_status_code AS INTEGER) and e.hos_code= '%s'
+		%s %s %s %s %s %s
 		order by e.checkupdate desc
-		limit '%d' offset '%d'`, hos_code, sex, status, name, ex_no, begintime, endtime, iRet.Limit, (iRet.Page_No-1)*20))
+		limit '%d' offset '%d'`, hos_code, sex, statusReport, name, ex_no, begintime, endtime, iRet.Limit, (iRet.Page_No-1)*20))
 	if err != nil {
 		glog.Errorf("GetQueryAll: sql return err %v\n", err)
 		return nil, err

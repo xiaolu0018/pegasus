@@ -59,7 +59,7 @@ func startCmd() *cobra.Command {
 		},
 
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := user.IDCache.Init(); err != nil {
+			if err := user.Init(); err != nil {
 				glog.Errorf("wc init user cache err %v\n", err)
 				os.Exit(1)
 			}

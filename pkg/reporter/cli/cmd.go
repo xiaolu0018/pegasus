@@ -7,7 +7,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/safe"
+	//"192.168.199.199/bjdaos/pegasus/pkg/common/util/safe"
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/handler"
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/model"
@@ -40,10 +40,10 @@ func startCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			if err := safe.LoadPubKey(publicKeyPath); err != nil {
-				glog.Errorf("reporter init rsa err %v\n", err)
-				os.Exit(1)
-			}
+			//if err := safe.LoadPubKey(publicKeyPath); err != nil {
+			//	glog.Errorf("reporter init rsa err %v\n", err)
+			//	os.Exit(1)
+			//}
 		},
 
 		Run: func(cmd *cobra.Command, args []string) {
