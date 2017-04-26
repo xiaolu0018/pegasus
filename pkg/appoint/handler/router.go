@@ -20,5 +20,7 @@ func CreateHttpRouter() http.Handler {
 	r.PUT("/api/appointment", appointment.UpdateAppointmentHandler)
 	r.GET("/api/appointment/:appointid", appointment.GetAppointmentHandler)
 	r.GET("/api/appointmenlist", appointment.ListAppointmentsHandler)
+
+	r.GET("/api/pinto/checkups", ListCheckupHandler)
 	return r
 }
