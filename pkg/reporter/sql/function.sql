@@ -1,44 +1,3 @@
-package db
-
-import (
-	"database/sql"
-	_ "github.com/lib/pq"
-
-	"fmt"
-)
-
-//"postgres://postgres:postgresql2016@192.168.199.216:5432/pinto?sslmode=disable"
-var readDB *sql.DB
-var err error
-
-func Init(user, passwd, ip, port, db string) error {
-	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		user, passwd, ip, port, db)
-
-	readDB, err = sql.Open("postgres", addr)
-	return err
-}
-
-func GetDB() *sql.DB {
-	return readDB
-}
-
-func InitFunction(user, passwd, ip, port, db string) error {
-	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		user, passwd, ip, port, db)
-
-	writeDB, err := sql.Open("postgres", addr)
-	if err != nil {
-		return err
-	}
-	defer writeDB.Close()
-
-	_, err = writeDB.Exec(initCmd)
-	return err
-}
-
-// **these sql functions need sync with sql/function.sql**
-var initCmd = `
 CREATE OR REPLACE FUNCTION arrayToArrStr(arr text[]) RETURNS text AS $$
    BEGIN
     return concat('[^[', array_to_string(arr, '^,^'), ']^]');
@@ -265,4 +224,4 @@ CREATE OR REPLACE FUNCTION getSingles(exam_no varchar) RETURNS text AS $$
         RETURN arrayToArrStr(tmp);
     END;
 
-$$ LANGUAGE plpgsql;`
+$$ LANGUAGE plpgsql;

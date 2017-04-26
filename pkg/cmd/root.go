@@ -16,6 +16,7 @@ var RootCmd = &cobra.Command{
 		pegasus wc
 		pegasus rpt
 		pegasus app
+		pegasus pinto
 	`,
 }
 

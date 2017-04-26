@@ -25,12 +25,18 @@ func NewReporterCmd(name string) *cobra.Command {
 
 func startCmd() *cobra.Command {
 	var addr string
+	var w_user, w_passwd, w_ip, w_port, w_dbname string
 	var user, passwd, ip, port, dbname string
-	var publicKeyPath string
+	//var publicKeyPath string
 	start := &cobra.Command{
 		Use:   "start",
 		Short: "Start reporter system service",
 		PreRun: func(cmd *cobra.Command, args []string) {
+			if err := db.InitFunction(w_user, w_passwd, w_ip, w_port, w_dbname); err != nil {
+				glog.Errorf("reporter init db err %v\n", err)
+				os.Exit(1)
+			}
+
 			if err := db.Init(user, passwd, ip, port, dbname); err != nil {
 				glog.Errorf("reporter init db err %v\n", err)
 				os.Exit(1)
@@ -65,11 +71,18 @@ func startCmd() *cobra.Command {
 
 	flags := start.Flags()
 	flags.StringVar(&addr, "listen", ":9100", "TCP network address to listen on, to serve incomming http request.")
-	flags.StringVar(&user, "db_user", "postgres", "Database user for the Application.")
-	flags.StringVar(&passwd, "db_passwd", "postgres190@", "Database passwd for the Application.")
-	flags.StringVar(&ip, "db_ip", "10.1.0.190", "Database ip for the Application.")
-	flags.StringVar(&port, "db_port", "5432", "Database port for the Application.")
-	flags.StringVar(&dbname, "db_name", "pinto", "Database name for the Application.")
-	flags.StringVar(&publicKeyPath, "public_key", "public.pem", "Transport layer data encoding")
+	flags.StringVar(&user, "r_db_user", "postgres", "Database user for the Application.")
+	flags.StringVar(&passwd, "r_db_passwd", "postgres190@", "Database passwd for the Application.")
+	flags.StringVar(&ip, "r_db_ip", "10.1.0.190", "Database ip for the Application.")
+	flags.StringVar(&port, "r_db_port", "5432", "Database port for the Application.")
+	flags.StringVar(&dbname, "r_db_name", "pinto", "Database name for the Application.")
+	//flags.StringVar(&publicKeyPath, "public_key", "public.pem", "Transport layer data encoding")
+
+	flags.StringVar(&w_user, "w_db_user", "postgres", "Database user for the Application.")
+	flags.StringVar(&w_passwd, "w_db_passwd", "postgres190@", "Database passwd for the Application.")
+	flags.StringVar(&w_ip, "w_db_ip", "10.1.0.190", "Database ip for the Application.")
+	flags.StringVar(&w_port, "w_db_port", "5432", "Database port for the Application.")
+	flags.StringVar(&w_dbname, "w_db_name", "pinto", "Database name for the Application.")
+
 	return start
 }

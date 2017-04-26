@@ -11,7 +11,7 @@ import (
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/handler"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/model"
 
-	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/sync"
+	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/pinto"
 )
 
 func NewAppointManagerCmd(name string) *cobra.Command {
@@ -27,7 +27,7 @@ func NewAppointManagerCmd(name string) *cobra.Command {
 func startCmd() *cobra.Command {
 	var addr string
 	var user, passwd, ip, port, dbname string
-	var syncController org.SyncController
+	var syncController org.Config
 	start := &cobra.Command{
 		Use:   "start",
 		Short: "Start appointment system service",

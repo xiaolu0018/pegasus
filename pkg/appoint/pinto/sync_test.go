@@ -1,11 +1,11 @@
-package organization
+package pinto
 
 import (
 	"testing"
 )
 
 func TestSyncController_SyncOrganizations(t *testing.T) {
-	c := SyncController{
+	c := Config{
 		User:     "postgres",
 		Password: "postgres190@",
 		IP:       "10.1.0.190",
@@ -13,7 +13,7 @@ func TestSyncController_SyncOrganizations(t *testing.T) {
 		Database: "pinto",
 	}
 
-	if err := c.syncOrganizations(); err != nil {
+	if err := c.sync(); err != nil {
 		t.Fatal(err)
 	}
 }
