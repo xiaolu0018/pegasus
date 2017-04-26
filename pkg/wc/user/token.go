@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"github.com/golang/glog"
 )
 
 var ErrUnexpectedUser error = errors.New("wrong user format")
@@ -56,5 +57,11 @@ func getUserByOpenID(openID string) (*User, error) {
 }
 
 func initUser(bsonID, openID string) error {
-	return db.User().Insert(bson.M{"_id": bson.ObjectIdHex(bsonID), "openid": openID})
+	//return db.User().Insert(bson.M{"_id": bson.ObjectIdHex(bsonID), "openid": openID})
+	u := User{
+		ID:     bson.ObjectIdHex(bsonID),
+		OpenID: openID,
+	}
+	glog.Errorln("initUser___", u.Upsert())
+	return u.Upsert()
 }

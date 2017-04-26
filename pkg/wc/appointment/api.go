@@ -11,11 +11,17 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint"
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/branch"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/capacitymanage"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/plan"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
+	"bytes"
+	"encoding/json"
 	"github.com/golang/glog"
+	"io/ioutil"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -114,4 +120,96 @@ func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {
 	au.Mobile = u.Mobile
 	au.CardID = u.CardNo
 	return &au, nil
+}
+
+func SendToAppoint(a appointment.Appointment) *http.Response {
+	client := &http.Client{nil, nil, nil, time.Second * 10}
+	var req *http.Request
+	var rsp *http.Response
+
+	var err error
+	var buf bytes.Buffer
+	a.OrgCode = "000100102"
+	a.PlanId = "2"
+	json.NewEncoder(&buf).Encode(a)
+	if req, err = http.NewRequest("POST", "http://192.168.199.198:9200/api/appointment", &buf); err != nil {
+		glog.Errorln("newrequest err", err)
+		return nil
+	}
+
+	if rsp, err = client.Do(req); err != nil {
+		glog.Errorln("newrequest err", err)
+		return nil
+	}
+	defer rsp.Body.Close()
+	return rsp
+}
+
+func Get_Appoint_Appointment(u user.User, a Appointment) (*appointment.Appointment, error) {
+	var appointtimeint int64
+	if appointtime, err := time.Parse("2006-01-02", a.AppointDate); err != nil {
+		return nil, err
+	} else {
+		appointtimeint = appointtime.Unix()
+	}
+	address := fmt.Sprintf("%s-%s-%s-%s", u.Address.Province, u.Address.City, u.Address.District, u.Address.Details)
+	a_a := appointment.Appointment{
+		ID:          a.ID.Hex(),
+		PlanId:      a.PlanID.Hex(),
+		AppointTime: appointtimeint,
+		OrgCode:     a.BranchID.Hex(),
+
+		CardNo:          u.CardNo,
+		CardType:        u.CardType,
+		Mobile:          u.Mobile,
+		Appointor:       u.Name,
+		Appointorid:     u.ID.Hex(),
+		Address:         address,
+		MerryStatus:     u.IsMarry,
+		Status:          "预约",
+		Appoint_Channel: "微信",
+		Company:         "",
+		Group:           "",
+		Remark:          "",
+		Operator:        "微信用户",
+		OperateTime:     time.Now().Unix(),
+		OrderID:         "",
+		CommentID:       "",
+		AppointedNum:    0,
+		IfSingle:        true,
+		IfCancel:        false,
+	}
+	return &a_a, nil
+}
+
+func GetListAppointmentFromApp(userid string) *http.Response {
+	client := &http.Client{nil, nil, nil, time.Second * 10}
+	var req *http.Request
+	var rsp *http.Response
+
+	var err error
+	if req, err = http.NewRequest("GET", "http://192.168.199.198:9200/api/appointmenlist", nil); err != nil {
+		glog.Errorln("newrequest err", err)
+		return nil
+	}
+	req.SetBasicAuth(userid, appoint.PASSWORD)
+	if rsp, err = client.Do(req); err != nil {
+		glog.Errorln("newrequest err", err)
+		return nil
+	}
+	defer rsp.Body.Close()
+	result := []map[string]interface{}{}
+	buf, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		fmt.Println("err", err.Error())
+		return nil
+	}
+
+	fmt.Println("bufff", string(buf))
+	//if err := json.NewDecoder(buf).Decode(&result); err != nil {
+	//	fmt.Println("new err", err)
+	//}
+
+	fmt.Println("res", result, rsp.StatusCode)
+	return rsp
 }

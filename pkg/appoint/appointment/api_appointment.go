@@ -131,7 +131,7 @@ func GetAppointment(appointid string) (*Appointment, error) {
 	return &a, nil
 }
 
-func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org_code, search string) ([]Appointment, int, error) {
+func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org_code, search, userid string) ([]Appointment, int, error) {
 	var totalnums int
 	apps := make([]Appointment, 0, page_size)
 	if len(org_code) != 0 {
@@ -147,19 +147,23 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 	if len(search) != 0 {
 		search = fmt.Sprintf("AND ( appointor = '%s' OR mobile = '%s' OR cardno = '%s'", search, search, search)
 	}
-	fmt.Println(",,,,", fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s`,
-		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql))
-	if err := db.GetDB().QueryRow(fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s`,
-		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql)).Scan(&totalnums); err != nil {
+
+	if userid != "" {
+		userid = fmt.Sprintf("AND appointorid = '%s'", userid)
+	}
+	fmt.Println(",,,,", fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s %s`,
+		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid))
+	if err := db.GetDB().QueryRow(fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s %s`,
+		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid)).Scan(&totalnums); err != nil {
 		glog.Errorf("GetQueryAll: sql  err %v\n", err)
 		return nil, 0, err
 	}
+	fmt.Println("total,,,,", totalnums)
+	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,appointorid,merrystatus,status,appoint_channel,"+
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE  %s %s %s %s %s LIMIT '%d' OFFSET '%d' `,
+		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid, page_size, page_index)
 
-	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE  %s %s %s %s LIMIT '%d' OFFSET '%d' `,
-		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, page_size, page_index)
-
-	var id, orgcode, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
+	var id, orgcode, planid, cardtype, cardno, mobile, appointor, appointorid, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
 	var appointtime, operatetime int64
 	var appointednum int
 	var ifsingle, ifcancel bool
@@ -173,7 +177,7 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 	defer rows.Close()
 
 	for rows.Next() {
-		if err = rows.Scan(&id, &appointtime, &orgcode, &planid, &cardtype, &cardno, &mobile, &appointor, &merrystatus, &status, &appoint_channel,
+		if err = rows.Scan(&id, &appointtime, &orgcode, &planid, &cardtype, &cardno, &mobile, &appointor, &appointorid, &merrystatus, &status, &appoint_channel,
 			&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel); err != nil {
 			glog.Errorln("appointment.GetAppointmentList  rows.Scan,err " + err.Error())
 			return nil, 0, err
@@ -187,6 +191,7 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 			CardNo:          cardno,
 			Mobile:          mobile,
 			Appointor:       appointor,
+			Appointorid:     appointorid,
 			MerryStatus:     merrystatus,
 			Status:          status,
 			Appoint_Channel: appoint_channel,
@@ -219,19 +224,19 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	var sqlStr string
 	if a.PlanId != "" {
 		if sales, err = GetCheckupsByplan(tx, a.PlanId); err != nil {
-			fmt.Println("planid err")
+			glog.Errorf("planid err", err.Error())
 			return
 		}
 	}
 	date := time.Unix(a.AppointTime, 0).Format("2006-01-02")
 	if len(sales) > 0 {
 		if itemLimits, err = GetLimit(tx, a.OrgCode, sales); err != nil {
-			fmt.Println("GetLimit err")
+			glog.Errorf("GetLimit err", err.Error())
 			return
 		}
 
 		if itemused, err = GetSalesUsed(tx, a.OrgCode, date, sales); err != nil {
-			fmt.Println("GetItemAppointedNum err")
+			glog.Errorf("GetItemAppointedNum err ", err.Error())
 			return
 		}
 
@@ -248,7 +253,7 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 			sqlStr = SetSaleAppointed_SQL(used+1, a.OrgCode, date, item)
 			fmt.Println("sqlstr", sqlStr, used+1)
 			if _, err = tx.Exec(sqlStr); err != nil {
-				fmt.Println("SetItemAppointed_SQL")
+				glog.Errorf("SetItemAppointed_SQL", err.Error())
 				return
 			}
 		}
@@ -258,12 +263,12 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	var capacity, warnnum, capacityUsed int
 	var avoidNumbers []int64
 	if capacity, warnnum, avoidNumbers, err = GetOrg_Config(tx, a.OrgCode); err != nil {
-		fmt.Println("GetOrg_Config___")
+		glog.Errorf("GetOrg_Config___", err.Error())
 		return
 	}
 
 	if capacityUsed, err = GetCapacityUsed(tx, a.OrgCode, date); err != nil {
-		fmt.Println("GetCapacityused___", capacityUsed)
+		glog.Errorf("GetCapacityused___", capacityUsed)
 		return
 	}
 	fmt.Println("GetCapacit", capacityUsed)
@@ -279,22 +284,23 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	//更新该分院的总容量
 	sqlStr = SetCapacityUsed_SQL(a.OrgCode, date, capacityUsed+1)
 	if _, err = tx.Exec(sqlStr); err != nil {
+		glog.Errorf("SetCapacityUsed_SQL___", err.Error())
 		return
 	}
 
 	a.AppointedNum = getAppointedNum((capacityUsed + 1), avoidNumbers)
 	//保存预约
-	sqlStr = fmt.Sprintf("INSERT INTO %s(id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
+	sqlStr = fmt.Sprintf("INSERT INTO %s(id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,appointorid,merrystatus,status,appoint_channel,"+
 		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel) `+
-		"VALUES ('%s','%d','%s','%s','%s','%s','%s','%s','%s','%s',"+
+		"VALUES ('%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s',"+
 		"'%s','%s','%s','%s','%s','%d','%s','%s','%d','%v','%v') ON CONFLICT (id)DO UPDATE SET appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid"+
 		`, cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,mobile=EXCLUDED.mobile,appointor=EXCLUDED.appointor,merrystatus=EXCLUDED.merrystatus,status=EXCLUDED.status,appoint_channel=EXCLUDED.appoint_channel,`+
 		`company=EXCLUDED.company,"group"=EXCLUDED."group",remark=EXCLUDED.remark,operator=EXCLUDED.operatetime=EXCLUDED.operatetime,ifsingle=EXCLUDED.ifsingle,ifcancel=EXCLUDED.ifcancel`,
-		TABLE_APPOINTMENT, a.ID, a.AppointTime, a.OrgCode, a.PlanId, a.CardType, a.CardNo, a.Mobile, a.Appointor, a.MerryStatus, a.Status,
+		TABLE_APPOINTMENT, a.ID, a.AppointTime, a.OrgCode, a.PlanId, a.CardType, a.CardNo, a.Mobile, a.Appointor, a.Appointorid, a.MerryStatus, a.Status,
 		a.Appoint_Channel, a.Company, a.Group, a.Remark, a.Operator, a.OperateTime, a.OrderID, a.CommentID, a.AppointedNum, a.IfSingle, a.IfCancel)
 	fmt.Println("sqlStr", sqlStr)
 	if _, err = tx.Exec(sqlStr); err != nil {
-		fmt.Println("TABLE_AppointmentsqlStr", sqlStr)
+		glog.Errorf("TABLE_AppointmentsqlStr", err.Error())
 		return
 	}
 	return

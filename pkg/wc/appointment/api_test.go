@@ -13,3 +13,8 @@ func TestGet(t *testing.T) {
 
 	fmt.Println("zheli", ap, err)
 }
+
+
+func TestGetListAppointmentFromApp(t *testing.T){
+	GetListAppointmentFromApp("590002bbc1962674c1f5e0ad")
+}

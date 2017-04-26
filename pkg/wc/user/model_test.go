@@ -18,9 +18,11 @@ func TestUser_UpdateLabel(t *testing.T) {
 }
 
 func TestGetUPSERTSQLStrByStruct(t *testing.T) {
-	h := Health{}
-	stringss := GetUPSERTSQLStrByStruct(h)
-	fmt.Println("strgingsss", stringss)
+	//h := Health{}
+	//stringss := GetUPSERTSQLStrByStruct(h)
+	us := User{}
+	st := GetSelectString(us)
+	fmt.Println("strgingsss", st)
 }
 
 func GetUPSERTSQLStrByStruct(struct_ interface{}) string {
@@ -46,4 +48,21 @@ func GetUPSERTSQLStrByStruct(struct_ interface{}) string {
 
 	s1 = s1 + s2
 	return s1
+}
+
+func GetSelectString(s interface{}) string {
+	tp := reflect.TypeOf(s)
+	keys := make([]string, 0)
+	for i := 0; i < tp.NumField(); i++ {
+		keys = append(keys, strings.ToLower(tp.Field(i).Name))
+	}
+	return strings.Join(keys, ",")
+}
+
+func GetPtrForSql(s []string) string {
+	arr := make([]string, 0, len(s))
+	for _, v := range s {
+		arr = append(arr, fmt.Sprintf("&%s", v))
+	}
+	return strings.Join(arr, ",")
 }

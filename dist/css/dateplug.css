@@ -74,6 +74,10 @@
 	background-size:45%;
 	border-color:#transparent;
 }
+.myDate>table>tbody>tr>.forbid{
+	background:#c8c7cc;
+	border-color:#transparent;
+}
 .myDate>table>caption>div{
 	overflow:hidden;
 }

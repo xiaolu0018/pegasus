@@ -14,7 +14,7 @@ CREATE TABLE go_appoint_appointment
   cardtype VARCHAR(10) not null,
   cardno VARCHAR(20) not null,
   mobile VARCHAR(15) not null,
-  appointor VARCHAR(15) not null,
+  appointor VARCHAR(30) not null,
   merrystatus VARCHAR(10),
   status VARCHAR(10) not null,
   appoint_channel VARCHAR(30),
@@ -25,6 +25,7 @@ CREATE TABLE go_appoint_appointment
   operatetime bigint,
   orderid VARCHAR(30),
   commentid VARCHAR(30),
+  address VARCHAR(100),
   appointednum integer,
   ifsingle boolean,
   ifcancel boolean

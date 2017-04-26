@@ -1,16 +1,17 @@
 package appointment
 
 import (
-	"time"
-	"strconv"
-	"net/http"
 	"encoding/json"
+	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/golang/glog"
 
 	"github.com/julienschmidt/httprouter"
 
 	httputil "github.com/1851616111/util/http"
+	"strings"
 )
 
 func CreateAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -67,6 +68,11 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 	endtimestring := r.FormValue("endtime")
 	search := r.FormValue("search")
 
+	userid := ps.ByName("user")
+	if strings.Contains(userid, "admin") { //是管理员操作
+		userid = ""
+	}
+
 	var page_index, page_size int
 
 	if page_no == "" {
@@ -117,13 +123,13 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 
 	var apps []Appointment
 	var total int
-	if apps, total, err = GetAppointmentList(page_index, page_size, beginInt64, endInt64, org_code, search); err != nil {
+	if apps, total, err = GetAppointmentList(page_index, page_size, beginInt64, endInt64, org_code, search, userid); err != nil {
 		glog.Errorln("appointment ListAppointmentsHandler GetAppointmentList ,err", err.Error())
 		httputil.Response(rw, 400, err)
 		return
 	}
 	result := make(map[string]interface{})
-
+	glog.Errorln("apps__", len(apps))
 	result["total"] = total
 	result["data"] = apps
 

@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"strconv"
-	"net/http"
 	"encoding/json"
+	"net/http"
+	"strconv"
 
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
@@ -42,6 +42,27 @@ func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	httputil.Response(rw, 200, "ok")
+}
+
+func GetBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	code := ps.ByName("code")
+	if len(code) == 0 {
+		glog.Errorln("orgnization.GetBasicHandler organization code not found")
+		httputil.Response(rw, 400, "organization code not found")
+		return
+	}
+	org_basic := &org.Config_Basic{}
+	var err error
+	if org_basic, err = org.GetConfigBasic(code); err != nil {
+		glog.Errorln("orgnization.GetBasicHandler GetConfigBasic err ", err.Error())
+		httputil.Response(rw, 400, err.Error())
+		return
+	}
+	if err := json.NewEncoder(rw).Encode(org_basic); err != nil {
+		httputil.Response(rw, 400, err)
+		return
+	}
+	return
 }
 
 //创建 特殊项目的可预约人数

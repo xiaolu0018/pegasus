@@ -88,11 +88,11 @@
 		       		<div class="repueried mui-card-content-inner">
 		       			<div class="mui-input-row"  id="useID">
 		       					<select name="cardtype" class="mui-btn mui-btn-block">
-		       						<option value="1">身份证</option>
-		       						<option value="2">军官证</option>
-		       						<option value="3">警察证</option>
-		       						<option value="4">护照</option>
-		       						<option value="5">其他</option>
+		       						<option value="身份证">身份证</option>
+		       						<option value="军官证">军官证</option>
+		       						<option value="警察证">警察证</option>
+		       						<option value="护照">护照</option>
+		       						<option value="其他">其他</option>
 		       					</select>
 		       				
 		       				<input name="idcard" type="text" required="required" class="mui-input-clear" placeholder="请输入证件号码" style="width:65%;"/>
@@ -109,16 +109,16 @@
 		       				<label for="male">性 &nbsp;&nbsp;别</label>
 		       				<select name="sex" id="male">
 		       					<option value="0">请选择性别</option>
-		       					<option value="male">男</option>
-		       					<option value="female">女</option>
+		       					<option value="男">男</option>
+		       					<option value="女">女</option>
 		       				</select>
 		       			</div>
 		       			<div class="mui-input-row">
 		       				<label>婚 &nbsp;&nbsp;否</label>
 		       				<select name="ismarry" id="ismarry">
 		       					<option value="0">请选择婚否</option>
-		       					<option value="marry">已婚</option>
-		       					<option value="noMarry">未婚</option>
+		       					<option value="已婚">已婚</option>
+		       					<option value="未婚">未婚</option>
 		       				</select>
 		       			</div>
 		       			<div class="mui-table-view-cell mui-collapse mui-active">
@@ -200,21 +200,27 @@
 						formVal=true;
 						if(data.isdianzireport){
 							$("#isdianzireport").attr("checked","checked");
-							//地址栏清空
-							$("#showCityPicker3").val("");
-							$("input[name='details']").val("");
+							//地址栏收起	
+							$("#isdianzireport").parents('.mui-collapse').removeClass("mui-active");
+
 							
 						}
 						if(data.address.city){
 							$("#showCityPicker3").val(data.address.province+" "+data.address.city+" "+data.address.district);						
 							$("input[name='details']").val(data.address.details);
 						}
-						$("select[name='cardtype']>option[value="+data.cardtype+"]").attr("selected","true");
+						$("select[name='cardtype']>option[value="+data.cardtype+"]").prop("selected",true );
 						$("input[name='idcard']").val(data.idcard);
 						$("input[name='name']").val(data.name);
 						$("input[name='mobile']").val(data.mobile);
 						$("select[name='sex']>option[value="+data.sex+"]").prop("selected",true);
-						$("select[name='ismarry']>option[value="+data.ismarry+"]").attr("selected","true");
+						$("select[name='ismarry']>option[value="+data.ismarry+"]").prop("selected",true);
+						adds={
+							"province":data.address.province,
+							"city":data.address.city,
+							"district":data.address.district,
+							"details":data.address.details
+						};
 					}
 					
 				});
@@ -458,8 +464,8 @@
 					if($(this).parent(".mui-collapse").hasClass("mui-active")){
 						$("#isdianzireport").attr("checked","checked");
 						//地址栏清空
-						$("#showCityPicker3").val("");
-						$("input[name='details']").val("");
+//						$("#showCityPicker3").val("");
+//						$("input[name='details']").val("");
 					}else{
 						$("#isdianzireport").removeAttr("checked");
 					}

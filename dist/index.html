@@ -86,7 +86,8 @@
 							//什么也不做，返回页面
 						}
 					});
-    			}else if($(this).parents("ul")==$("#list")){
+    			}else if($(this).parents("ul").is("#list")){
+    				return false;
     				
     			}else{
     				window.location.href=this.href;
@@ -95,6 +96,7 @@
 			$("#list").on('tap','a.mui-card-content>img',function(e){
 				localStorage.indexdet=$(this).attr("href");
 				window.location.href='indexdetail.html';
+				
 			})
     	
     	//滚动
@@ -108,8 +110,8 @@
 			 bounce: true //是否启用回弹
     	});
 		document.body.onload=function(){
-			$.getJSON('http://www.elepick.com/api/banners',function(data){
-//			$.getJSON('data/index.json',function(data){
+//			$.getJSON('http://www.elepick.com/api/banners',function(data){
+			$.getJSON('data/index.json',function(data){
 					//服务器返回响应，根据响应结果，分析是否登录成功；
 				if (typeof data === 'string') {
 				    data = JSON.parse(data);
@@ -155,10 +157,7 @@
 
 
 
-		//拨打电话
-		document.getElementById("service").addEventListener('tap', function() {
-				
-			});
+		
 		//滚动监听
 		document.querySelector(".mui-scroll-wrapper").addEventListener("swipeup",function(){
 			$("header .mui-tab-label").hide();

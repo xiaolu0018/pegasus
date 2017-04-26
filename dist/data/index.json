@@ -2,57 +2,57 @@
  	{
  		"pos":1,
  		"imageUrl":"img/banner1.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/pack1.png"
  	},
 	{
  		"pos":2,
  		"imageUrl":"img/banner2.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/pack2.png"
 	},
 	{
  		"pos":3,
  		"imageUrl":"img/banner3.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch1.jpg"
 	},
 	{
  		"pos":4,
  		"imageUrl":"img/banner4.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch2.jpg"
 	},
 	{
  		"pos":5,
  		"imageUrl":"img/banner5.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch3.jpg"
 	},
 	{
  		"pos":6,
  		"imageUrl":"img/banner6.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch4.jpg"
 	},
 	{
  		"pos":7,
  		"imageUrl":"img/banner7.jpeg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch1.jpg"
 	},
 	{
  		"pos":8,
  		"imageUrl":"img/banner1.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch2.jpg"
 	},
 	{
  		"pos":9,
  		"imageUrl":"img/banner2.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch3.jpg"
 	},
 	{
  		"pos":11,
  		"imageUrl":"img/banner3.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch1.jpg"
 	},
 	{
  		"pos":12,
  		"imageUrl":"img/banner4.jpg",
- 		"redirectUrl":"http://www.bjdaos.com"
+ 		"redirectUrl":"img/branch4.jpg"
 	},
 	{
  		"pos":13,

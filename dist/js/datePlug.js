@@ -1,8 +1,8 @@
 //体检预约日期插件
 var DataCheck=false;//是否已经预约状态
-	var DataYear=0;
-	var DataMonth=0;
-	var DataDay=0;
+	var DataYear=0;//预约的年份
+	var DataMonth=0;//预约的月份
+	var DataDay=0;//预约的日子
 
 	$(".myDate td").css("height",$(".myDate td").width()+"px");
 	//ie兼容处理
@@ -24,6 +24,7 @@ var DataCheck=false;//是否已经预约状态
 	var myTime=new Date();
 	var year=myTime.getFullYear();
 	var month=myTime.getMonth()+1;//要显示的月份,默认显示当前月
+	var rightYear=year;//当前年
 	var rightDay=myTime.getDate();//当前日
 	var rightMon=month;//当前月
 	var offdays={};//休息日
@@ -78,6 +79,7 @@ var DataCheck=false;//是否已经预约状态
 		}
 		//当天状态判读
 		function dayState(){
+			//checkmonth匹配后台数据的月份格式
 			var checkmonth=year+((month<10)?("0"+month):string(month));
 //			console.log(checkmonth);
 ////			console.count();
@@ -111,7 +113,16 @@ var DataCheck=false;//是否已经预约状态
 					$(".myDate tbody>tr").eq(line).children("td").eq(i).removeAttr("class").addClass("part");			
 				}
 			}
-			
+			//日期范围之外的monthday状态
+			if(year==rightYear){
+				if(((month==rightMon)&&(monthday<=rightDay))||((month==(rightMon+2))&&(monthday>rightDay))){
+					$(".myDate tbody>tr").eq(line).children("td").eq(i).removeAttr("class").addClass("forbid");
+				}
+			}else if(year==(rightYear+1)){
+				if(((month+2)==(rightMon+12))&&(monthday>rightDay)){
+					$(".myDate tbody>tr").eq(line).children("td").eq(i).removeAttr("class").addClass("forbid");
+				}
+			}
 			//选中
 			if((DataCheck)&&(DataYear==year)&&(DataMonth==month)&&(DataDay==monthday)){
 				$(".myDate tbody>tr").eq(line).children("td").eq(i).removeAttr("class").addClass("checked");			

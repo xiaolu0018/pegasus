@@ -130,7 +130,14 @@
           {
             "in": "body",
             "name": "idcard",
-            "description": "用户身份证号",
+            "description": "证件号",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "cardtype",
+            "description": "证件类型",
             "required": true,
             "type": "string"
           },
@@ -1096,18 +1103,31 @@
     "Appointment": {
       "type": "object",
       "properties": {
+        "appid":{
+          "required": true,
+          "type": "string",
+          "description": "预约ｉｄ"
+        },
         "planid": {
           "required": false,
           "type": "string"
         },
-        "payInfo": {
-          "required": false,
+        "name": {
+          "required": true,
           "type": "string",
           "description": "目前暂不清楚这块填写啥"
         },
         "branchid": {
-          "required": false,
+          "required": true,
           "type": "string"
+        },
+        "status":{
+          "required":true,
+          "type":"string"
+        },
+        "serve_mobile":{
+          "required":true,
+          "type":"string"
         },
         "appointdate": {
           "required": false,

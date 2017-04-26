@@ -15,7 +15,6 @@ import (
 	httputil "github.com/1851616111/util/http"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 )
 
 //保存或更新用户的个人基本信息
@@ -23,7 +22,7 @@ import (
 func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	u := User{}
 	//u := make(map[string]interface{})
-	glog.Errorf("enter UpsertInfoHandler")
+	glog.Errorf("enter user.UpsertInfoHandler")
 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
 		glog.Errorf("UpsertInfoHandler err", err.Error())
 		httputil.ResponseJson(w, 400, "params invalid"+err.Error())
@@ -37,7 +36,7 @@ func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	}
 	u.ID = bson.ObjectIdHex(ps.ByName(common.AuthHeaderKey))
 	glog.Errorln("upsert u,id", ps.ByName(common.AuthHeaderKey))
-	if err := u.UpsertBasicInfo(db.User()); err != nil {
+	if err := u.Upsert(); err != nil {
 		glog.Errorf("user.UpsertInfoHandler: user(%v) err %v\n", u, err)
 		httputil.ResponseJson(w, 400, err)
 		return
@@ -49,17 +48,20 @@ func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 //保存或更新用户的label
 // curl --data '{"bingshi":{"gaoxueya","gaoxuezhi"},"jiazushi":{"guanxinbing","naogeng"}}' http://www.elepick.com/api/user/12345678910/health
 func UpdateLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	l := make(map[string][]string)
-	userid := ps.ByName(common.AuthHeaderKey)
+	//l := make(map[string][]string)
 
-	if err := json.NewDecoder(r.Body).Decode(&l); err != nil {
+	glog.Errorf("enter user.UpdateLabelHandler")
+	userid := ps.ByName(common.AuthHeaderKey)
+	h := Health{}
+	if err := json.NewDecoder(r.Body).Decode(&h); err != nil {
+		glog.Errorln("user.UpdateLabelHandler err", err.Error())
 		httputil.ResponseJson(w, 404, "params invalid")
 		return
 	}
 
-	glog.Errorf("l__err", l)
+	glog.Errorf("l__err", h)
 
-	if err := UpdateLabel(db.User(), bson.ObjectIdHex(userid), l); err != nil {
+	if err := h.Upsert(userid); err != nil {
 		glog.Errorf("user.UpdateLabelHandler: updatelabel(%v) err %v\n", userid, err)
 		httputil.ResponseJson(w, 400, err)
 		return
@@ -70,15 +72,14 @@ func UpdateLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 func GetLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	userid := ps.ByName(common.AuthHeaderKey)
-	if u, err := Get(bson.ObjectIdHex(userid)); err != nil {
-		glog.Errorf("user.GetHandler:err %v\n", err)
+	if h, err := GetHealth(userid); err != nil {
+		glog.Errorf("user.GetLabelHandler:err %v\n", err)
 		httputil.ResponseJson(w, 400, err)
 		return
 	} else {
-
-		httputil.ResponseJson(w, 200, u.Label.Health)
+		json.NewEncoder(w).Encode(h)
 	}
-
+	return
 }
 
 //得到用户信息
@@ -87,7 +88,7 @@ func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userid := ps.ByName(common.AuthHeaderKey)
 
 	fmt.Println("GetHandler", ps.ByName(common.AuthHeaderKey))
-	if u, err := Get(bson.ObjectIdHex(userid)); err != nil {
+	if u, err := GetUserByid(userid); err != nil {
 		glog.Errorf("user.GetHandler:err %v\n", err)
 		httputil.ResponseJson(w, 400, err)
 		return

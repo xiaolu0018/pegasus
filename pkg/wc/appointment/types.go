@@ -10,7 +10,6 @@ type Appointment struct {
 	UserID            bson.ObjectId `json:"userid"`
 	CreatDate         time.Time     `json:"CreatDate"`                      //预约创建时间按
 	AppointDate       string        `json:"appointdate" bson:"appointdate"` //预约体检时间
-	AppointTime       time.Time     ``
 	BranchID          bson.ObjectId `json:"branchid" bson:"branchid"`
 	PlanID            bson.ObjectId `bson:"planid,omitempty"`
 	SpecialItem       []string      `bson:"SpecialItem"`
@@ -37,3 +36,4 @@ type Appoint_User struct{
 	CardID string `json:"cardid"`
 	Mobile string `json:"mobile"`
 }
+

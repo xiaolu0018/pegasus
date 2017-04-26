@@ -122,9 +122,9 @@
 											<div class="mui-pull-right mui-col-xs-6">
 												<p><span>伊凡</span></p>
 												<p>
-													<button class="mui-btn mui-btn-success">
+													<a href="tel://10086" class="mui-btn mui-btn-success">
 														<span class="mui-icon mui-icon-phone"></span>
-													</button>
+													</a>
 													<button class="changedate mui-btn mui-btn-primary">改约</button>
 													<button class="deldate mui-btn mui-btn-primary">取消</button>
 												</p>
@@ -141,9 +141,9 @@
 											<div class="mui-pull-right mui-col-xs-6">
 												<p><span>伊凡</span></p>
 												<p>
-													<button class="mui-btn mui-btn-success">
+													<a href="tel://10086" class="mui-btn mui-btn-success">
 														<span class="mui-icon mui-icon-phone"></span>
-													</button>
+													</a>
 													<button class="mui-btn mui-btn-warning myjudge">待评价</button>
 												</p>
 											</div>
@@ -159,9 +159,9 @@
 											<div class="mui-pull-right mui-col-xs-6">
 												<p><span>伊凡</span></p>
 												<p>
-													<button class="mui-btn mui-btn-success">
+													<a href="tel://10086" class="mui-btn mui-btn-success">
 														<span class="mui-icon mui-icon-phone"></span>
-													</button>
+													</a>
 													<span class="mydel">已取消</span>
 												</p>
 											</div>
@@ -177,9 +177,9 @@
 											<div class="mui-pull-right mui-col-xs-6">
 												<p><span>伊凡</span></p>
 												<p>
-													<button class="mui-btn mui-btn-success">
+													<a href="tel://10086" class="mui-btn mui-btn-success">
 														<span class="mui-icon mui-icon-phone"></span>
-													</button>
+													</a>
 													<span class="myfinish">已评价</span>
 												</p>
 											</div>
@@ -189,15 +189,15 @@
 			    						<div class="mui-media-body mui-row">
 											<div class="mui-pull-left mui-col-xs-6">
 												<p><span>杭州韩诺体检中心</span></p>
-												<p>体检日期:<span>2017-12-20</span></p>
 												<p>预约日期:<span>2017-12-20</span></p>
+												<p>当天日期:<span>2017-12-20</span></p>
 											</div>
 											<div class="mui-pull-right mui-col-xs-6">
 												<p><span>伊凡</span></p>
 												<p>
-													<button class="mui-btn mui-btn-success">
+													<a href="tel://10086" class="mui-btn mui-btn-success">
 														<span class="mui-icon mui-icon-phone"></span>
-													</button>
+													</a>
 													<span class="mying">体检中</span>
 												</p>
 											</div>
@@ -236,7 +236,29 @@
 				//页面数据加载			
 				access();
 				$.getJSON('http://www.elepick.com/api/appointments',{},function(data){
-					
+					if (typeof data === 'string') {
+						    data = JSON.parse(data);
+						}
+					if(data==null){
+						
+					}else{
+						var len=data.length;
+						var listRange="";
+						for(var g=0;g<len;g++){
+							switch(data[g].status){
+								case "预约成功":listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>伊凡</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><button class="changedate mui-btn mui-btn-primary">改约</button><button class="deldate mui-btn mui-btn-primary">取消</button></p></div></div></li>';
+									break;
+								case '待评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><button class="mui-btn mui-btn-warning myjudge">待评价</button></p></div></div></li>';
+									break;
+								case '已取消':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><span class="mydel">已取消</span></p></div></div></li>';
+									break;
+								case '已评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><span class="myfinish">已评价</span></p></div></div></li>';
+									break;
+								case '体检中':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><span class="mying">体检中</span></p></div></div></li>';
+									break;
+							}
+						}
+					}
 				});
 				var snum=60;
 				var time1=null;
@@ -298,9 +320,14 @@
 				
 				var iftap=true;//重复提交判断
 				mui('body').on('tap','a',function(e){
-					if(($(this).parent('nav').html()==$("#footer").html())||($(this).parents("header").html()==$("header").html())){
+					if($(this).is("a[href^='tel://']")){
+						//拨打电话
+						location.href=this.href;
+					}else if(($(this).parent('nav').html()==$("#footer").html())||($(this).parents("header").html()==$("header").html())){
 						window.location.href=this.href;
-					}	
+					}else{
+						
+					}
 				});
 				
 			});

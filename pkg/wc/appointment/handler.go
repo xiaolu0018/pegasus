@@ -1,6 +1,10 @@
 package appointment
 
 import (
+	"bytes"
+	"fmt"
+	"time"
+
 	"net/http"
 
 	"encoding/json"
@@ -8,20 +12,16 @@ import (
 	"github.com/golang/glog"
 	"gopkg.in/mgo.v2/bson"
 
+	httputil "github.com/1851616111/util/http"
+	"github.com/1851616111/util/message"
 	"github.com/julienschmidt/httprouter"
 
-	httputil "github.com/1851616111/util/http"
-
-	appoint_Appointment "192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
-	"github.com/1851616111/util/message"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
-	"bytes"
-	"fmt"
-	"time"
+	appoint_Appointment "192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
 )
 
 func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -44,31 +44,8 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		return
 	}
 	cache.Set(CACHE_TP, cm.ID.Hex(), cm)
-
-	return
-}
-
-func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	appid := ps.ByName("id")
-	mapkey := make(map[string]string)
-	if err := json.NewDecoder(r.Body).Decode(&mapkey); err != nil {
-		glog.Errorln("Appointment SetBranchHandler Decode", err.Error())
-		httputil.Response(w, 400, err)
-		return
-	}
-	app, err := Get(bson.ObjectIdHex(appid))
-	if err != nil {
-		glog.Errorln("Appointment SetBranchHandler Get", err.Error())
-		httputil.Response(w, 400, err)
-		return
-	}
-
-	if err = app.Update(db.Appointment()); err != nil {
-		glog.Errorln("Appointment SetBranchHandler SetBranch", err.Error())
-		httputil.Response(w, 400, err)
-		return
-	}
-	httputil.Response(w, 200, "ok")
+	c, err := cache.Get(CACHE_TP, cm.ID.Hex())
+	glog.Errorln("cache__", c, err)
 	return
 }
 
@@ -81,15 +58,15 @@ func GetAppointmentConfirmHandler(w http.ResponseWriter, r *http.Request, ps htt
 		httputil.Response(w, 400, err.Error())
 		return
 	}
-	u := user.User{}
-	if u, err = user.Get(bson.ObjectIdHex(ps.ByName(common.AuthHeaderKey))); err != nil {
+	u := &user.User{}
+	if u, err = user.GetUserByid(ps.ByName(common.AuthHeaderKey)); err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler user.Get err", err.Error())
 		httputil.Response(w, 400, err)
 		return
 	}
 
 	var appoint_user *Appoint_User
-	if appoint_user, err = CreatAppoint_User(a.(Appointment), u); err != nil {
+	if appoint_user, err = CreatAppoint_User(a.(Appointment), *u); err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler appoint_user err", err.Error())
 		httputil.Response(w, 400, err)
 		return
@@ -111,13 +88,23 @@ func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		httputil.Response(w, 400, err.Error())
 		return
 	}
-	//app, err := Get(bson.ObjectIdHex(appid))
-	//if err != nil {
-	//	glog.Errorln("CapacityManage ConfirmCreatHandler Get", err.Error())
-	//	httputil.Response(w, 400, err)
-	//	return
-	//}
 	app := app_interface.(Appointment)
+
+	u := &user.User{}
+	if u, err = user.GetUserByid(ps.ByName(common.AuthHeaderKey)); err != nil {
+		glog.Errorln("Appointment GetAppointmentConfirmHandler user.Get err", err.Error())
+		httputil.Response(w, 400, err)
+		return
+	}
+	var a_a *appoint_Appointment.Appointment
+	if a_a, err = Get_Appoint_Appointment(*u, app); err != nil {
+		glog.Errorln("Appointment GetAppointmentConfirmHandler Get_Appoint_Appointment err", err.Error())
+		httputil.Response(w, 400, err)
+		return
+	}
+
+	rsp := SendToAppoint(*a_a)
+	glog.Errorln("Appointment GetAppointmentConfirmHandler SendToAppoint", rsp.StatusCode)
 	if err = app.UpdateStatus(db.Appointment(), app.SpecialItem); err != nil {
 		glog.Errorln("CapacityManage ConfirmCreatHandler UpdateStatus", err.Error())
 		httputil.Response(w, 400, err)

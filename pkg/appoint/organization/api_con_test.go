@@ -15,16 +15,17 @@ func TestConfig_Basic_Create(t *testing.T) {
 	}
 
 	org := Config_Basic{
-		Org_Code:     time.Now().String()[:30],
+		Org_Code:     "000100131",
 		Capacity:     100,
 		WarnNum:      90,
-		OffDays:      []string{"2017-02-13", "2017-02-14"},
+		OffDays:      []string{"fdfdfdf", "健康信息"},
 		AvoidNumbers: []int64{13, 3, 4, 14},
 	}
 
-	err := org.Validate()
-	fmt.Println("125464_____", org.AvoidNumbers, err)
-	//err := org.Create()
+	//err := org.Validate()
+
+	err := org.Create()
+	fmt.Println("125464_____", err)
 	if err == nil {
 		t.Fatal(err)
 	}

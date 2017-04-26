@@ -3,6 +3,7 @@ package user
 import (
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
 	"errors"
+	"github.com/1851616111/util/validator/mobile"
 )
 
 var (
@@ -13,7 +14,7 @@ var (
 )
 
 func (u User) CreateValidate() (err error) {
-	if len(u.Mobile) != 11 {
+	if mobile.Validate(u.Mobile) != nil {
 		return ErrMobileInvalid
 	}
 	if u.Name == "" {
@@ -23,6 +24,7 @@ func (u User) CreateValidate() (err error) {
 	if u.IsMarry == "" {
 		return ErrIsMarryInvalid
 	}
+
 	if !util.CheckId(u.CardNo) {
 		return ErrIDCardInvalid
 	}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/token"
 	"github.com/1851616111/util/weichat/manager/user"
 	"github.com/golang/glog"
@@ -67,7 +66,7 @@ func (c *cache) Init() error {
 	}
 
 	var users []User
-	if users, err = listUsersByOpenIDs(db.User(), openIDs); err != nil {
+	if users, err = GetUsersByOpenids(openIDs); err != nil {
 		return err
 	}
 
@@ -126,11 +125,11 @@ func (c *cache) CacheToken(id, token string) error {
 }
 
 func (c *cache) Auth(token string) (bool, string) {
-	if oid, ok := c.tokenToOID[token];ok{
-		id,ok := c.oIDToDbID[oid]
+	if oid, ok := c.tokenToOID[token]; ok {
+		id, ok := c.oIDToDbID[oid]
 		return ok, id
 	}
-	return false,""
+	return false, ""
 }
 
 func (c *cache) cacheUsers(l []User) {

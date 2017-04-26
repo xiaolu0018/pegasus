@@ -228,6 +228,8 @@
 							mui.toast("请选择分院和日期");
 						}else{
 							//跳转下一步,ajax
+							DataMonth=(DataMonth<10)?("0"+DataMonth):(""+DataMonth);
+							DataDay=(DataDay<10)?("0"+DataDay):(""+DataDay);
 							mui.toast(DEPART.name+"-"+DataYear+"."+DataMonth+"."+DataDay);
 							localStorage.appointdate=DataYear+"-"+DataMonth+"-"+DataDay;
 							iftap=false;
@@ -242,7 +244,9 @@
 									success:function(data, textStatus, xhr){	
 										iftap=true;
 										if(xhr.status=="200"){
-											data=jQuery.parseJSON(data);
+											if (typeof data === 'string') {
+											     data = JSON.parse(data);
+											}
 											localStorage.appointid=data.appointid;
 											window.location.href='confirm.html';
 										}else{

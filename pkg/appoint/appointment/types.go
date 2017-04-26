@@ -8,8 +8,8 @@ const VALIDATE_CARD_TYPE_ID = "身份证"
 const VALIDATE_CARD_TYPE_PASSPORT = "身份证"
 const VALIDATE_CARD_TYPE_OFFICER = "军官证"
 const VALIDATE_CARD_TYPE_STU = "学生证"
-const VALIDATE_MERRY_NO =  "未婚"
-const VALIDATE_MERRY_YES =  "未婚"
+const VALIDATE_MERRY_NO = "未婚"
+const VALIDATE_MERRY_YES = "未婚"
 
 var ErrAppointmentString = "Can't make an appointment"
 
@@ -19,14 +19,15 @@ type Appointment struct {
 	AppointTime int64  `json:"appointtime"`
 	OrgCode     string `json:"org_code"` //分院
 
-	CardNo               string `json:"cardno"`
-	CardType             string `json:"cardtype"`
-	Mobile               string `json:"mobile"`
-	Appointor            string `json:"appointor"`
-	Address 	     string `json:"address"`
-	MerryStatus          string `json:"merrystatus"`
-	Status               string `json:"status"`
-	Appoint_Channel      string `json:"appoint_channel"`      //预约渠道
+	CardNo          string `json:"cardno"`
+	CardType        string `json:"cardtype"`
+	Mobile          string `json:"mobile"`
+	Appointor       string `json:"appointor"` //预约人姓名
+	Address         string `json:"address"`
+	MerryStatus     string `json:"merrystatus"`
+	Status          string `json:"status"`
+	Appoint_Channel string `json:"appoint_channel"` //预约渠道
+	Appointorid     string `json:"appointorid"`     //预约人id
 
 	Company      string `json:"company"`
 	Group        string `json:"group"`

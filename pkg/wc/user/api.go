@@ -1,16 +1,23 @@
 package user
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 	"fmt"
+	"strings"
+
+	"gopkg.in/mgo.v2/bson"
+
+	"github.com/golang/glog"
+
+	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
+	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 )
 
 func (u *User) Upsert() error {
-	sqlStr := fmt.Sprintf("INSERT INTO %s(id,openid,cardtype,cardno,mobile,name,merrystatus,address_province,address_city,address_district,address_details,ifonlyneed_electronic_report,healthid) "+
-		"VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') ON CONFLICT (id) DO UPDATE SET cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,"+
-		"mobile=EXCLUDED.mobile,name=EXCLUDED.name,merrystatus=EXCLUDED.merrystatus,address_province=EXCLUDED.address_province,address_city=EXCLUDED.address_city,"+
-		"address_city=EXCLUDED.address_city,address_district=EXCLUDED.address_district,address_details=EXCLUDED.address_details,ifonlyneed_electronic_report=EXCLUDED.ifonlyneed_electronic_report",
-		TABLE_USER, u.ID, u.OpenID, u.CardType, u.CardNo, u.Mobile, u.Name, u.IsMarry, u.Address.Province, u.Address.City, u.Address.District,
+	sqlStr := fmt.Sprintf("INSERT INTO %s(id,openid,cardtype,cardno,mobile,name,sex,merrystatus,address_province,address_city,address_district,address_details,ifonlyneed_electronic_report,healthid) "+
+		"VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%v','%s') ON CONFLICT (id) DO UPDATE SET cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,"+
+		"mobile=EXCLUDED.mobile,name=EXCLUDED.name,sex=EXCLUDED.sex,merrystatus=EXCLUDED.merrystatus,address_province=EXCLUDED.address_province,address_city=EXCLUDED.address_city,"+
+		"address_district=EXCLUDED.address_district,address_details=EXCLUDED.address_details,ifonlyneed_electronic_report=EXCLUDED.ifonlyneed_electronic_report",
+		TABLE_USER, u.ID.Hex(), u.OpenID, u.CardType, u.CardNo, u.Mobile, u.Name, u.Sex, u.IsMarry, u.Address.Province, u.Address.City, u.Address.District,
 		u.Address.Details, u.IsDianziReport, "")
 
 	if _, err := db.GetDB().Exec(sqlStr); err != nil {
@@ -19,11 +26,65 @@ func (u *User) Upsert() error {
 	return nil
 }
 
-func (h *Health) Upsert() error {
-	sqlStr := fmt.Sprintf("INSERT INTO %s (id,past_history,family_medical_history,exam_frequency,past_exam_exception,psychological_pressure,food_habits,eating_habits,drink_habits,smoke_history)VALUES('%v','%v','%v','%v','%v','%v','%v','%v','%v','%v') ON CONFLICT (id) DO UPDATE SET id=EXCLUDED.id,past_history=EXCLUDED.past_history,family_medical_history=EXCLUDED.family_medical_history,exam_frequency=EXCLUDED.exam_frequency,past_exam_exception=EXCLUDED.past_exam_exception,psychological_pressure=EXCLUDED.psychological_pressure,food_habits=EXCLUDED.food_habits,eating_habits=EXCLUDED.eating_habits,drink_habits=EXCLUDED.drink_habits,smoke_history=EXCLUDED.smoke_history",
-		TABLE_HEALTH, h.Id, h.Past_history, h.Family_medical_history, h.Exam_frequency, h.Past_exam_exception, h.Psychological_pressure, h.Food_habits, h.Eating_habits, h.Drink_habits, h.Smoke_history)
-	if _, err := db.GetDB().Exec(sqlStr); err != nil {
-		return err
+func GetUsersByOpenids(openids []string) ([]User, error) {
+
+	sqlStr := fmt.Sprintf("SELECT id,openid FROM %s WHERE openid IN(%s)", TABLE_USER, forSqlIn(openids))
+	glog.Errorln("user.GetUsersByOpenids sqlStr", sqlStr)
+	rows, err := db.GetDB().Query(sqlStr)
+	if err != nil {
+		glog.Errorln("user.GetUsersByOpenids Query err", err.Error())
+		return nil, err
 	}
-	return nil
+	defer rows.Close()
+	var id, openid string
+	users := make([]User, 10)
+	for rows.Next() {
+		if err = rows.Scan(&id, &openid); err != nil {
+			glog.Errorln("user.GetUsersByOpenids rows.Scan err", err.Error())
+			return nil, err
+		}
+		users = append(users, User{ID: bson.ObjectIdHex(id), OpenID: openid})
+	}
+	if rows.Err() != nil {
+		glog.Errorln("user.GetUsersByOpenids rows.Err err", rows.Err().Error())
+		return nil, rows.Err()
+	}
+	return users, nil
+}
+
+func GetUserByid(id string) (*User, error) {
+	sqlStr := fmt.Sprintf("SELECT openid,cardtype,cardno,mobile,name,sex,merrystatus,address_province,address_city,address_district,address_details,ifonlyneed_electronic_report FROM %s WHERE id = '%s'", TABLE_USER, id)
+	var openid, cardtype, cardno, mobile, name, sex, merrystatus, address_province, address_city, address_district, address_details string
+	var ifonlyneed_electronic_report bool
+	glog.Errorln("GetUserByid sqlstr", sqlStr)
+	err := db.GetDB().QueryRow(sqlStr).Scan(&openid, &cardtype, &cardno, &mobile, &name, &sex, &merrystatus, &address_province, &address_city, &address_district, &address_details, &ifonlyneed_electronic_report)
+	if err != nil {
+		glog.Errorln("user.GetUserByid rows.Scan err", err.Error())
+		return nil, err
+	}
+	u := User{
+		ID:       bson.ObjectIdHex(id),
+		CardType: cardtype,
+		CardNo:   cardno,
+		Mobile:   mobile,
+		Name:     name,
+		IsMarry:  merrystatus,
+		Address: common.Address{
+			Province: address_province,
+			City:     address_city,
+			District: address_district,
+			Details:  address_details,
+		},
+		IsDianziReport: ifonlyneed_electronic_report,
+		Sex:            sex,
+	}
+	return &u, nil
+}
+
+//为了sql时添加查询添加in
+func forSqlIn(arr []string) string {
+	for k, v := range arr {
+		arr[k] = fmt.Sprintf("'%s'", v)
+	}
+	return strings.Join(arr, ",")
 }
