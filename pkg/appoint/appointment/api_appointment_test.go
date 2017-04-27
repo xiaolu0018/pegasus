@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 	//"time"
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -178,4 +179,11 @@ func GenRsaKey(bits int) error {
 		return err
 	}
 	return nil
+}
+
+func TestChangeOrg(t *testing.T) {
+	dbinit()
+	sqlstr := fmt.Sprintf("UPDATE %s SET imageurl = '%s',detailsurl = '%s'", organization.TABLE_ORG, "", "")
+	_, err := db.GetDB().Exec(sqlstr)
+	fmt.Println("errr", err)
 }

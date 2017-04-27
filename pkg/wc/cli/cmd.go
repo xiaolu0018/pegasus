@@ -71,6 +71,7 @@ func startCmd() *cobra.Command {
 			}
 			manager.Redirect("/api/appoint", "regist.html")
 			manager.Redirect("/api/branch", "branch.html")
+			manager.Redirect("/api/reportmenu", "myRep.html")
 
 			router := handler.CreateHttpRouter(dist)
 			if err := manager.AddRouter(router.(*httprouter.Router)); err != nil {

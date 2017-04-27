@@ -112,7 +112,7 @@
 			    			</div>
 			    			<div id="mydate" class="mui-control-content">
 			    				<ul class="mui-table-view">
-			    					<li class="mui-table-view-cell mui-media">
+			    					<!--<li class="mui-table-view-cell mui-media">
 			    						<div class="mui-media-body mui-row">
 											<div class="mui-pull-left mui-col-xs-6">
 												<p><span>杭州韩诺体检中心</span></p>
@@ -184,9 +184,9 @@
 												</p>
 											</div>
 										</div>
-			    					</li>
-			    					<li class="mui-table-view-cell">
-			    						<div class="mui-media-body mui-row">
+			    					</li>-->
+			    					<!--<li class="mui-table-view-cell">-->
+			    						<!--<div class="mui-media-body mui-row">
 											<div class="mui-pull-left mui-col-xs-6">
 												<p><span>杭州韩诺体检中心</span></p>
 												<p>预约日期:<span>2017-12-20</span></p>
@@ -202,7 +202,7 @@
 												</p>
 											</div>
 										</div>
-			    					</li>
+			    					</li>-->
 			    				</ul>
 			    			</div>
 			    		</div>
@@ -235,10 +235,12 @@
 			$(function(){
 				//页面数据加载			
 				access();
+//				$.getJSON('js/myRep.json',{},function(data){
 				$.getJSON('http://www.elepick.com/api/appointments',{},function(data){
 					if (typeof data === 'string') {
 						    data = JSON.parse(data);
 						}
+					console.log(data);
 					if(data==null){
 						
 					}else{
@@ -246,18 +248,19 @@
 						var listRange="";
 						for(var g=0;g<len;g++){
 							switch(data[g].status){
-								case "预约成功":listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>伊凡</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><button class="changedate mui-btn mui-btn-primary">改约</button><button class="deldate mui-btn mui-btn-primary">取消</button></p></div></div></li>';
+								case "预约成功":listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button class="changedate mui-btn mui-btn-primary" data-id="'+data[g].appid+'">改约</button><button class="deldate mui-btn mui-btn-primary" data-id="'+data[g].appid+'">取消</button></p></div></div></li>';
 									break;
-								case '待评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><button class="mui-btn mui-btn-warning myjudge">待评价</button></p></div></div></li>';
+								case '待评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data.serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button data-id="'+data[g].appid+'" class="mui-btn mui-btn-warning myjudge">待评价</button></p></div></div></li>';
 									break;
-								case '已取消':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><span class="mydel">已取消</span></p></div></div></li>';
+								case '已取消':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="mydel">已取消</span></p></div></div></li>';
 									break;
-								case '已评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><span class="myfinish">已评价</span></p></div></div></li>';
+								case '已评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="myfinish">已评价</span></p></div></div></li>';
 									break;
-								case '体检中':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data.rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data.name+'</span></p><p><a href="tel://'+data.serve_mobile+'" class="mui-btn mui-btn-success"></a><span class="mying">体检中</span></p></div></div></li>';
+								case '体检中':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="mying">体检中</span></p></div></div></li>';
 									break;
 							}
-						}
+						};
+					$("#mydate>ul.mui-table-view").html(listRange);
 					}
 				});
 				var snum=60;
@@ -284,7 +287,7 @@
 					}else{
 						clearInterval(time1);
 						snum=60;
-						//发送验证码
+						//发送验证码功能实现
 						
 						//发送成功，倒计时
 						$(".mui-popup-text").css("visibility",'visible');
@@ -317,7 +320,73 @@
 					clearInterval(time1);
 					mui.closePopups();
 				});
-				
+				//取消预约,改约，联系客服,评价
+				$("#mydate>ul").on('tap','li.mui-media button',function(e){
+					console.log(e.target)
+					e.stopPropagation();
+					if($(e.target).hasClass("deldate")){
+						//取消预约
+						var appid=$(e.target).data('id');
+						mui.confirm('确认取消该次预约吗？', '', ['是','否'], function(e) {
+							if (e.index == 0) {
+								//拨打电话
+								$.ajax({
+									type:"post",
+									url:"http://www.elepick.com/api/appointment/"+appid+"/cancel",
+									data:JSON.stringify({
+										"appointid":appid
+									}),
+									success:function(data, textStatus, xhr){											
+										if(xhr.status=="200"){
+											mui.toast('预约已取消');
+										}else{
+											mui.alert(textStatus+"-"+xhr.status);
+										}
+										
+									},
+									error:function(xhr, textStatus){
+										console.log(xhr);
+	                                    mui.alert(textStatus);
+									}
+								});
+								
+							} else {
+								//什么也不做，返回页面
+								
+							}
+						});
+					}else if($(e.target).hasClass("changedate")){
+						//改约
+						var appid=$(e.target).data('id');						
+						localStorage.appointid=appid;	
+						mui.later(function(){
+							window.location.href='package.html';
+						},100);					
+					}else if($(e.target).hasClass("myjudge")){
+						//预约评价
+						var appids=$(e.target).data('id');						
+						localStorage.appointid=appids;
+						mui.later(function(){
+							window.location.href='judge.html';
+						},100);
+						
+						
+					}else if($(e.target).parent('button').hasClass("tel")){
+						//联系客服
+						var tel=$(e.target).parent('button').attr("href");
+						var btnArray = ['<a style="display:inline-block;width:100%;height:100%;" href="tel://'+tel+'">呼叫</a>','取消'];
+						mui.confirm(tel, '联系电话:', btnArray, function(e) {
+						if (e.index == 0) {
+							//拨打电话
+	//						alert("我打电话了")
+						} else {
+							//什么也不做，返回页面
+						}
+					});
+					}
+
+
+				});
 				var iftap=true;//重复提交判断
 				mui('body').on('tap','a',function(e){
 					if($(this).is("a[href^='tel://']")){

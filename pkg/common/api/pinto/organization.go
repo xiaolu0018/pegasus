@@ -18,11 +18,13 @@ func ListOrganizations(db *sql.DB) ([]types.Organization, error) {
 	var id, code, name string
 	for rows.Next() {
 		if err = rows.Scan(&id, &code, &name); err == nil {
-			l = append(l, types.Organization{
-				ID:   id,
-				Code: code,
-				Name: name,
-			})
+			if len(code) == 7 {
+				l = append(l, types.Organization{
+					ID:   id,
+					Code: code,
+					Name: name,
+				})
+			}
 		}
 	}
 

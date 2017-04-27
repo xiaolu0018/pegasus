@@ -1,23 +1,23 @@
 package appointment
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"strings"
 
 	id "github.com/1851616111/util/validator/identity"
 	"github.com/1851616111/util/validator/mobile"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
-	"time"
-	"github.com/golang/glog"
 	"database/sql"
+	"github.com/golang/glog"
+	"time"
 )
 
 var (
-	ErrBasicConfigInvalid    = errors.New("ConfigBasic Invalid")
-	ErrAppointChannelInvalid = errors.New("appoint channel invalid")
-	ErrAppointTimeInvalid    = errors.New("appint time invalid")
+	ErrBasicConfigInvalid        = errors.New("ConfigBasic Invalid")
+	ErrAppointChannelInvalid     = errors.New("appoint channel invalid")
+	ErrAppointTimeInvalid        = errors.New("appint time invalid")
 	ErrAppointMerryStatusInvalid = errors.New("appoint merry status invalid")
 )
 
@@ -84,16 +84,18 @@ func (a *Appointment) validatePersonInfo() error {
 		return FieldEmpty("cardtype")
 	}
 
-	if a.CardType != VALIDATE_CARD_TYPE_ID && a.CardType != VALIDATE_CARD_TYPE_PASSPORT && a.CardType != VALIDATE_CARD_TYPE_OFFICER && a.CardType != VALIDATE_CARD_TYPE_STU {
+	if a.CardType != VALIDATE_CARD_TYPE_ID && a.CardType != VALIDATE_CARD_TYPE_PASSPORT && a.CardType != VALIDATE_CARD_TYPE_OFFICER && a.CardType != VALIDATE_CARD_TYPE_POLICE &&
+		a.CardType != VALIDATE_CARD_TYPE_OTHER {
 		return fmt.Errorf("plan card type =%s invalid", a.CardType)
 	}
 
 	if len(strings.TrimSpace(a.CardNo)) == 0 {
-		return FieldEmpty("cardno")
+		return FieldEmpty("TrimSpace cardno")
 	}
-
-	if err := id.Validate(a.CardNo); err != nil {
-		return FieldInvalid("cardno")
+	if a.CardType == VALIDATE_CARD_TYPE_ID {
+		if err := id.Validate(a.CardNo); err != nil {
+			return FieldInvalid("Validate cardno")
+		}
 	}
 
 	if len(strings.TrimSpace(a.Mobile)) == 0 {
@@ -167,10 +169,10 @@ func (a *Appointment) validateAppointInfo() error {
 	return nil
 }
 
-func FieldEmpty(field string)error{
+func FieldEmpty(field string) error {
 	return fmt.Errorf("object field %s empty", field)
 }
 
-func FieldInvalid(field string)error{
+func FieldInvalid(field string) error {
 	return fmt.Errorf("object field %s invalid", field)
 }

@@ -1,9 +1,9 @@
 //体检预约日期插件
-var DataCheck=false;//是否已经预约状态
+	var DataCheck=false;//是否已经预约状态
 	var DataYear=0;//预约的年份
 	var DataMonth=0;//预约的月份
 	var DataDay=0;//预约的日子
-
+	var dateReady=false;//日期状态是否完成
 	$(".myDate td").css("height",$(".myDate td").width()+"px");
 	//ie兼容处理
 	function NewDate(str) { 
@@ -81,10 +81,7 @@ var DataCheck=false;//是否已经预约状态
 		function dayState(){
 			//checkmonth匹配后台数据的月份格式
 			var checkmonth=year+((month<10)?("0"+month):string(month));
-//			console.log(checkmonth);
-////			console.count();
-//			console.log(offdays[checkmonth]);
-//			console.log(capatityed[checkmonth]);
+
 			//是否当天
 			$(".myDate tbody>tr").eq(line).children("td").eq(i).removeAttr("class").addClass("permit");
 			//是否星期休息日
@@ -161,25 +158,28 @@ var DataCheck=false;//是否已经预约状态
 	});
 	//预约日期选择
 	$(".myDate tbody td").click(function(e){
-		e.stopPropagation();
-		if($(this).hasClass("permit")){
-			$(this).parents("tbody").find(".checked").removeClass("checked").addClass("permit");
-			$(this).removeAttr("class").addClass("checked");
-			$(".myDate caption>div").css("color","red").html("已选中"+year+"年"+month+"月"+$(this).text()+"日");
-			DataYear=year;
-			DataMonth=month;
-			DataDay=$(this).html();
-			return DataCheck=true;
+		if(dateReady){
+			e.stopPropagation();
+			if($(this).hasClass("permit")){
+				$(this).parents("tbody").find(".checked").removeClass("checked").addClass("permit");
+				$(this).removeAttr("class").addClass("checked");
+				$(".myDate caption>div").css("color","red").html("已选中"+year+"年"+month+"月"+$(this).text()+"日");
+				DataYear=year;
+				DataMonth=month;
+				DataDay=$(this).html();
+				return DataCheck=true;
+			}
+			if(($(this).hasClass("checked"))&&(DataCheck)){
+				$(this).removeAttr("class").addClass("permit");
+				$(".myDate caption>div").removeAttr("style").html("<p>可以预约</p><p>不可预约</p>");
+				DataYear=0;
+				DataMonth=0;
+				DataDay=0;
+				return DataCheck=false;
+			}
+		}else{
+			mui.toast("请先选择分院");
 		}
-		if(($(this).hasClass("checked"))&&(DataCheck)){
-			$(this).removeAttr("class").addClass("permit");
-			$(".myDate caption>div").removeAttr("style").html("<p>可以预约</p><p>不可预约</p>");
-			DataYear=0;
-			DataMonth=0;
-			DataDay=0;
-			return DataCheck=false;
-		}
-		
 	});
 
 

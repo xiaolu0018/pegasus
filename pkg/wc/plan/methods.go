@@ -8,11 +8,12 @@ import (
 
 //plan 保存更新
 func (p *Plan) UpSert(c *mgo.Collection) error {
-	if bson.IsObjectIdHex(p.Id.Hex()) {
-		return c.UpdateId(p.Id, p)
-	}
-	p.Id = bson.NewObjectId()
-	return c.Insert(p)
+	//if bson.IsObjectIdHex(p.Id) {
+	//	return c.UpdateId(p.Id, p)
+	//}
+	//p.Id = bson.NewObjectId()
+	//return c.Insert(p)
+	return nil
 }
 
 //暂时只检查是否为空

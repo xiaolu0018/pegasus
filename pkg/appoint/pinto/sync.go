@@ -8,8 +8,8 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
 	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
 	pintoapi "192.168.199.199/bjdaos/pegasus/pkg/common/api/pinto"
+	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
 	"192.168.199.199/bjdaos/pegasus/pkg/common/util/database"
 )
 
@@ -73,6 +73,7 @@ func (c *Config) sync() error {
 
 	olds, err := org.ListDBOrgs()
 	if err != nil {
+		glog.Errorln("ListDBOrgs", err)
 		return err
 	}
 
@@ -90,7 +91,6 @@ func (c *Config) sync() error {
 		glog.Errorf("sync () update change orgs err %v\n", err)
 	}
 
-
 	cks, err := pintoapi.ListCheckups(database)
 	if err != nil {
 		glog.Errorf("Sync checkups cached cks err %v\n", err)
@@ -102,4 +102,3 @@ func (c *Config) sync() error {
 
 	return nil
 }
-

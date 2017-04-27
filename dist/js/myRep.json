@@ -1,0 +1,51 @@
+[{
+ 	"appid": "ackekdberr_tocken0303kjgkk",
+    "planid": "abandkfo003i44klkglcddwe3d",
+    "name": "测试人名",
+    "branchname": "苍南体检分院",
+    "status": "预约成功",
+    "serve_mobile": "15035836695",
+    "appointdate": "2017-03-05",
+    "rightdate":"2017-01-28"
+},
+{
+ 	"appid": "ackekdberr_tocken0303kjgk2k",
+    "planid": "abandkfo003i44klkglcddwe3d",
+    "name": "测试人名2",
+    "branchname": "苍南体检分院2",
+    "status": "待评价",
+    "serve_mobile": "15035836695",
+    "appointdate": "2017-04-05",
+    "rightdate":"2017-01-28"
+},
+{
+ 	"appid": "ackekdberr_tocken0303kjgkk3",
+    "planid": "abandkfo003i44klkglcddwe3d4",
+    "name": "测试人名3",
+    "branchname": "苍南体检分院3",
+    "status": "已评价",
+    "serve_mobile": "15035836695",
+    "appointdate": "2017-04-05",
+    "rightdate":"2017-04-28"
+},
+{
+ 	"appid": "ackekdberr_tocken0303kjgkk4",
+    "planid": "abandkfo003i44klkglcddwe3dt",
+    "name": "测试人名4",
+    "branchname": "苍南体检分院4",
+    "status": "已取消",
+    "serve_mobile": "15035836695",
+    "appointdate": "2017-06-05",
+    "rightdate":"2017-05-20"
+},
+{
+ 	"appid": "ackekdberr_tocken0303kjgkk5",
+    "planid": "abandkfo003i44klkglcddwe3dg",
+    "name": "测试人名5",
+    "branchname": "苍南体检分院5",
+    "status": "体检中",
+    "serve_mobile": "15035836695",
+    "appointdate": "2017-01-05",
+    "rightdate":"2017-12-28"
+}
+]

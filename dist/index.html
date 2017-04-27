@@ -110,8 +110,8 @@
 			 bounce: true //是否启用回弹
     	});
 		document.body.onload=function(){
-//			$.getJSON('http://www.elepick.com/api/banners',function(data){
-			$.getJSON('data/index.json',function(data){
+			$.getJSON('http://www.elepick.com/api/banners',function(data){
+//			$.getJSON('data/index.json',function(data){
 					//服务器返回响应，根据响应结果，分析是否登录成功；
 				if (typeof data === 'string') {
 				    data = JSON.parse(data);
@@ -148,7 +148,7 @@
 					lazyload.refresh(true);
 				})(mui);
 				
-            },'json');
+            });
 
 
 		};

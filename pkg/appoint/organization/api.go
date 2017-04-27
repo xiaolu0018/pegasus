@@ -3,8 +3,8 @@ package organization
 import (
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
-	"github.com/lib/pq"
 	"fmt"
+	"github.com/lib/pq"
 )
 
 func ListDBOrgs() ([]types.Organization, error) {
@@ -20,7 +20,9 @@ func ListDBOrgs() ([]types.Organization, error) {
 		if err = rows.Scan(&code, &id, &name); err != nil {
 			return nil, err
 		}
+
 		l = append(l, types.Organization{ID: id, Code: code, Name: name})
+
 	}
 
 	if rows.Err() != nil {
@@ -31,8 +33,8 @@ func ListDBOrgs() ([]types.Organization, error) {
 }
 
 func CreateOrg(org types.Organization) error {
-	_, err := db.GetDB().Exec("INSERT INTO "+TABLE_ORG+"(ORG_CODE, ID, NAME) VALUES ($1, $2, $3)",
-		org.Code, org.ID, org.Name)
+	_, err := db.GetDB().Exec("INSERT INTO "+TABLE_ORG+"(ORG_CODE, ID, NAME,IMAGEURL, DETAILSURL) VALUES ($1, $2, $3,$4,$5)",
+		org.Code, org.ID, org.Name, org.ImageUrl, org.DetailsUrl)
 	return err
 }
 
@@ -116,9 +118,34 @@ func ListOrganizations(page_index, page_size int) ([]Organization, error) {
 	return l, nil
 }
 
+func ListOrganizationsForWC() ([]Organization, error) {
+	sql := `SELECT org_code, name,imageurl,detailsUrl FROM %s`
+	sql = fmt.Sprintf(sql, TABLE_ORG)
+	rows, err := db.GetDB().Query(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	l := []Organization{}
+	org := Organization{}
+	for rows.Next() {
+		if err = rows.Scan(&org.Code, &org.Name, &org.ImageUrl, &org.DetailsUrl); err != nil {
+			return nil, err
+		}
+
+		l = append(l, org)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return l, nil
+}
 func GetOrgByCode(code string) (*Organization, error) {
 	org := Organization{}
-	if err := db.GetDB().QueryRow(`SELECT org_code, id, name FROM ` + TABLE_ORG + ` WHERE org_code = $1`, code).
+	if err := db.GetDB().QueryRow(`SELECT org_code, id, name FROM `+TABLE_ORG+` WHERE org_code = $1`, code).
 		Scan(&org.Code, &org.ID, &org.Name); err != nil {
 
 		return nil, err

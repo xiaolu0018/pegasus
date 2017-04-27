@@ -151,7 +151,7 @@ func (c *cache) Auth(token string) (bool, string) {
 
 func (c *cache) cacheUsers(l []User) {
 	for _, user := range l {
-		c.oIDToDbID[user.OpenID] = user.ID.Hex()
+		c.oIDToDbID[user.OpenID] = user.ID
 	}
 }
 

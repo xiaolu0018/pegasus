@@ -5,10 +5,12 @@ import (
 )
 
 type Organization struct {
-	ID      string //id
-	Code    string //org_code
-	Name    string //org_name
-	Deleted bool
+	ID         string //id
+	Code       string //org_code
+	Name       string //org_name
+	ImageUrl   string
+	DetailsUrl string
+	Deleted    bool
 }
 
 type OrganizationList []Organization

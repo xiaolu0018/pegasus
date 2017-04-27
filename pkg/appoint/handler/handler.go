@@ -10,6 +10,7 @@ import (
 
 	httputil "github.com/1851616111/util/http"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
 	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
 )
 
@@ -127,4 +128,59 @@ func ListHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	} else {
 		httputil.ResponseJson(rw, 200, org)
 	}
+}
+
+func ListHandlerWC(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var org_wcs []org.Org_WC
+	var org_wc org.Org_WC
+	if orgs, err := org.ListOrganizationsForWC(); err != nil {
+		glog.Errorln("Orgnization ListHandler ListOrgConfig", err.Error())
+		httputil.Response(rw, 400, err)
+		return
+	} else {
+		for _, org := range orgs {
+			org_wc.Name = org.Name
+			org_wc.OrgCode = org.Code
+			org_wc.ImageUrl = org.ImageUrl
+			org_wc.DetailsUrl = org.DetailsUrl
+			org_wcs = append(org_wcs, org_wc)
+		}
+	}
+	httputil.ResponseJson(rw, 200, &org_wcs)
+	return
+}
+
+func GetPlansHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var plans []appointment.Plan
+	var err error
+	if plans, err = appointment.GetPlans(); err == nil {
+		if err = json.NewEncoder(rw).Encode(&plans); err != nil {
+			glog.Errorln("appoint.GetPlansHandler", err.Error())
+			httputil.ResponseJson(rw, 400, "not found")
+		}
+	}
+	return
+}
+
+func GetBannersHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var banners []appointment.Banner
+	var err error
+	if banners, err = appointment.GetBanners(); err == nil {
+		httputil.ResponseJson(rw, 200, &banners)
+		return
+	}
+	glog.Errorln("appoint.GetBannersHandler Err  ", err.Error())
+	httputil.ResponseJson(rw, 400, err)
+}
+
+func GetOffDayHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	org_code := ps.ByName("code")
+	offdays, err := appointment.GetOffDay(org_code)
+	if err != nil {
+		glog.Errorln("appoint.GetOffDayHandler Err ", err.Error())
+	}
+	if err = json.NewEncoder(rw).Encode(offdays); err != nil {
+		httputil.ResponseJson(rw, 400, err)
+	}
+	return
 }
