@@ -42,7 +42,7 @@ func (m *redirectManager) AddRouter(router *httprouter.Router) error {
 			return err
 		}
 
-		router.GET(path, handler.AuthValidator(newApiToken, redirectFn))
+		router.GET(path, handler.AuthValidator(completeUserInfo, redirectFn))
 	}
 
 	return nil

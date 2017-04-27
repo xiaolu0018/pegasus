@@ -11,10 +11,11 @@ var ErrDistrictNotFound error = errors.New("address district not found")
 var ErrDetailNotFound error = errors.New("address detail not found")
 
 type Address struct {
-	Province string `bson:"province" json:"province"`
-	City     string `bson:"city" json:"city"`
-	District string `bson:"district" json:"district"`
-	Details  string `bson:"details" json:"details"`
+	Country  string `json:"country,omitempty"`
+	Province string `bson:"province" json:"province,omitempty"`
+	City     string `bson:"city" json:"city,omitempty"`
+	District string `bson:"district" json:"district,omitempty"`
+	Details  string `bson:"details" json:"details,omitempty"`
 }
 
 func (a Address) Validate() error {

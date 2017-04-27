@@ -28,14 +28,13 @@ func TestHealth_Upsert(t *testing.T) {
 	//	pq.Array(h.Eating_habits), pq.Array(h.Drink_habits), pq.Array(h.Smoke_history))
 	sqlStr := fmt.Sprintf("INSERT INTO %s (id,past_history)VALUES('%v',%s)",
 		TABLE_HEALTH, h.Id, GetArraySqlString(h.Past_history))
-	fmt.Println("sqlstr",sqlStr)
+	fmt.Println("sqlstr", sqlStr)
 	if rs, err := db.GetDB().Exec(sqlStr); err != nil {
 		glog.Errorln("user.Upsert TABLE_HEALTH Exec err", err.Error())
 		return
-	}else {
-		fmt.Println("rs",rs)
+	} else {
+		fmt.Println("rs", rs)
 	}
-
 
 }
 

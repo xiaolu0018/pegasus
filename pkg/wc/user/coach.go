@@ -11,6 +11,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const WC_USER_INFO_CH_LEN = 500
+
 var nilStruct struct{} = struct{}{}
 
 //用户缓存数据
@@ -23,19 +25,21 @@ func Init() error {
 
 type Cache interface {
 	GetWorkingToken(id string) (bool, string)
-	CacheToken(id, token string) error
+	CacheSysToken(id, token string) error
+	CacheWCToken(id, token string) error
 	Auth(string) (bool, string)
 }
 
 func NewCache(ttlSec int64) Cache {
 	c := &cache{
-		tokenTTLSec: ttlSec,
-		oIDToDbID:   map[string]string{},
-		oIDToToken:  map[string]string{},
-		tokenToOID:  map[string]string{},
-		tokenToSecs: map[string]int64{},
-		toSyncOIDs:  map[string]struct{}{},
-		toSyncCh:    make(chan struct{}, 200),
+		tokenTTLSec:         ttlSec,
+		oIDToDbID:           map[string]string{},
+		oIDToToken:          map[string]string{},
+		tokenToOID:          map[string]string{},
+		tokenToSecs:         map[string]int64{},
+		toSyncOIDs:          map[string]struct{}{},
+		toSyncCh:            make(chan struct{}, 200),
+		toCacheWcUserInfoCh: make(chan *wcToken, WC_USER_INFO_CH_LEN),
 	}
 
 	go c.startSync()
@@ -47,11 +51,11 @@ type cache struct {
 	toSyncOIDs map[string]struct{}
 	toSyncCh   chan struct{}
 
-	tokenTTLSec int64
-	oIDToToken  map[string]string
-	tokenToOID  map[string]string //token过期删除oID
-	tokenToSecs map[string]int64  //token缓存时间秒数
-
+	tokenTTLSec         int64
+	oIDToToken          map[string]string
+	tokenToOID          map[string]string //token过期删除oID
+	tokenToSecs         map[string]int64  //token缓存时间秒数
+	toCacheWcUserInfoCh chan *wcToken
 }
 
 func (c *cache) Init() error {
@@ -98,7 +102,7 @@ func (c *cache) GetWorkingToken(id string) (bool, string) {
 	return true, token
 }
 
-func (c *cache) CacheToken(id, token string) error {
+func (c *cache) CacheSysToken(id, token string) error {
 	if id == "" {
 		return errors.New("cache id not found")
 	}
@@ -122,6 +126,19 @@ func (c *cache) CacheToken(id, token string) error {
 	}
 
 	return nil
+}
+
+func (c *cache) CacheWCToken(id, token string) (err error) {
+	if len(c.toCacheWcUserInfoCh) == WC_USER_INFO_CH_LEN {
+		return errors.New("weichat user channel full")
+	}
+
+	c.toCacheWcUserInfoCh <- &wcToken{
+		openID:      id,
+		accessToken: token,
+	}
+
+	return
 }
 
 func (c *cache) Auth(token string) (bool, string) {
@@ -152,6 +169,10 @@ func (c *cache) startSync() {
 			c.cleanExpiredToken()
 		case <-oomCheck.C:
 			c.Check()
+		case wcU := <-c.toCacheWcUserInfoCh:
+			if err := wcU.updateUserWCInfo(); err != nil {
+				glog.Errorf("cache.startSync()  sync cache weichat user err %v\n", err)
+			}
 		}
 	}
 }

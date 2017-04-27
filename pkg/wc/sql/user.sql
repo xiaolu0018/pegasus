@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS go_weixin_user_health;
 CREATE TABLE go_weixin_user
 (
   id VARCHAR(30)  primary key,
-  openid    VARCHAR(30),
+  openid    VARCHAR(30) UNIQUE,
   cardtype VARCHAR(10) ,
   cardno VARCHAR(20),
   mobile VARCHAR(15) ,
@@ -15,7 +15,14 @@ CREATE TABLE go_weixin_user
   address_city VARCHAR(10),
   address_district VARCHAR(10),
   address_details VARCHAR(30),
-  ifonlyneed_electronic_report boolean,
+  ifonlyneed_electronic_report boolean DEFAULT FALSE,
+
+  wc_nickname VARCHAR(100),
+  wc_sex VARCHAR (2),
+  wc_province VARCHAR (10),
+  wc_city VARCHAR (20),
+  wc_country VARCHAR(10),
+  wc_headimgurl VARCHAR (200),
   healthid VARCHAR(30)
 );
 

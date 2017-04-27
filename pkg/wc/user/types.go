@@ -31,8 +31,9 @@ type User struct {
 	IsDianziReport bool           `json:"isdianzireport"` //是否发送电子报告
 	Address        common.Address `json:"address" bson:"address"`
 	Label          Lable
-	OpenID         string `json:"-" bson:"openid"`         //微信用来确认的id
-	Role           string `json:"-" bson:"role,omitempty"` //暂时区分管理员和普通用户
+	OpenID         string     `json:"-" bson:"openid"`         //微信用来确认的id
+	Role           string     `json:"-" bson:"role,omitempty"` //暂时区分管理员和普通用户
+	WC_Info        WCUserInfo //微信用户数据来自微信
 }
 
 type Lable struct {

@@ -61,6 +61,5 @@ func forbiddenHandler(w http.ResponseWriter, r *http.Request) {
 
 func isTokenInValid(r *http.Request) bool {
 	token := r.Header.Get(user.TokenHeaderName)
-	glog.Errorf("tolen", token)
 	return len(token) != user.TokenLength
 }

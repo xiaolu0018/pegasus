@@ -1,13 +1,9 @@
 package user
 
 import (
-	"fmt"
-
-	"net/http"
-
 	"encoding/json"
-
 	"gopkg.in/mgo.v2/bson"
+	"net/http"
 
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
@@ -22,13 +18,12 @@ import (
 func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	u := User{}
 	//u := make(map[string]interface{})
-	glog.Errorf("enter user.UpsertInfoHandler")
 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
 		glog.Errorf("UpsertInfoHandler err", err.Error())
 		httputil.ResponseJson(w, 400, "params invalid"+err.Error())
 		return
 	}
-	fmt.Println("u __", u)
+
 	if err := u.CreateValidate(); err != nil {
 		glog.Errorf("CreateValidate err", err.Error())
 		httputil.ResponseJson(w, 400, err.Error())
@@ -41,16 +36,13 @@ func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		httputil.ResponseJson(w, 400, err)
 		return
 	}
-	glog.Errorf("u_map,%v", u)
+
 	httputil.ResponseJson(w, 200, "ok")
 }
 
 //保存或更新用户的label
 // curl --data '{"bingshi":{"gaoxueya","gaoxuezhi"},"jiazushi":{"guanxinbing","naogeng"}}' http://www.elepick.com/api/user/12345678910/health
 func UpdateLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	//l := make(map[string][]string)
-
-	glog.Errorf("enter user.UpdateLabelHandler")
 	userid := ps.ByName(common.AuthHeaderKey)
 	h := Health{}
 	if err := json.NewDecoder(r.Body).Decode(&h); err != nil {
@@ -58,8 +50,6 @@ func UpdateLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		httputil.ResponseJson(w, 404, "params invalid")
 		return
 	}
-
-	glog.Errorf("l__err", h)
 
 	if err := h.Upsert(userid); err != nil {
 		glog.Errorf("user.UpdateLabelHandler: updatelabel(%v) err %v\n", userid, err)
@@ -87,7 +77,6 @@ func GetLabelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userid := ps.ByName(common.AuthHeaderKey)
 
-	fmt.Println("GetHandler", ps.ByName(common.AuthHeaderKey))
 	if u, err := GetUserByid(userid); err != nil {
 		glog.Errorf("user.GetHandler:err %v\n", err)
 		httputil.ResponseJson(w, 400, err)
