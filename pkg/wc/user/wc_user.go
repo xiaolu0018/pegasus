@@ -59,7 +59,7 @@ func upsertUser(openid string, ui *WCUserInfo) error {
 	}
 
 	_, err := db.GetDB().Exec(`UPDATE `+TABLE_USER+`
-	SET wc_nickname=$1, wc_sex=$2, wc_headimgurl=$3, wc_country=$4,wc_province=$5, wc_city=$6`,
-		ui.NickName, ui.Sex, ui.Head_ImgUrl, ui.Country, ui.Province, ui.City)
+	SET wc_nickname=$1, wc_sex=$2, wc_headimgurl=$3, wc_country=$4,wc_province=$5, wc_city=$6
+	WHERE openid=$7`, ui.NickName, ui.Sex, ui.Head_ImgUrl, ui.Country, ui.Province, ui.City, openid)
 	return err
 }
