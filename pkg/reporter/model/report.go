@@ -31,6 +31,8 @@ func GetReporterByExNo(exNo string, sync bool) (*types.Report, error) {
 		return nil, err
 	}
 
+	*ret.CardNo = encodeCardNo(*ret.CardNo)
+
 	b := married == married_code
 	ret.Married = &b
 
@@ -67,4 +69,15 @@ func getSyncSQL(exam_no string) string {
        LEFT JOIN sale_enterprise se ON se.enterprise_code = so.enterprise_code
        WHERE
 	        EX.examination_no = '%s'`, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no)
+}
+
+func encodeCardNo(cardNo string) string {
+	switch len(cardNo) {
+	case 15:
+		return fmt.Sprintf("%s****%s**%s", cardNo[0:2], cardNo[6:12], cardNo[13:])
+	case 18:
+		return fmt.Sprintf("%s****%s**%s", cardNo[0:2], cardNo[6:14], cardNo[16:])
+	default:
+		return cardNo
+	}
 }
