@@ -1,8 +1,8 @@
 package token
 
 import (
+	wchandler "github.com/1851616111/util/weichat/handler"
 	wctoken "github.com/1851616111/util/weichat/util/api-token"
-	wchandler "github.com/1851616111/util/weichat/util/handler"
 	usertoken "github.com/1851616111/util/weichat/util/user-token"
 )
 

@@ -6,9 +6,9 @@ import (
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
 )
 
 func authUser(handler func(http.ResponseWriter, *http.Request, httprouter.Params)) func(http.ResponseWriter, *http.Request, httprouter.Params) {

@@ -1,19 +1,57 @@
-drop FUNCTION IF EXISTS  arrayToArrStr(arr text[]);
-drop FUNCTION IF EXISTS  arrayToObjStr(arr text[]);
-drop FUNCTION IF EXISTS  arrayToObjStr2(arr text[]);
-drop FUNCTION IF EXISTS  arrayToArrStr2(arr text[]);
-drop FUNCTION IF EXISTS  checkNull(s text);
-drop FUNCTION IF EXISTS  getCheckupStr(exam_no varchar);
-drop FUNCTION IF EXISTS  getSelectedStr(exam_no varchar);
-drop FUNCTION IF EXISTS  getCheckAndItems(exam_no varchar);
-drop FUNCTION IF EXISTS  getFinalDiagoseStr(exam_no varchar);
-drop FUNCTION IF EXISTS  genFinalExam(exam_no varchar);
-drop FUNCTION IF EXISTS  getItemStr(exam_no varchar, ck_code varchar);
-drop FUNCTION IF EXISTS  getImageStr(exam_no varchar);
-drop FUNCTION IF EXISTS  getSingles(exam_no varchar);
-drop FUNCTION IF EXISTS  genAllData(exam_no varchar);
-drop FUNCTION IF EXISTS  getReport(exam_no VARCHAR);
+package db
 
+import (
+	"database/sql"
+	_ "github.com/lib/pq"
+
+	"fmt"
+)
+
+//"postgres://postgres:postgresql2016@192.168.199.216:5432/pinto?sslmode=disable"
+var readDB *sql.DB
+var writeDB *sql.DB
+var err error
+
+func InitReadDB(user, passwd, ip, port, db string) error {
+	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		user, passwd, ip, port, db)
+
+	readDB, err = sql.Open("postgres", addr)
+	return err
+}
+
+func InitWriteDB(user, passwd, ip, port, db string) error {
+	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		user, passwd, ip, port, db)
+
+	writeDB, err = sql.Open("postgres", addr)
+	return err
+}
+
+func GetReadDB() *sql.DB {
+	return readDB
+}
+
+func GetWriteDB() *sql.DB {
+	return readDB
+}
+
+func InitFunction(user, passwd, ip, port, db string) error {
+	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		user, passwd, ip, port, db)
+
+	writeDB, err := sql.Open("postgres", addr)
+	if err != nil {
+		return err
+	}
+	defer writeDB.Close()
+
+	_, err = writeDB.Exec(initCmd)
+	return err
+}
+
+// **these sql functions need sync with sql/function.sql**
+var initCmd = `
 CREATE OR REPLACE FUNCTION arrayToArrStr(arr text[]) RETURNS text AS $$
    BEGIN
     return concat('[^[', array_to_string(arr, '^,^'), ']^]');
@@ -82,7 +120,6 @@ CREATE OR REPLACE FUNCTION getSelectedStr(exam_no varchar) RETURNS text AS $$
 	        FROM personal_health_info P, examination b
 	        WHERE P.person_code = b.person_code
 	        AND b.examination_no = exam_no
-	        ORDER BY P.person_code
         LOOP
             SELECT array_append(selecteds, data.selected_code::text) into selecteds;
         END LOOP;
@@ -101,8 +138,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
         DEP.department_name,
         I.item_name, EX_I.item_value, EX_I.exception_arrow, EX_I.reference_description, I.examination_unit,
         EX_CK.diagnose_result,
-        DEP.doctor_sign, M.previous_name username, mm.previous_name,
-        CK.checkup_type_code, CK.department_code
+        DEP.doctor_sign, M.previous_name username, mm.previous_name
         FROM examination EX
         LEFT JOIN examination_checkup EX_CK ON EX.examination_no = EX_CK.examination_no
         LEFT JOIN checkup CK ON EX_CK.checkup_code = CK.checkup_code
@@ -112,7 +148,6 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
         LEFT JOIN manager M ON EX_CK.diagnose_manager_code = M.manager_code
         LEFT JOIN MANAGER mm ON EX_CK.check_manager_code = mm.manager_code
         WHERE EX_CK.checkup_code IS NOT NULL
-        and CK.checkup_type_code IN ('0', '1')
         AND EX_CK.checkup_status = 2
         AND EX.examination_no = exam_no
         AND (
@@ -128,8 +163,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
             select array_append(tmp, arrayToObjStr(ARRAY[checkNull(data.department_name), checkNull(data.item_name),
             checkNull(data.item_value), checkNull(data.exception_arrow), checkNull(data.reference_description),
             checkNull(data.examination_unit), checkNull(data.diagnose_result), checkNull(data.doctor_sign),
-            checkNull(data.username), checkNull(data.previous_name),
-            checkNull(data.checkup_type_code), checkNull(data.department_code)]::text[])) into tmp;
+            checkNull(data.username), checkNull(data.previous_name)]::text[])) into tmp;
         END LOOP;
 
         return arrayToArrStr(tmp);
@@ -233,45 +267,15 @@ CREATE OR REPLACE FUNCTION getSingles(exam_no varchar) RETURNS text AS $$
         tmp text[];
     BEGIN
         FOR data IN
-        SELECT image_url
-        FROM examination_imageinformation T
-        WHERE T.examination_no = exam_no
-        AND T.image_url IS NOT NULL
-        AND T.checkup_code IN ( SELECT regexp_split_to_table(key_value, ',') FROM con_global_config WHERE key_name = 'single_print_code')
-        ORDER BY  checkup_code,t.createtime
-    LOOP
-        SELECT array_append(tmp, arrayToObjStr(ARRAY[data.image_url])) into tmp;
+            SELECT DISTINCT C.checkup_name, T.image_url
+            FROM examination_imageinformation T
+            LEFT JOIN checkup C ON T.checkup_code = C.checkup_code
+            WHERE T.examination_no = exam_no AND T.image_url IS NOT NULL
+            AND T.checkup_code IN (SELECT regexp_split_to_table(key_value, ',') FROM con_global_config WHERE key_name = 'single_print_code')
+        LOOP
+          SELECT array_append(tmp, arrayToObjStr(ARRAY[data.checkup_name, data.image_url])) into tmp;
         END LOOP;
         RETURN arrayToArrStr(tmp);
     END;
-$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION genAllData(exam_no varchar) RETURNS void AS $$
-    DECLARE
-        tmp text;
-    BEGIN
-    INSERT INTO go_report(EX_NO, EX_CHECKUPDATE, EX_IMAGE, EX_AGE,
-    P_NAME, P_SEX, P_CARDNO, P_BIRTHDAY, P_IFMARRIED, P_EMAIL, P_ADDRESS, P_CELLPHONE, P_PHONE,
-    NATION, ENTERPRISE, CONTACT_PHONE)
-       SELECT
-            	EX.examination_no, EX.checkupdate, replace(EX.image_url,'\','/'), EX.age,
-            	P.name, P.sex, P.card_no, P.bithday, P.is_marry, P.email, P.address, P.cellphone, P.phone,
-            	(SELECT nation_name from nation n where n.nation_code = P.nation_code) NATION,
-            	se.enterprise_name ENTERPRISE,
-            	(SELECT T2.contact_phone FROM examination T1, print_template T2 WHERE T1.checkup_hoscode = T2.hos_code AND T1.examination_no = exam_no) CONTACT_PHONE
-       FROM examination EX
-       LEFT JOIN person P ON EX.person_code = P.person_code
-       LEFT JOIN organization o ON EX.hos_code = o.org_code
-       LEFT JOIN sale_order so ON so.order_code = EX.group_code
-       LEFT JOIN sale_enterprise se ON se.enterprise_code = so.enterprise_code
-       WHERE
-	        EX.examination_no = exam_no;
-
-    UPDATE go_report SET CK_DETAILS = getCheckupStr(exam_no), HEALTH_SELECTED = getSelectedStr(exam_no),
-    CK_ITEMS = getCheckAndItems(exam_no), ANALYSE_ADVICE = getFinalDiagoseStr(exam_no), FINAL_EXAM = genFinalExam(exam_no),
-    IMAGES = getImageStr(exam_no), SINGLES = getSingles(exam_no)
-    WHERE go_report.EX_NO = exam_no;
-
-    END;
-
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;`

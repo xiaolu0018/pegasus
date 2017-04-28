@@ -1,19 +1,34 @@
 package handler
 
 import (
+	"encoding/xml"
+	"io/ioutil"
+	"net/http"
+	"sync"
+
+	httputil "github.com/1851616111/util/http"
+	"github.com/1851616111/util/weichat/event"
 	"github.com/1851616111/util/weichat/util/sign"
 	token "github.com/1851616111/util/weichat/util/user-token"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
-	"net/http"
 )
 
 var APP_ID string
 var Token *token.Config
+var EventManager *event.EventManager
+var EOnceL sync.Once
+
+func init() {
+	EOnceL.Do(func() {
+		EventManager = event.NewEventManager()
+	})
+}
 
 //validate qualification of weichat developer
 func DeveloperValidater(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	r.ParseForm()
+
 	s := sign.Sign(r.FormValue("nonce"), r.FormValue("timestamp"), APP_ID)
 
 	if s != r.FormValue("signature") {
@@ -22,7 +37,32 @@ func DeveloperValidater(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 		w.WriteHeader(200)
 		w.Write([]byte(r.FormValue("echostr")))
 	}
+	return
+}
 
+func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	xmlData, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		httputil.Response(w, 400, err)
+		glog.Errorf("read weichat notify event err %v\n", err)
+		return
+	}
+
+	e := event.Event{}
+	if err := xml.Unmarshal(xmlData, &e); err != nil {
+		httputil.Response(w, 400, err)
+		glog.Errorf("decode weichat notify event msg err %v\n", err)
+		return
+	}
+
+	if act := EventManager.Handle(&e); act != nil {
+		b, err := xml.Marshal(act)
+		if err != nil {
+			glog.Errorf("encode weichat event action err %v\n", err)
+		}
+
+		w.Write(b)
+	}
 	return
 }
 
@@ -43,7 +83,7 @@ func AuthValidator(tokenCallBack func(*token.Token, *httprouter.Params) error, h
 			forbiddenHandler(w, r, ps)
 			return
 		}
-		glog.Errorf("authValidater exchange access_token %v\n", *tk)
+		glog.Errorf("authValidater exchange access_token %#v\n", *tk)
 
 		if err := tokenCallBack(tk, &ps); err != nil {
 			glog.Errorf("authValidater tokenCallBack(%v) err %v\n", tk.Open_ID, err)

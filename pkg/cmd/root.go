@@ -3,10 +3,10 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	wccli "192.168.199.199/bjdaos/pegasus/pkg/wc/cli"
 	appcli "192.168.199.199/bjdaos/pegasus/pkg/appoint/cli"
-	rptcli "192.168.199.199/bjdaos/pegasus/pkg/reporter/cli"
 	pintocli "192.168.199.199/bjdaos/pegasus/pkg/pinto/cli"
+	rptcli "192.168.199.199/bjdaos/pegasus/pkg/reporter/cli"
+	wccli "192.168.199.199/bjdaos/pegasus/pkg/wc/cli"
 )
 
 // RootCmd represents the base command when called without any subcommands

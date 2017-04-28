@@ -11,13 +11,14 @@ import (
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/image"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/plan"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
-	"github.com/1851616111/util/weichat/util/handler"
+	"github.com/1851616111/util/weichat/handler"
 	"github.com/julienschmidt/httprouter"
 )
 
 func CreateHttpRouter(dist string) http.Handler {
 	r := httprouter.New()
 	r.GET("/api/basic/signature", handler.DeveloperValidater)
+	r.POST("/api/basic/signature", handler.EventAction)
 
 
 	r.POST("/api/user", authUser(user.UpsertInfoHandler))

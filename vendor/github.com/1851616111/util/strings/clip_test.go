@@ -1,9 +1,9 @@
 package strings
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
-	"fmt"
 )
 
 func TestClip(t *testing.T) {

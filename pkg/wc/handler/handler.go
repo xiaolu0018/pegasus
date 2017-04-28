@@ -16,7 +16,6 @@ func completeUserInfo(t *tk.Token, ps *httprouter.Params) error {
 	var ok bool
 	var id string = t.Open_ID
 
-
 	if ok, token = user.IDCache.GetWorkingToken(id); !ok {
 		token = rand.String(user.TokenLength)
 		user.IDCache.CacheSysToken(id, token)

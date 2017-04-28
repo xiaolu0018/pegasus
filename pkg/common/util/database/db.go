@@ -12,5 +12,5 @@ func Init(user, passwd, ip, port, db string) (*sql.DB, error) {
 	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		user, passwd, ip, port, db)
 
-	return  sql.Open("postgres", addr)
+	return sql.Open("postgres", addr)
 }

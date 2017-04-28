@@ -2,8 +2,8 @@ package plan
 
 import (
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestPlan_UpSert(t *testing.T) {
@@ -26,8 +26,7 @@ func TestGetPlans(t *testing.T) {
 	}
 }
 
-
 func TestSendHttpToGetPlans(t *testing.T) {
-	sd,to := SendHttpToGetPlans()
-	fmt.Println("sddto",string(sd),to)
+	sd, to := SendHttpToGetPlans()
+	fmt.Println("sddto", string(sd), to)
 }

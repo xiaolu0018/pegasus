@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/1851616111/util/weichat/util/handler"
+	"github.com/1851616111/util/weichat/handler"
 	"github.com/julienschmidt/httprouter"
 )
 

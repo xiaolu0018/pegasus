@@ -52,10 +52,14 @@ func startCmd() *cobra.Command {
 			}
 
 			if err := manager.CreateMenu(token.TokenCtrl.GetToken()); err != nil {
-				glog.Errorf("wc start:init menu err", err)
+				glog.Errorf("wc start:init menu err %v", err)
 				os.Exit(1)
 			}
 
+			if err := manager.CreateActivity(); err != nil {
+				glog.Errorf("wc start:init event action err %v", err)
+				os.Exit(1)
+			}
 		},
 
 		Run: func(cmd *cobra.Command, args []string) {
