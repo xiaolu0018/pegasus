@@ -1,15 +1,17 @@
 package appointment
 
 const TABLE_APPOINTMENT = "go_appoint_appointment"
+const TABLE_BANNER = "go_appoint_banner"
 
 const VALIDATE_CHANNEL_WC = "微信"
 const VALIDATE_CHANNEL_400 = "400"
 const VALIDATE_CARD_TYPE_ID = "身份证"
-const VALIDATE_CARD_TYPE_PASSPORT = "身份证"
+const VALIDATE_CARD_TYPE_PASSPORT = "护照"
 const VALIDATE_CARD_TYPE_OFFICER = "军官证"
-const VALIDATE_CARD_TYPE_STU = "学生证"
+const VALIDATE_CARD_TYPE_POLICE = "警察证"
+const VALIDATE_CARD_TYPE_OTHER = "其他"
 const VALIDATE_MERRY_NO = "未婚"
-const VALIDATE_MERRY_YES = "未婚"
+const VALIDATE_MERRY_YES = "已婚"
 
 var ErrAppointmentString = "Can't make an appointment"
 
@@ -75,10 +77,18 @@ type ManagerItem struct {
 var TABLE_PALN = "go_appoint_plan"
 
 type Plan struct {
-	ID        string
-	Name      string
-	AvatarImg string
-	DetailImg string
+	ID        string   `json:"id"`
+	Name      string   `json:"name"`
+	AvatarImg string   `json:"imageurl"` //todo 暂时为了保持和微信一致
+	DetailImg string   `json:"detailsurl"`
 	Checkups  []string //一个套餐中应该含有几种检查类型
 	IfShow    bool     //是否显示  false 显示  ture 隐藏
+}
+
+//定义Banner结构
+type Banner struct {
+	Pos         int    `json:"pos" bson:"pos"` //位置
+	ImageUrl    string `json:"imageUrl" bson:"imageurl"`
+	RedirectUrl string `json:"redirectUrl" bson:"redirecturl"`
+	IfShow      bool   //是否显示  false 显示  ture 隐藏
 }

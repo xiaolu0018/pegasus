@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS go_appoint_comment;
 DROP TABLE IF EXISTS go_appoint_plan;
 DROP TABLE IF EXISTS go_appoint_capacity_records;
 DROP TABLE IF EXISTS go_appoint_sale_records;
+DROP TABLE IF EXISTS go_appoint_banner;
 
 CREATE TABLE go_appoint_appointment
 (
@@ -15,6 +16,7 @@ CREATE TABLE go_appoint_appointment
   cardno VARCHAR(20) not null,
   mobile VARCHAR(15) not null,
   appointor VARCHAR(30) not null,
+  appointorid VARCHAR(30),
   merrystatus VARCHAR(10),
   status VARCHAR(10) not null,
   appoint_channel VARCHAR(30),
@@ -49,6 +51,14 @@ CREATE TABLE go_appoint_plan(
     avatar_img VARCHAR(50),
     detail_img VARCHAR(),
     checkups VARCHAR(30)[],
+    ifshow boolean
+);
+
+CREATE TABLE go_appoint_banner(
+    id VARCHAR(30) primary key,
+    pos INTEGER,
+    imageurl VARCHAR(30),
+    redirecturl VARCHAR(30),
     ifshow boolean
 );
 

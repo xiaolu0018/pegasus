@@ -14,7 +14,7 @@ func (o *Config_Basic) Create() error {
 	return err
 }
 
-func  GetConfigBasic(orgcode string) (*Config_Basic, error) {
+func GetConfigBasic(orgcode string) (*Config_Basic, error) {
 	sqlStr := fmt.Sprintf(`SELECT org_code,capacity,warnnum,offdays,avoidnumbers FROM %s WHERE org_code = '%s'`, TABLE_ORG_CON_BASIC, orgcode)
 	var org_code string
 	var capacity, warnnum int

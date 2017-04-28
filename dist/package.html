@@ -115,24 +115,29 @@
 		
 		$(function(){	
 			access();
-//			$.getJSON("http://www.elepick.com/api/plans",{},function(data){
-	var data=[{"Id":"58f06c59a46d12679d3b7a05","name":"基础套餐","origPrice":"","discount":"","presentPrice":"","imageUrl":"img/pack1.png","detailsUrl":"img/pacdet1.jpg","SpecialItems":null},{"Id":"58f06c9da46d126820f841a4","name":"三人套餐","origPrice":"","discount":"","presentPrice":"","imageUrl":"img/pack2.png","detailsUrl":"img/pacdet2.jpg","SpecialItems":null},{"Id":"58f06cdfa46d12688c23405b","name":"迪安套餐","origPrice":"","discount":"","presentPrice":"","imageUrl":"img/pack1.png","detailsUrl":"img/pacdet3.jpg","SpecialItems":null}]
-				if (typeof data === 'string') {
-				    data = JSON.parse(data);
-				}
-				if(data==null){
-					//数据为空
-				}else{
-					data=eval(data);
-					var len=data.length;
-					var ranges='';
-					for(var g=0;g<len;g++){
-						ranges+='<li class="mui-table-view-cell"><div class="mui-input-row mui-radio mui-left"><label>'+data[g].name+'</label><input id="'+data[g].Id+'" name="package" value="'+data[g].name+'" type="radio"></div><img href="'+data[g].detailsUrl+'" src="'+data[g].imageUrl+'"></li>'
+			$.ajax({
+				url:"http://www.elepick.com/api/plans",
+				type:"get",
+				data:"",
+				success:function(data){
+					//	var data=[{"Id":"58f06c59a46d12679d3b7a05","name":"基础套餐","origPrice":"","discount":"","presentPrice":"","imageUrl":"img/pack1.png","detailsUrl":"img/pacdet1.jpg","SpecialItems":null},{"Id":"58f06c9da46d126820f841a4","name":"三人套餐","origPrice":"","discount":"","presentPrice":"","imageUrl":"img/pack2.png","detailsUrl":"img/pacdet2.jpg","SpecialItems":null},{"Id":"58f06cdfa46d12688c23405b","name":"迪安套餐","origPrice":"","discount":"","presentPrice":"","imageUrl":"img/pack1.png","detailsUrl":"img/pacdet3.jpg","SpecialItems":null}]
+					if (typeof data === 'string') {
+					    data = JSON.parse(data);
 					}
-					$("form>ul.mui-table-view-radio").html(ranges);
-					
-				}						
-//			});
+					if(data==null){
+						//数据为空
+					}else{
+						data=eval(data);
+						var len=data.length;
+						var ranges='';
+						for(var g=0;g<len;g++){
+							ranges+='<li class="mui-table-view-cell"><div class="mui-input-row mui-radio mui-left"><label>'+data[g].name+'</label><input id="'+data[g].id+'" name="package" value="'+data[g].name+'" type="radio"></div><img href="'+data[g].detailsurl+'" src="'+data[g].imageurl+'"></li>'
+						}
+						$("form>ul.mui-table-view-radio").html(ranges);
+						
+					}						
+				}
+			});
 			//套餐选择，取消			
 			$(".mui-table-view").on('tap','li>div.mui-radio',function(e){
 				
@@ -151,8 +156,8 @@
 					$(this).children('input').prop('checked',true);
 					packages=$(this).children('input').attr("id");
 				}
-				console.log(packages);
 				localStorage.packageid=packages;
+				localStorage.packagename=$(this).children('input').val();
 			});
 			//详情页链接进入
 			$("ul>li").on('tap','img',function(){

@@ -151,14 +151,11 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 	if userid != "" {
 		userid = fmt.Sprintf("AND appointorid = '%s'", userid)
 	}
-	fmt.Println(",,,,", fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s %s`,
-		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid))
 	if err := db.GetDB().QueryRow(fmt.Sprintf(`SELECT COUNT(*) FROM %s WHERE %s %s %s %s %s`,
 		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid)).Scan(&totalnums); err != nil {
 		glog.Errorf("GetQueryAll: sql  err %v\n", err)
 		return nil, 0, err
 	}
-	fmt.Println("total,,,,", totalnums)
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,appointorid,merrystatus,status,appoint_channel,"+
 		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE  %s %s %s %s %s LIMIT '%d' OFFSET '%d' `,
 		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid, page_size, page_index)

@@ -59,7 +59,7 @@ func getUserByOpenID(openID string) (*User, error) {
 func initUser(bsonID, openID string) error {
 	//return db.User().Insert(bson.M{"_id": bson.ObjectIdHex(bsonID), "openid": openID})
 	u := User{
-		ID:     bson.ObjectIdHex(bsonID),
+		ID:     bsonID,
 		OpenID: openID,
 	}
 	glog.Errorln("initUser___", u.Upsert())

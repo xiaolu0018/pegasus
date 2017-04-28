@@ -55,3 +55,10 @@ func TestConfig_Special_Create(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestORg(t *testing.T){
+	if err := db.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto"); err != nil {
+		t.Fatal(err)
+	}
+
+}

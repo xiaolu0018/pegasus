@@ -32,3 +32,26 @@ func GetPlanByID(planid string) (*Plan, error) {
 	pl.Checkups = []string(checkups)
 	return &pl, nil
 }
+
+func GetPlans() ([]Plan, error) {
+	ps := make([]Plan, 0)
+	sqlStr := fmt.Sprintf("SELECT id,name,avatar_img,detail_img,checkups FROM %s", TABLE_PALN)
+	rows, err := db.GetDB().Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	p := Plan{}
+	checkups := pq.StringArray{}
+	for rows.Next() {
+		if err = rows.Scan(&p.ID, &p.Name, &p.AvatarImg, &p.DetailImg, &checkups); err != nil {
+			return nil, err
+		}
+		p.Checkups = checkups
+		ps = append(ps, p)
+	}
+	if rows.Err() != nil {
+		return nil, rows.Err()
+	}
+	return ps, nil
+}

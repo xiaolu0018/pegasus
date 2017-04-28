@@ -13,9 +13,9 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/branch"
+	//"192.168.199.199/bjdaos/pegasus/pkg/wc/branch"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/capacitymanage"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/plan"
+	//"192.168.199.199/bjdaos/pegasus/pkg/wc/plan"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
 	"bytes"
 	"encoding/json"
@@ -27,20 +27,20 @@ import (
 )
 
 func (a *Appointment) Create(c *mgo.Collection) error {
-	a.ID = bson.NewObjectId()
-
-	if bson.IsObjectIdHex(a.PlanID.Hex()) {
-		plan, err := plan.Get(a.PlanID) //todo speciitem 应该从前端直接传过来，不需要在这重新
-		if err != nil {
-			glog.Errorln("plan err %v", a)
-			return err
-		}
-		a.SpecialItem = plan.SpecialItems
-	}
-
-	a.CreatDate = time.Now()
-	glog.Errorln("a err %v", a)
-	return c.Insert(a)
+	//a.ID = bson.NewObjectId().Hex()
+	//
+	//if bson.IsObjectIdHex(a.PlanID) {
+	//	plan, err := plan.Get(a.PlanID) //todo speciitem 应该从前端直接传过来，不需要在这重新
+	//	if err != nil {
+	//		glog.Errorln("plan err %v", a)
+	//		return err
+	//	}
+	//	a.SpecialItem = plan.SpecialItems
+	//}
+	//
+	//a.CreatDate = time.Now()
+	//glog.Errorln("a err %v", a)
+	return nil
 }
 
 func (a *Appointment) Update(c *mgo.Collection) error {
@@ -62,7 +62,6 @@ func (a *Appointment) UpdateStatus(c *mgo.Collection, speitem []string) error { 
 	month, _ := strconv.Atoi(datestring[1])
 	cm, err := capacitymanage.GetCapacityManage(bson.M{"branchid": a.BranchID, "year": year, "month": month})
 	if err != nil {
-		glog.Errorln("zheli<<<<<<<", err.Error())
 		return err
 	}
 	if ok := cm.UpdateDayOfCapacity(datestring[2], a.SpecialItem); !ok {
@@ -101,20 +100,22 @@ func ListAppointment(userid bson.ObjectId, c *mgo.Collection) ([]Appointment, er
 
 func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {
 	var au Appoint_User
-	var err error
+	//var err error
 
-	b := &branch.Branch{}
-	if b, err = branch.Get(a.BranchID); err != nil {
-		return nil, err
-	}
-	au.BranchName = b.Name
-	if bson.IsObjectIdHex(a.PlanID.Hex()) {
-		p := &plan.Plan{}
-		if p, err = plan.Get(a.PlanID); err != nil {
-			return nil, err
-		}
-		au.Planname = p.Name
-	}
+	//b := &branch.Branch{}
+	//if b, err = branch.Get(a.BranchID); err != nil {
+	//	return nil, err
+	//}
+	//au.BranchName = b.Name
+	//if bson.IsObjectIdHex(a.PlanID) {
+	//	p := &plan.Plan{}
+	//	if p, err = plan.Get(a.PlanID); err != nil {
+	//		return nil, err
+	//	}
+	//	au.Planname = p.Name
+	//}
+	au.BranchName = a.BranchName
+	au.Planname = a.PlanName
 	au.AppointDate = a.AppointDate
 	au.Name = u.Name
 	au.Mobile = u.Mobile
@@ -122,7 +123,7 @@ func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {
 	return &au, nil
 }
 
-func SendToAppoint(a appointment.Appointment) *http.Response {
+func SendToAppoint(a appointment.Appointment) (*http.Response, error) {
 	client := &http.Client{nil, nil, nil, time.Second * 10}
 	var req *http.Request
 	var rsp *http.Response
@@ -134,15 +135,15 @@ func SendToAppoint(a appointment.Appointment) *http.Response {
 	json.NewEncoder(&buf).Encode(a)
 	if req, err = http.NewRequest("POST", "http://192.168.199.198:9200/api/appointment", &buf); err != nil {
 		glog.Errorln("newrequest err", err)
-		return nil
+		return nil, err
 	}
 
 	if rsp, err = client.Do(req); err != nil {
 		glog.Errorln("newrequest err", err)
-		return nil
+		return nil, err
 	}
 	defer rsp.Body.Close()
-	return rsp
+	return rsp, nil
 }
 
 func Get_Appoint_Appointment(u user.User, a Appointment) (*appointment.Appointment, error) {
@@ -154,16 +155,16 @@ func Get_Appoint_Appointment(u user.User, a Appointment) (*appointment.Appointme
 	}
 	address := fmt.Sprintf("%s-%s-%s-%s", u.Address.Province, u.Address.City, u.Address.District, u.Address.Details)
 	a_a := appointment.Appointment{
-		ID:          a.ID.Hex(),
-		PlanId:      a.PlanID.Hex(),
+		ID:          a.ID,
+		PlanId:      a.PlanID,
 		AppointTime: appointtimeint,
-		OrgCode:     a.BranchID.Hex(),
+		OrgCode:     a.BranchID,
 
 		CardNo:          u.CardNo,
 		CardType:        u.CardType,
 		Mobile:          u.Mobile,
 		Appointor:       u.Name,
-		Appointorid:     u.ID.Hex(),
+		Appointorid:     u.ID,
 		Address:         address,
 		MerryStatus:     u.IsMarry,
 		Status:          "预约",

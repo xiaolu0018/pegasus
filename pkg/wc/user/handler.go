@@ -2,7 +2,6 @@ package user
 
 import (
 	"encoding/json"
-	"gopkg.in/mgo.v2/bson"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -29,7 +28,7 @@ func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		httputil.ResponseJson(w, 400, err.Error())
 		return
 	}
-	u.ID = bson.ObjectIdHex(ps.ByName(common.AuthHeaderKey))
+	u.ID = ps.ByName(common.AuthHeaderKey)
 	glog.Errorln("upsert u,id", ps.ByName(common.AuthHeaderKey))
 	if err := u.Upsert(); err != nil {
 		glog.Errorf("user.UpsertInfoHandler: user(%v) err %v\n", u, err)

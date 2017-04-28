@@ -165,12 +165,11 @@
            
         	//页面加载数据
         	$(function(){
-      			access();
-
+      			access();				
 				$.getJSON("http://www.elepick.com/api/branches",function(data){
-					 if (typeof data === 'string') {
+					if (typeof data === 'string') {
 						    data = JSON.parse(data);
-						  }
+						}
 					if(data==null){
 						
 					}else{
@@ -178,7 +177,7 @@
 						for(var i=0;i<leg;i++){
 							allDep.push({
 										text:data[i].name,
-										value:data[i].id
+										value:data[i].org_code
 									});
 						};
 					}					
@@ -188,8 +187,10 @@
 						departPicker.setData(allDep);
 						var showDepartPickerButton = document.getElementById('showDepartPicker');
 						var departResult = document.getElementById('departResult');
-						showDepartPickerButton.addEventListener('tap', function(event) {
-							
+						showDepartPickerButton.addEventListener('tap', function(event) {							
+							dateReady=false;
+							$(".myDate table td.checked").removeClass("checked").addClass("permit");
+							$(".myDate caption>div").removeAttr("style").html("<p>可以预约</p><p>不可预约</p>");
 							departPicker.show(function(items) {
 								departResult.innerText = items[0].text;
 								DEPART.name=items[0].text;
@@ -200,13 +201,15 @@
 									if (typeof data === 'string') {
 									     data = JSON.parse(data);
 									}
-									console.log(data);
+//									console.log(data);
 									if(data==null){
+										dateReady=true;
 										//数据为空
 									}else{
 										capatityed=data.capatityed;
 										offdays=data.offdays;
 										showDay(year,month);
+										dateReady=true;
 									}
 									
 								});
@@ -237,8 +240,10 @@
 									type:"put",
 									url:"http://www.elepick.com/api/appointment",
 									data:JSON.stringify({
-										'planid':localStorage.packageid,
+										'branchname':DEPART.name,
 										'branchid':DEPART.id,
+										'planname':localStorage.packagename,
+										'planid':localStorage.packageid,
 										'appointdate':DataYear+"-"+DataMonth+"-"+DataDay,									
 									}),
 									success:function(data, textStatus, xhr){	

@@ -31,21 +31,20 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		httputil.Response(w, 400, err)
 		return
 	}
-	cm.UserID = bson.ObjectIdHex(ps.ByName(common.AuthHeaderKey))
-	if err := cm.Create(db.Appointment()); err != nil {
-		glog.Errorln("Appointment CreateHandle Create", err.Error())
-		httputil.Response(w, 400, err)
-		return
-	}
+	cm.ID = bson.NewObjectIdWithTime(time.Now()).Hex()
+	cm.UserID = ps.ByName(common.AuthHeaderKey)
+	//if err := cm.Create(db.Appointment()); err != nil {
+	//	glog.Errorln("Appointment CreateHandle Create", err.Error())
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
 	result := make(map[string]string)
-	result["appointid"] = cm.ID.Hex()
+	result["appointid"] = cm.ID
 	if err := message.SuccessI(w, result); err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler SuccessI err", err.Error())
 		return
 	}
-	cache.Set(CACHE_TP, cm.ID.Hex(), cm)
-	c, err := cache.Get(CACHE_TP, cm.ID.Hex())
-	glog.Errorln("cache__", c, err)
+	cache.Set(CACHE_TP, cm.ID, cm)
 	return
 }
 
@@ -103,15 +102,19 @@ func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	rsp := SendToAppoint(*a_a)
-	glog.Errorln("Appointment GetAppointmentConfirmHandler SendToAppoint", rsp.StatusCode)
-	if err = app.UpdateStatus(db.Appointment(), app.SpecialItem); err != nil {
-		glog.Errorln("CapacityManage ConfirmCreatHandler UpdateStatus", err.Error())
-		httputil.Response(w, 400, err)
-		return
+	rsp, err := SendToAppoint(*a_a)
+	if err != nil {
+		glog.Errorln("Appointment GetAppointmentConfirmHandler SendToAppoint", err)
+		httputil.Response(w, 400, "ok")
 	}
 
-	httputil.Response(w, 200, "ok")
+	//if err = app.UpdateStatus(db.Appointment(), app.SpecialItem); err != nil {
+	//	glog.Errorln("CapacityManage ConfirmCreatHandler UpdateStatus", err.Error())
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
+
+	httputil.Response(w, rsp.StatusCode, "ok")
 }
 
 //当预约确认时走http 往appoint服务中传数据

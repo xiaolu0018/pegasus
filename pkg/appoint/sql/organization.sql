@@ -6,6 +6,8 @@ CREATE TABLE go_appoint_organization(
    ORG_CODE         VARCHAR(30) PRIMARY KEY,
    ID               VARCHAR(30),
    NAME             VARCHAR(50),
+   imageUrl         VARCHAR(50),
+   detailsUrl       VARCHAR(50),
    DELETED          BOOLEAN DEFAULT FALSE
 );
 

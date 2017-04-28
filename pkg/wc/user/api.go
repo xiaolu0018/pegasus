@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"gopkg.in/mgo.v2/bson"
-
 	"github.com/golang/glog"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
@@ -17,7 +15,7 @@ func (u *User) Upsert() error {
 		"VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%v','%s') ON CONFLICT (id) DO UPDATE SET cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,"+
 		"mobile=EXCLUDED.mobile,name=EXCLUDED.name,sex=EXCLUDED.sex,merrystatus=EXCLUDED.merrystatus,address_province=EXCLUDED.address_province,address_city=EXCLUDED.address_city,"+
 		"address_district=EXCLUDED.address_district,address_details=EXCLUDED.address_details,ifonlyneed_electronic_report=EXCLUDED.ifonlyneed_electronic_report",
-		TABLE_USER, u.ID.Hex(), u.OpenID, u.CardType, u.CardNo, u.Mobile, u.Name, u.Sex, u.IsMarry, u.Address.Province, u.Address.City, u.Address.District,
+		TABLE_USER, u.ID, u.OpenID, u.CardType, u.CardNo, u.Mobile, u.Name, u.Sex, u.IsMarry, u.Address.Province, u.Address.City, u.Address.District,
 		u.Address.Details, u.IsDianziReport, "")
 
 	if _, err := db.GetDB().Exec(sqlStr); err != nil {
@@ -43,7 +41,7 @@ func GetUsersByOpenids(openids []string) ([]User, error) {
 			glog.Errorln("user.GetUsersByOpenids rows.Scan err", err.Error())
 			return nil, err
 		}
-		users = append(users, User{ID: bson.ObjectIdHex(id), OpenID: openid})
+		users = append(users, User{ID: id, OpenID: openid})
 	}
 	if rows.Err() != nil {
 		glog.Errorln("user.GetUsersByOpenids rows.Err err", rows.Err().Error())
@@ -63,7 +61,7 @@ func GetUserByid(id string) (*User, error) {
 		return nil, err
 	}
 	u := User{
-		ID:       bson.ObjectIdHex(id),
+		ID:       id,
 		CardType: cardtype,
 		CardNo:   cardno,
 		Mobile:   mobile,

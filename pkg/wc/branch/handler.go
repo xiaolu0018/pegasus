@@ -5,6 +5,7 @@ import (
 
 	"encoding/json"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 	httputil "github.com/1851616111/util/http"
 	"github.com/julienschmidt/httprouter"
@@ -34,17 +35,29 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 
 // curl 192.168.199.168:9000/api/manager/branches
 func ListHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	l, err := ListBranches(db.Branch())
-	if err != nil {
-		httputil.Response(w, 400, err)
+	//l, err := ListBranches(db.Branch())
+	//if err != nil {
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
+	//
+	//if err := json.NewEncoder(w).Encode(l); err != nil {
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
+	//return
+	rspbyte, statuscode, err := common.Go_Through_Http("/api/organizations/wc")
+	if statuscode != 200 {
+		httputil.ResponseJson(w, 400, err)
+	}
+	if _, err := w.Write(rspbyte); err != nil {
+		httputil.ResponseJson(w, 400, err)
 		return
 	}
 
-	if err := json.NewEncoder(w).Encode(l); err != nil {
-		httputil.Response(w, 400, err)
-		return
-	}
 	return
+
+	//http.Redirect(w, r, common.AppointServe+"/api/organizations/wc", 301)
 }
 
 //curl -u michael:123456 -XPUT 192.168.199.198:9000/api/manage/branch/58e757f08fe64213cadb1f73  -d '{ "name": "北京第一体检中心2", "desc": "北京第一体检中心成立于1980年, 位于北京市海淀区。", "address": { "province": "北京", "city": "北京", "district": "海淀", "details": "金源小区91#1-1-2" }, "tel": "010-588888"}'

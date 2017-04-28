@@ -1,9 +1,6 @@
 package user
 
 import (
-	"errors"
-	"gopkg.in/mgo.v2/bson"
-
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
 )
 
@@ -16,28 +13,20 @@ const (
 	TABLE_HEALTH    = "go_weixin_user_health"
 )
 
-var errUserConflict error = errors.New("user conflict")
-var errUserSmsCodeInvalid error = errors.New("sms code invlid")
-
 //User结构定义
 type User struct {
-	ID             bson.ObjectId  `json:"-" bson:"_id"`
-	Mobile         string         `json:"mobile" bson:"mobile"` //用户的手机号
-	Name           string         `json:"name" bson:"name"`
-	CardNo         string         `json:"idcard" bson:"idcard"`
+	ID             string         `json:"-"`
+	Mobile         string         `json:"mobile"` //用户的手机号
+	Name           string         `json:"name" `
+	CardNo         string         `json:"idcard" `
 	CardType       string         `json:"cardtype"`
 	Sex            string         `json:"sex" bson:"sex,omitempty"`
 	IsMarry        string         `json:"ismarry" bson:"ismarry"`
 	IsDianziReport bool           `json:"isdianzireport"` //是否发送电子报告
 	Address        common.Address `json:"address" bson:"address"`
-	Label          Lable
-	OpenID         string     `json:"-" bson:"openid"`         //微信用来确认的id
-	Role           string     `json:"-" bson:"role,omitempty"` //暂时区分管理员和普通用户
-	WC_Info        WCUserInfo //微信用户数据来自微信
-}
-
-type Lable struct {
-	Health map[string][]string
+	OpenID         string         `json:"-" bson:"openid"`         //微信用来确认的id
+	Role           string         `json:"-" bson:"role,omitempty"` //暂时区分管理员和普通用户
+	WC_Info        WCUserInfo     //微信用户数据来自微信
 }
 
 //人员的相关属性
@@ -54,10 +43,10 @@ type Health struct {
 	Smoke_history          []string `json:"smoke_history"`          //吸烟史
 }
 
-//在更新label时的操作
-type UserLabel struct {
-	labelmap map[string][]string
-}
+////在更新label时的操作
+//type UserLabel struct {
+//	labelmap map[string][]string
+//}
 
 func (u *User) IsAdmin() bool {
 	return u.Role == role_admin
