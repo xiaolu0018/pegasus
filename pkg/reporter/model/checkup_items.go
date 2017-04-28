@@ -22,15 +22,21 @@ func parseCheckupItems(data *string) []types.Checkup {
 
 		newItemDep := items[0]
 		if oldItemDep != newItemDep {
-			ret = append(ret, types.Checkup{
+			ck := types.Checkup{
 				Department:     items[0],
 				Items:          []types.Item{},
-				ShowDiagnose: 	!(items[10] == "1" || items[11] == "78"),
-				DiagnoseResult: unquote(items[6]),
 				DocterSign:     unquote(items[7]),
 				Username:       items[8],
 				PreviousName:   items[9],
-			})
+			}
+
+			isDiagnodeHide := items[10] == "1" || items[11] == "78"
+			if !isDiagnodeHide {
+				ck.ShowDiagnose = true
+				ck.DiagnoseResult = unquote(items[6])
+			}
+
+			ret = append(ret, ck)
 
 			oldItemDep = newItemDep
 		}
