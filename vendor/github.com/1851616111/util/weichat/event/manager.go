@@ -2,7 +2,6 @@ package event
 
 import (
 	"errors"
-	"fmt"
 	"time"
 )
 
