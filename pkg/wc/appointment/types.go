@@ -37,3 +37,12 @@ type Appoint_User struct {
 	CardID      string `json:"cardid"`
 	Mobile      string `json:"mobile"`
 }
+
+type Comment struct { //预约评价
+	ID          string  `json:"id"`
+	Environment float32 `json:"environment"` //环境
+	Attitude    float32 `json:"attitude"`    //态度
+	Breakfast   float32 `json:"breakfast"`   //早餐
+	Details     string  `json:"details"`     //评价内容
+	Conclusion  string  `json:"conclusion"`
+}

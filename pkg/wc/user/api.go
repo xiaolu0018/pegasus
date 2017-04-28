@@ -51,11 +51,11 @@ func GetUsersByOpenids(openids []string) ([]User, error) {
 }
 
 func GetUserByid(id string) (*User, error) {
-	sqlStr := fmt.Sprintf("SELECT openid,cardtype,cardno,mobile,name,sex,merrystatus,address_province,address_city,address_district,address_details,ifonlyneed_electronic_report FROM %s WHERE id = '%s'", TABLE_USER, id)
-	var openid, cardtype, cardno, mobile, name, sex, merrystatus, address_province, address_city, address_district, address_details string
+	sqlStr := fmt.Sprintf("SELECT openid,cardtype,cardno,mobile,name,sex,merrystatus,address_province,address_city,address_district,address_details,wc_nickname,wc_headimgurl,ifonlyneed_electronic_report FROM %s WHERE id = '%s'", TABLE_USER, id)
+	var openid, cardtype, cardno, mobile, name, sex, merrystatus, address_province, address_city, address_district, address_details, wc_nickname, wc_headimgurl string
 	var ifonlyneed_electronic_report bool
 	glog.Errorln("GetUserByid sqlstr", sqlStr)
-	err := db.GetDB().QueryRow(sqlStr).Scan(&openid, &cardtype, &cardno, &mobile, &name, &sex, &merrystatus, &address_province, &address_city, &address_district, &address_details, &ifonlyneed_electronic_report)
+	err := db.GetDB().QueryRow(sqlStr).Scan(&openid, &cardtype, &cardno, &mobile, &name, &sex, &merrystatus, &address_province, &address_city, &address_district, &address_details, &wc_nickname, &wc_headimgurl,&ifonlyneed_electronic_report)
 	if err != nil {
 		glog.Errorln("user.GetUserByid rows.Scan err", err.Error())
 		return nil, err
@@ -75,6 +75,10 @@ func GetUserByid(id string) (*User, error) {
 		},
 		IsDianziReport: ifonlyneed_electronic_report,
 		Sex:            sex,
+		WC_Info: WCUserInfo{
+			NickName:    wc_nickname,
+			Head_ImgUrl: wc_headimgurl,
+		},
 	}
 	return &u, nil
 }

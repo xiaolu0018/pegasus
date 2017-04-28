@@ -25,7 +25,7 @@
 						<h4>
 							<span>伊凡</span>(<span>男</span>)
 						</h4>
-						<p>WeChar : <span>lxl121348946</span></p>
+						<p>TEL : <span>121348946</span></p>
 					</div>
 				</div>
 				<div class="mui-col-xs-3" style="text-align: right;">
@@ -63,7 +63,7 @@
 			    		<div id="segmentedControlContents">
 			    			<div id="myreport" class="mui-control-content mui-active">
 			    				<ul class="mui-table-view">
-			    					<li class="mui-table-view-cell mui-media">
+			    					<!--<li class="mui-table-view-cell mui-media">
 			    						<a href="javascript:;">
 											<img class="mui-media-object mui-pull-left" src="img/rep.png">
 											<div class="mui-media-body">
@@ -107,7 +107,7 @@
 												</div>
 											</div>
 										</a>
-			    					</li>
+			    					</li>-->
 			    				</ul>
 			    			</div>
 			    			<div id="mydate" class="mui-control-content">
@@ -235,32 +235,66 @@
 			$(function(){
 				//页面数据加载			
 				access();
+				
+				//个人信息
+				
+				$.getJSON("http://www.elepick.com/api/user",{},function(data){
+					if (typeof data === 'string') {
+						    data = JSON.parse(data);
+					}
+					if(data==null){
+						
+					}else{
+						$("header h1 a.mui-pull-left>img").attr("src",data.WC_Info.headimgurl);
+						$("header h1 .mui-pull-right>h4").html("<span>"+data.WC_Info.nickname+"</span>\(<span>"+data.sex+"</span>\)");
+						$("header h1 .mui-pull-right>p>span").html(data.mobile);
+					}
+				});
+				
+				
+				//我的报告解析函数
+				
+					
+				
 //				$.getJSON('js/myRep.json',{},function(data){
 				$.getJSON('http://www.elepick.com/api/appointments',{},function(data){
 					if (typeof data === 'string') {
 						    data = JSON.parse(data);
-						}
-					console.log(data);
+					}
 					if(data==null){
 						
 					}else{
 						var len=data.length;
+						console.log(len);
+						var listreport="";
 						var listRange="";
 						for(var g=0;g<len;g++){
 							switch(data[g].status){
-								case "预约成功":listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button class="changedate mui-btn mui-btn-primary" data-id="'+data[g].appid+'">改约</button><button class="deldate mui-btn mui-btn-primary" data-id="'+data[g].appid+'">取消</button></p></div></div></li>';
+								case "预约成功":listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button class="changedate mui-btn mui-btn-primary" data-id="'+data[g].appid+'">改约</button><button class="deldate mui-btn mui-btn-primary" data-id="'+data[g].appid+'">取消</button></p></div></div></li>';
 									break;
-								case '待评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data.serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button data-id="'+data[g].appid+'" class="mui-btn mui-btn-warning myjudge">待评价</button></p></div></div></li>';
+								case '待评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data.serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button data-id="'+data[g].appid+'" class="mui-btn mui-btn-warning myjudge">待评价</button></p></div></div></li>';
+					
+					if(!(data[g].reportid=="")){
+						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p type="button" class="mui-btn mui-btn-outlined">查看报告</p></div></div></a></li>';
+					}else{
+						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p>未出报告</p></div></div></a></li>';
+					}
 									break;
-								case '已取消':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="mydel">已取消</span></p></div></div></li>';
+								case '已取消':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="mydel">已取消</span></p></div></div></li>';
 									break;
-								case '已评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="myfinish">已评价</span></p></div></div></li>';
+								case '已评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="myfinish">已评价</span></p></div></div></li>';
+								if(!(data[g].reportid=="")){
+						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p type="button" class="mui-btn mui-btn-outlined">查看报告</p></div></div></a></li>';
+					}else{
+						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p>未出报告</p></div></div></a></li>';
+					}
 									break;
-								case '体检中':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].branchname+'</span></p><p>体检日期:<span>'+data[g].rightdate+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="mying">体检中</span></p></div></div></li>';
+								case '体检中':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="mying">体检中</span></p></div></div></li>';
 									break;
 							}
 						};
 					$("#mydate>ul.mui-table-view").html(listRange);
+					$("#myreport>ul.mui-table-view").html(listreport);
 					}
 				});
 				var snum=60;

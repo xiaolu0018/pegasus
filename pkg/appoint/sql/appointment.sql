@@ -29,6 +29,7 @@ CREATE TABLE go_appoint_appointment
   commentid VARCHAR(30),
   address VARCHAR(100),
   appointednum integer,
+  reportid VARCHAR(3),
   ifsingle boolean,
   ifcancel boolean
 );
@@ -42,7 +43,8 @@ CREATE TABLE go_appoint_comment(
     environment FLOAT,
     attitude FLOAT,
     breakfase FLOAT,
-    details VARCHAR(500)
+    details VARCHAR(500),
+    conclusion VARCHAR(10)
 );
 
 CREATE TABLE go_appoint_plan(

@@ -8,6 +8,7 @@ CREATE TABLE go_appoint_organization(
    NAME             VARCHAR(50),
    imageUrl         VARCHAR(50),
    detailsUrl       VARCHAR(50),
+   phone            VARCHAR(15),
    DELETED          BOOLEAN DEFAULT FALSE
 );
 

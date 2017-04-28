@@ -7,7 +7,7 @@ import (
 )
 
 func ListOrganizations(db *sql.DB) ([]types.Organization, error) {
-	sql := `SELECT id, org_code, org_name FROM organization WHERE is_valid = 1 ORDER BY parent_code`
+	sql := `SELECT id, org_code, org_name,org_phone FROM organization WHERE is_valid = 1 ORDER BY parent_code`
 	rows, err := db.Query(sql)
 	if err != nil {
 		return nil, err
@@ -15,14 +15,15 @@ func ListOrganizations(db *sql.DB) ([]types.Organization, error) {
 	defer rows.Close()
 
 	l := []types.Organization{}
-	var id, code, name string
+	var id, code, name, phone string
 	for rows.Next() {
-		if err = rows.Scan(&id, &code, &name); err == nil {
+		if err = rows.Scan(&id, &code, &name, &phone); err == nil {
 			if len(code) == 7 {
 				l = append(l, types.Organization{
-					ID:   id,
-					Code: code,
-					Name: name,
+					ID:    id,
+					Code:  code,
+					Name:  name,
+					Phone: phone,
 				})
 			}
 		}

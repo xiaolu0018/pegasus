@@ -1,8 +1,6 @@
 package appointment
 
 import (
-	"bytes"
-	"fmt"
 	"time"
 
 	"net/http"
@@ -18,10 +16,11 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
 
 	appoint_Appointment "192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
+	"fmt"
+	"math/rand"
 )
 
 func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -33,11 +32,6 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	}
 	cm.ID = bson.NewObjectIdWithTime(time.Now()).Hex()
 	cm.UserID = ps.ByName(common.AuthHeaderKey)
-	//if err := cm.Create(db.Appointment()); err != nil {
-	//	glog.Errorln("Appointment CreateHandle Create", err.Error())
-	//	httputil.Response(w, 400, err)
-	//	return
-	//}
 	result := make(map[string]string)
 	result["appointid"] = cm.ID
 	if err := message.SuccessI(w, result); err != nil {
@@ -108,81 +102,78 @@ func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		httputil.Response(w, 400, "ok")
 	}
 
-	//if err = app.UpdateStatus(db.Appointment(), app.SpecialItem); err != nil {
-	//	glog.Errorln("CapacityManage ConfirmCreatHandler UpdateStatus", err.Error())
-	//	httputil.Response(w, 400, err)
-	//	return
-	//}
-
 	httputil.Response(w, rsp.StatusCode, "ok")
-}
-
-//当预约确认时走http 往appoint服务中传数据
-func ConfirmAppointment(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	glog.Errorln("enter ConfirmAppointment")
-	a := appoint_Appointment.Appointment{
-		ID:              "appoint155",
-		Appointor:       "weixinfasong",
-		CardNo:          "181818818184569",
-		CardType:        "cardType1",
-		Mobile:          "mobile1",
-		MerryStatus:     "未婚",
-		Status:          "预约",
-		Appoint_Channel: "微信",
-		AppointedNum:    0,
-		PlanId:          "1",
-		OrgCode:         "000101",
-		AppointTime:     time.Now().Unix(),
-		OperateTime:     time.Now().Unix(),
-		OrderID:         "order13",
-		Operator:        "operator13",
-	}
-
-	client := &http.Client{nil, nil, nil, time.Second * 10}
-	var req *http.Request
-	var rsp *http.Response
-
-	var err error
-	var buf bytes.Buffer
-	json.NewEncoder(&buf).Encode(a)
-	if req, err = http.NewRequest("POST", "http://192.168.199.198:9200/api/appointment", &buf); err != nil {
-		glog.Errorln("newrequest err", err)
-		return
-	}
-
-	if rsp, err = client.Do(req); err != nil {
-		glog.Errorln("newrequest err", err)
-		return
-	}
-	defer rsp.Body.Close()
-	err = httputil.ResponseJson(w, rsp.StatusCode, "")
-	fmt.Println("ResponseJson", err)
-	return
-
 }
 
 func CancelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	appid := ps.ByName("id")
-	if err := CancelAppoint(db.Appointment(), bson.ObjectIdHex(appid)); err != nil {
-		glog.Errorln("Appointment CancelHandler CancelAppoin", err.Error())
-		httputil.Response(w, 400, err)
-		return
-	}
+	userid := ps.ByName(common.AuthHeaderKey)
+	//if err := CancelAppoint(db.Appointment(), bson.ObjectIdHex(appid)); err != nil {
+	//	glog.Errorln("Appointment CancelHandler CancelAppoin", err.Error())
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
+
+	common.Go_Through_Http("POST", "/api/appointment/"+appid+"/cancel", userid)
 	httputil.Response(w, 200, "ok")
 }
 
 func ListAppointmentHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userid := ps.ByName("userid")
-	apps, err := ListAppointment(bson.ObjectIdHex(userid), db.Appointment())
+	//apps, err := ListAppointment(bson.ObjectIdHex(userid), db.Appointment())
+	//if err != nil {
+	//	glog.Errorln("CapacityManage ListAppointmentHandler ListAppointment", err.Error())
+	//	httputil.Response(w, 400, err)
+	//	return
+	//}
+	//if err := json.NewEncoder(w).Encode(apps); err != nil {
+	//	httputil.Response(w, 400, err)
+	//	return
+	//} else {
+	//	httputil.Response(w, 200, nil)
+	//}
+	rwbyte, statuscode, err := common.Go_Through_Http("GET", "/api/appointmentlist/wc", userid)
 	if err != nil {
-		glog.Errorln("CapacityManage ListAppointmentHandler ListAppointment", err.Error())
+		glog.Errorln("appointment ListAppointmentHandler Go_Through_Http, err : ", err.Error())
+		return
+	}
+	if statuscode == 200 {
+		w.Write(rwbyte)
+		w.WriteHeader(statuscode)
+		return
+	}
+	glog.Errorln("appointment ListAppointmentHandler err")
+	httputil.Response(w, statuscode, "request err")
+}
+
+func CreateCommentHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	cm := Comment{}
+	if err := json.NewDecoder(r.Body).Decode(&cm); err != nil {
+		glog.Errorln("appointment CreateCommentHandler Decode", err.Error())
 		httputil.Response(w, 400, err)
 		return
 	}
-	if err := json.NewEncoder(w).Encode(apps); err != nil {
-		httputil.Response(w, 400, err)
+	appid := ps.ByName("appointid")
+	userid := ps.ByName(common.AuthHeaderKey)
+	rwbyte, statuscode, err := common.Go_Through_HttpWithBody("POST", "/api/appointment/"+appid+"/comment", userid, cm)
+	if err != nil {
+		glog.Errorln("appointment CreateCommentHandler Go_Through_HttpWithBody, err : ", err.Error())
 		return
-	} else {
-		httputil.Response(w, 200, nil)
 	}
+	if statuscode == 200 {
+		w.Write(rwbyte)
+		w.WriteHeader(statuscode)
+		return
+	}
+	httputil.Response(w, statuscode, "request err")
+}
+
+func GetCheckNoForReport(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	mobile := ps.ByName("mobile")
+	userid := ps.ByName(common.AuthHeaderKey)
+	checkno := rand.Int()
+	////todo 调用短信接口发短信
+	fmt.Println("mobile", mobile, checkno)
+
+	cache.Set(CACHE_TP_Check_message, userid, 8888)
 }

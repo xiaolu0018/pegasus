@@ -128,7 +128,7 @@
 			<div class="mui-content">
 		    	<div class="mui-content-padded">
 		    		<div class="mui-row">
-		    			<button class='judge good active'>
+		    			<button class='judge good mysel'>
 		    				<span class='mui-icon-extra mui-icon-extra-lamp'></span>
 		    				<span>好评</span>
 		    			</button>
@@ -145,29 +145,29 @@
 		    			<textarea name="advice" rows="5" placeholder="欢迎提出宝贵建议"></textarea>
 		    		</div>
 		    		<div class="mui-row" id='advSel'>
-		    			<div>
+		    			<div class='environment'>
 		    				<p>医院环境: </p>
 		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
 		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
 		    			</div>
-		    			<div>
+		    			<div class="attitude">
 		    				<p>服务态度: </p>
 		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
 		    			</div>
-		    			<div>
+		    			<div class="breakfast">
 		    				<p>早餐满意度: </p>
 		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
-		    				<span class='mui-icon-extra mui-icon-extra-heart-filled'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
+		    				<span class='mui-icon-extra mui-icon-extra-heart'></span>
 		    				
 		    			</div>
 		    		</div>
@@ -206,8 +206,40 @@
 				mui('body').on('tap','a',function(e){
 	//				e.stopPropagation();
 					if(this==$("#footer>a").get(0)){
-						
-					
+						//提交
+						var repData={
+							"environment":0,
+							"attitude":0,
+							"breakfast":0,
+							"details":"",
+							"conclusion":"好评"
+						}
+						repData.conclusion=$(".mysel>span:last-of-type").html();
+						repData.details=$("textarea[name='advice']").val();
+						repData.environment=$(".environment span").filter(".mui-icon-extra-heart-filled").size();
+						repData.attitude=$(".attitude span").filter(".mui-icon-extra-heart-filled").size();
+						repData.breakfast=$(".breakfast span").filter(".mui-icon-extra-heart-filled").size();
+						$.ajax({
+							type:"post",
+							url:"http://www.elepick.com/api/appointment/"+localStorage.appointid+"/comment",
+							async:true,
+							data:JSON.stringify(repData),
+							success:function(data, textStatus, xhr){											
+										if(xhr.status=="200"){
+											mui.toast('评价已完成');
+											mui.later(function(){
+												window.location.href="myRep.html";
+											},500);
+										}else{
+											mui.alert(textStatus+"-"+xhr.status);
+										}
+										
+									},
+							error:function(xhr, textStatus){
+								console.log(xhr);
+                                mui.alert(textStatus);
+							}
+						});
 					
 					}else if(this==$("h1>a").get(0)){
 						window.history.back();
@@ -215,11 +247,17 @@
 						mui.toast("请对这次体检进行评价");
 					}				
 				});
+				//总评点击
 				mui('body').on('tap','button.judge',function(e){						
 						$(this).addClass("mysel").siblings('.judge').removeClass('mysel');
-					
 				});
-				
+				$("#advSel>div").on('tap','span',function(){
+					if($(this).hasClass("mui-icon-extra-heart-filled")){
+						$(this).removeClass("mui-icon-extra-heart-filled").addClass('mui-icon-extra-heart');
+					}else{
+						$(this).removeClass("mui-icon-extra-heart").addClass('mui-icon-extra-heart-filled');
+					}
+				});
 			});
 			
          

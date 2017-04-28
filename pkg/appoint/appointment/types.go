@@ -40,6 +40,8 @@ type Appointment struct {
 	CommentID    string `json:"commentid"`
 	AppointedNum int    `json:"appointednum"` //最后生产的预约号
 
+	ReportId string `json:"reportid"` //用来记录体检报告号
+
 	IfSingle bool `json:"ifsingle"` //是否散客
 	IfCancel bool `json:"ifcancel"` //是否取消预约体检
 }
@@ -52,6 +54,7 @@ type Comment struct { //预约评价
 	Attitude    float32 //态度
 	Breakfast   float32 //早餐
 	Details     string  //评价内容
+	Conclusion  string
 }
 
 //分院的某天已预约人数
@@ -91,4 +94,17 @@ type Banner struct {
 	ImageUrl    string `json:"imageUrl" bson:"imageurl"`
 	RedirectUrl string `json:"redirectUrl" bson:"redirecturl"`
 	IfShow      bool   //是否显示  false 显示  ture 隐藏
+}
+
+type App_For_WeChat struct {
+	Appid        string `json:"appid"`
+	Name         string `json:"name"`
+	PlanId       string `json:"planid"`
+	Org_code     string `json:"org_code"`
+	Org_Name     string `json:"org_name"`
+	Serve_Mobile string `json:"serve_mobile"`
+	AppointDate  string `json:"appointdate"`
+	OperateTime  string `json:"operatetime"`
+	Reportid     string `json:"reportid"`
+	Status       string `json:"status"`
 }

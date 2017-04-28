@@ -130,8 +130,8 @@ func SendToAppoint(a appointment.Appointment) (*http.Response, error) {
 
 	var err error
 	var buf bytes.Buffer
-	a.OrgCode = "000100102"
-	a.PlanId = "2"
+	//a.OrgCode = "000100102"
+	//a.PlanId = "2"
 	json.NewEncoder(&buf).Encode(a)
 	if req, err = http.NewRequest("POST", "http://192.168.199.198:9200/api/appointment", &buf); err != nil {
 		glog.Errorln("newrequest err", err)

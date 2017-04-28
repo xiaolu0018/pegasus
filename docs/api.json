@@ -621,6 +621,7 @@
         }
       }
     },
+
     "/api/appointment/{appointid}/confirm": {
       "get": {
         "tags": [
@@ -718,7 +719,7 @@
         }
       }
     },
-    "/appointments": {
+    "/api/appointments": {
       "get": {
         "tags": [
           "Appointment"
@@ -741,6 +742,125 @@
                 "$ref": "#/definitions/Appointment"
               }
             }
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/appointment/comment/:appid":{
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "体检评价",
+        "description": "体检评价",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "environment",
+            "description": "环境",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "attitude",
+            "description": "态度",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "breakfast",
+            "description": "早餐",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "details",
+            "description": "评价内容",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "conclusion",
+            "description": "总评",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/report/:mobile":{
+      "post": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "短信获取",
+        "description": "短信获取",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "mobile",
+            "description": "电话号",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          },
+          "400": {
+            "description": "params invalid"
+          }
+        }
+      }
+    },
+    "/api/appointment/report/:checkno/:appid":{
+      "get": {
+        "tags": [
+          "Appointment"
+        ],
+        "summary": "短信获取",
+        "description": "短信获取",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "checkno",
+            "description": "校验码",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "appid",
+            "description": "appid",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
           },
           "400": {
             "description": "params invalid"
@@ -1112,14 +1232,19 @@
           "required": false,
           "type": "string"
         },
+
         "name": {
           "required": true,
           "type": "string",
           "description": "目前暂不清楚这块填写啥"
         },
-        "branchid": {
+        "org_code": {
           "required": true,
           "type": "string"
+        },
+        "org_name":{
+          "required":true,
+          "type":"string"
         },
         "status":{
           "required":true,
@@ -1133,7 +1258,12 @@
           "required": false,
           "type": "string",
           "description": "预约日期，请严格按照YYYY-MM-DD",
-          "example": "2017-03-05"
+          "example": "2017-03-05 预约日期 体检"
+        },
+        "operatetime":{
+          "type": "string",
+          "description": "预约日期，请严格按照YYYY-MM-DD",
+          "example": "2017-03-05 操作日期"
         }
       }
     },

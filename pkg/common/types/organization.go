@@ -8,6 +8,7 @@ type Organization struct {
 	ID         string //id
 	Code       string //org_code
 	Name       string //org_name
+	Phone      string //org_phone
 	ImageUrl   string
 	DetailsUrl string
 	Deleted    bool

@@ -20,7 +20,6 @@ func CreateHttpRouter(dist string) http.Handler {
 	r.GET("/api/basic/signature", handler.DeveloperValidater)
 	r.POST("/api/basic/signature", handler.EventAction)
 
-
 	r.POST("/api/user", authUser(user.UpsertInfoHandler))
 	r.POST("/api/user/label", authUser(user.UpdateLabelHandler))
 	r.GET("/api/user/label", authUser(user.GetLabelHandler))
@@ -38,7 +37,9 @@ func CreateHttpRouter(dist string) http.Handler {
 	r.GET("/api/appointment/:appointid/confirm", authUser(appointment.GetAppointmentConfirmHandler))
 	r.POST("/api/appointments/:id/cancel", authUser(appointment.CancelHandler))
 	r.GET("/api/appointments", authUser(appointment.ListAppointmentHandler))
-	//
+	r.POST("/api/appointment/:appointid/comment", authUser(appointment.CreateCommentHandler))
+	r.POST("/api/report/:mobile", authUser(appointment.GetCheckNoForReport))
+
 	r.GET("/api/branch/:id/offday", capacitymanage.GetOffDaysHandler)
 	r.POST("/api/manage/branch", authAdmin(branch.CreateHandler))
 	r.PUT("/api/manage/branch/:id", authAdmin(branch.UpdateHandler))

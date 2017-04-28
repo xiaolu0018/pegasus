@@ -33,19 +33,19 @@ func ListDBOrgs() ([]types.Organization, error) {
 }
 
 func CreateOrg(org types.Organization) error {
-	_, err := db.GetDB().Exec("INSERT INTO "+TABLE_ORG+"(ORG_CODE, ID, NAME,IMAGEURL, DETAILSURL) VALUES ($1, $2, $3,$4,$5)",
-		org.Code, org.ID, org.Name, org.ImageUrl, org.DetailsUrl)
+	_, err := db.GetDB().Exec("INSERT INTO "+TABLE_ORG+"(ORG_CODE, ID, NAME,PHONE,IMAGEURL, DETAILSURL) VALUES ($1, $2, $3,$4,$5)",
+		org.Code, org.ID, org.Name, org.Phone, org.ImageUrl, org.DetailsUrl)
 	return err
 }
 
 func UpdateOrg(org types.Organization) error {
-	_, err := db.GetDB().Exec("UPDATE"+TABLE_ORG+" SET ID = $1, NAME = $2 WHERE ORG_CODE = $3",
-		org.ID, org.Name, org.Code)
+	_, err := db.GetDB().Exec("UPDATE "+TABLE_ORG+" SET ID = $1, NAME = $2 ,PHONE = $3 WHERE ORG_CODE = $4",
+		org.ID, org.Name, org.Phone, org.Code)
 	return err
 }
 
 func DeleteOrg(org types.Organization) error {
-	_, err := db.GetDB().Exec("UPDATE"+TABLE_ORG+" SET DELETED = true WHERE ORG_CODE = $1", org.Code)
+	_, err := db.GetDB().Exec("UPDATE "+TABLE_ORG+" SET DELETED = true WHERE ORG_CODE = $1", org.Code)
 	return err
 }
 
@@ -119,7 +119,7 @@ func ListOrganizations(page_index, page_size int) ([]Organization, error) {
 }
 
 func ListOrganizationsForWC() ([]Organization, error) {
-	sql := `SELECT org_code, name,imageurl,detailsUrl FROM %s`
+	sql := `SELECT org_code, name, phone, imageurl,detailsUrl FROM %s`
 	sql = fmt.Sprintf(sql, TABLE_ORG)
 	rows, err := db.GetDB().Query(sql)
 	if err != nil {
@@ -130,7 +130,7 @@ func ListOrganizationsForWC() ([]Organization, error) {
 	l := []Organization{}
 	org := Organization{}
 	for rows.Next() {
-		if err = rows.Scan(&org.Code, &org.Name, &org.ImageUrl, &org.DetailsUrl); err != nil {
+		if err = rows.Scan(&org.Code, &org.Name, &org.Phone, &org.ImageUrl, &org.DetailsUrl); err != nil {
 			return nil, err
 		}
 

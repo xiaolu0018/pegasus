@@ -56,7 +56,7 @@ func (a *Appointment) CancelAppointment() (err error) {
 
 	//设置appointment  cancel = 'true'
 	sqlStr := ""
-	sqlStr = fmt.Sprintf(`UPDATE %s SET ifcancel = 'true',status = '取消' WHERE id = '%s'`, TABLE_APPOINTMENT, a.ID)
+	sqlStr = fmt.Sprintf(`UPDATE %s SET ifcancel = 'true',status = '已取消' WHERE id = '%s'`, TABLE_APPOINTMENT, a.ID)
 	if _, err = tx.Exec(sqlStr); err != nil {
 		glog.Errorln("CancelAppointment update appointment err", err.Error())
 		return
@@ -157,10 +157,11 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 		return nil, 0, err
 	}
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,appointorid,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE  %s %s %s %s %s LIMIT '%d' OFFSET '%d' `,
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,reportid,ifsingle,ifcancel FROM %s WHERE  %s %s %s %s %s LIMIT '%d' OFFSET '%d' `,
 		TABLE_APPOINTMENT, beginTimeSql, search, org_code, endTimeSql, userid, page_size, page_index)
 
-	var id, orgcode, planid, cardtype, cardno, mobile, appointor, appointorid, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
+	var id, orgcode, planid, cardtype, cardno, mobile, appointor, appointorid, merrystatus, status,
+		appoint_channel, company, group, remark, operator, orderid, commentid, reportid string
 	var appointtime, operatetime int64
 	var appointednum int
 	var ifsingle, ifcancel bool
@@ -175,7 +176,7 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 
 	for rows.Next() {
 		if err = rows.Scan(&id, &appointtime, &orgcode, &planid, &cardtype, &cardno, &mobile, &appointor, &appointorid, &merrystatus, &status, &appoint_channel,
-			&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel); err != nil {
+			&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &reportid, &ifsingle, &ifcancel); err != nil {
 			glog.Errorln("appointment.GetAppointmentList  rows.Scan,err " + err.Error())
 			return nil, 0, err
 		}
@@ -200,6 +201,7 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 			OrderID:         orderid,
 			CommentID:       commentid,
 			AppointedNum:    appointednum,
+			ReportId:        reportid,
 			IfSingle:        ifsingle,
 			IfCancel:        ifcancel,
 		}
@@ -288,13 +290,13 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	a.AppointedNum = getAppointedNum((capacityUsed + 1), avoidNumbers)
 	//保存预约
 	sqlStr = fmt.Sprintf("INSERT INTO %s(id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,appointorid,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel) `+
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,reportid,ifsingle,ifcancel) `+
 		"VALUES ('%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s',"+
-		"'%s','%s','%s','%s','%s','%d','%s','%s','%d','%v','%v') ON CONFLICT (id)DO UPDATE SET appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid"+
+		"'%s','%s','%s','%s','%s','%d','%s','%s','%d','%s','%v','%v') ON CONFLICT (id)DO UPDATE SET appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid"+
 		`, cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,mobile=EXCLUDED.mobile,appointor=EXCLUDED.appointor,merrystatus=EXCLUDED.merrystatus,status=EXCLUDED.status,appoint_channel=EXCLUDED.appoint_channel,`+
 		`company=EXCLUDED.company,"group"=EXCLUDED."group",remark=EXCLUDED.remark,operator=EXCLUDED.operatetime=EXCLUDED.operatetime,ifsingle=EXCLUDED.ifsingle,ifcancel=EXCLUDED.ifcancel`,
 		TABLE_APPOINTMENT, a.ID, a.AppointTime, a.OrgCode, a.PlanId, a.CardType, a.CardNo, a.Mobile, a.Appointor, a.Appointorid, a.MerryStatus, a.Status,
-		a.Appoint_Channel, a.Company, a.Group, a.Remark, a.Operator, a.OperateTime, a.OrderID, a.CommentID, a.AppointedNum, a.IfSingle, a.IfCancel)
+		a.Appoint_Channel, a.Company, a.Group, a.Remark, a.Operator, a.OperateTime, a.OrderID, a.CommentID, a.AppointedNum, a.ReportId, a.IfSingle, a.IfCancel)
 	fmt.Println("sqlStr", sqlStr)
 	if _, err = tx.Exec(sqlStr); err != nil {
 		glog.Errorf("TABLE_AppointmentsqlStr", err.Error())
@@ -519,4 +521,31 @@ func changeAppointmentStatus() {
 	//	}
 	//	time.Sleep(time.Hour)
 	//}
+}
+
+func GetApp_for_wechatsByAppointments(a []Appointment) []App_For_WeChat {
+	var afws []App_For_WeChat
+	var afw App_For_WeChat
+	for _, v := range a {
+		afw.Name = v.Operator
+		afw.AppointDate = time.Unix(v.AppointTime, 0).Format("2006-01-02")
+		afw.PlanId = v.PlanId
+		afw.Org_code = v.OrgCode
+
+		if org, err := organization.GetOrgByCode(afw.Org_code); err != nil {
+			continue
+		} else {
+			afw.Org_Name = org.Name
+		}
+		afw.OperateTime = time.Unix(v.OperateTime, 0).Format("2006-01-02")
+		afw.Serve_Mobile = "400400"
+		afw.Status = v.Status
+		if v.IfCancel {
+			afw.Status = "已取消"
+		}
+		afw.Appid = v.ID
+		afw.Reportid = v.ReportId
+		afws = append(afws, afw)
+	}
+	return afws
 }

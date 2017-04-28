@@ -11,6 +11,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 
 	httputil "github.com/1851616111/util/http"
+	"gopkg.in/mgo.v2/bson"
 	"strings"
 )
 
@@ -60,6 +61,10 @@ func GetAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httproute
 
 func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	//todo 应该区分个人查询，还是管理员查询
+
+	rw.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	rw.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
+	rw.Header().Set("content-type", "application/json")
 
 	page_no := r.FormValue("page_no")
 	pageSize := r.FormValue("page_size")
@@ -136,6 +141,24 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 	httputil.Response(rw, 200, result)
 }
 
+func ListAppointmentsForWeChatHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	userid := ps.ByName("user")
+	if strings.Contains(userid, "admin") { //是管理员操作
+		userid = ""
+	}
+	var apps []Appointment
+	var err error
+	if apps, _, err = GetAppointmentList(0, 20, 0, 0, "", "", userid); err != nil {
+		glog.Errorln("appointment ListAppointmentsHandler GetAppointmentList ,err", err.Error())
+		httputil.Response(rw, 400, err)
+		return
+	}
+	afws := GetApp_for_wechatsByAppointments(apps)
+	httputil.ResponseJson(rw, 200, &afws)
+	return
+
+}
+
 func CancelAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	appointid := ps.ByName("appointid")
 	appointment := &Appointment{}
@@ -189,7 +212,7 @@ func CreateCommentHandler(rw http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	c.ID = time.Now().String()[:30]
+	c.ID = bson.NewObjectIdWithTime(time.Now()).Hex()
 
 	if err := c.Create(appid); err != nil {
 		glog.Errorf("appointment.CreateCommentHandler Create err %v\n", err.Error())

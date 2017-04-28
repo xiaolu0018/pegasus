@@ -10,6 +10,7 @@ type Organization struct {
 	ID         string           `json:"id"`
 	Code       string           `json:"org_code"`
 	Name       string           `json:"name"`
+	Phone      string           `json:"phone"`
 	ImageUrl   string           `json:"imageUrl"`
 	DetailsUrl string           `json:"detailsUrl"`
 	BasicCon   Config_Basic     `json:"basic_con,omitempty"`

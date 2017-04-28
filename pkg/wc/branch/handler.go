@@ -46,7 +46,7 @@ func ListHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//	return
 	//}
 	//return
-	rspbyte, statuscode, err := common.Go_Through_Http("/api/organizations/wc")
+	rspbyte, statuscode, err := common.Go_Through_Http("GET", "/api/organizations/wc", "")
 	if statuscode != 200 {
 		httputil.ResponseJson(w, 400, err)
 	}
