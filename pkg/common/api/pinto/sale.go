@@ -1,8 +1,8 @@
 package pinto
 
 import (
-	"database/sql"
 	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
+	"database/sql"
 )
 
 //Sale_Code string
@@ -30,7 +30,7 @@ func ListSales(db *sql.DB) ([]types.Sale, error) {
 	for rows.Next() {
 		s = types.Sale{}
 		if err = rows.Scan(&s.Sale_Code, s.Sale_OrgPrice, s.Sale_SellPrice, s.Sale_Discount,
-		s.LimitSex, s.Sale_Name, s.Brief_Name, s.Order_Position, s.MnemSymbol, s.Note); err == nil {
+			s.LimitSex, s.Sale_Name, s.Brief_Name, s.Order_Position, s.MnemSymbol, s.Note); err == nil {
 			l = append(l, s)
 		}
 	}

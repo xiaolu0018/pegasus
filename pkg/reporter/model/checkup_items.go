@@ -23,11 +23,11 @@ func parseCheckupItems(data *string) []types.Checkup {
 		newItemDep := items[0]
 		if oldItemDep != newItemDep {
 			ck := types.Checkup{
-				Department:     items[0],
-				Items:          []types.Item{},
-				DocterSign:     unquote(items[7]),
-				Username:       items[8],
-				PreviousName:   items[9],
+				Department:   items[0],
+				Items:        []types.Item{},
+				DocterSign:   unquote(items[7]),
+				Username:     items[8],
+				PreviousName: items[9],
 			}
 
 			isDiagnodeHide := items[10] == "1" || items[11] == "78"
@@ -41,7 +41,7 @@ func parseCheckupItems(data *string) []types.Checkup {
 			oldItemDep = newItemDep
 		}
 
-		index := len(ret) -1
+		index := len(ret) - 1
 
 		ret[index].Items = append(ret[index].Items, types.Item{
 			Name:            unquote(items[1]),

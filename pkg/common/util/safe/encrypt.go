@@ -1,10 +1,10 @@
 package safe
 
 import (
-	"encoding/pem"
-	"crypto/x509"
-	"crypto/rsa"
 	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"errors"
 	"io/ioutil"
 	"path/filepath"
@@ -13,7 +13,7 @@ import (
 var publicKey []byte
 
 func LoadPubKey(path string) error {
-	path , err := filepath.Abs(path)
+	path, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}

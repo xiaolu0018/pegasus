@@ -17,7 +17,7 @@ func ListCheckups(db *sql.DB) ([]types.Checkup, error) {
 	var ck types.Checkup
 	for rows.Next() {
 		ck = types.Checkup{}
-		if err = rows.Scan(&ck.Checkup_code,&ck.Checkup_name , &ck.Brief_name); err == nil {
+		if err = rows.Scan(&ck.Checkup_code, &ck.Checkup_name, &ck.Brief_name); err == nil {
 			l = append(l, ck)
 		}
 	}
@@ -48,7 +48,7 @@ func GetCheckupBySaleCode(db *sql.DB, code string) ([]types.Checkup, error) {
 	var ck types.Checkup
 	for rows.Next() {
 		ck = types.Checkup{}
-		if err = rows.Scan(&ck.Checkup_code,&ck.Checkup_name , &ck.Brief_name); err == nil {
+		if err = rows.Scan(&ck.Checkup_code, &ck.Checkup_name, &ck.Brief_name); err == nil {
 			l = append(l, ck)
 		}
 	}

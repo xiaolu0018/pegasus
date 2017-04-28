@@ -40,6 +40,4 @@ import (
 //	delete(a.appointmentToSecs, aid)
 //}
 
-
 var appointCache cache.Cache
-

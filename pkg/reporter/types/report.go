@@ -171,5 +171,5 @@ type ImageItem struct {
 }
 
 type Single struct {
-	Image       string `json:"image"`
+	Image string `json:"image"`
 }

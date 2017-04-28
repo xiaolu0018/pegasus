@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"net/http"
-	"github.com/julienschmidt/httprouter"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/pinto"
 	httputil "github.com/1851616111/util/http"
+	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 func ListCheckupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
