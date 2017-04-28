@@ -75,6 +75,7 @@ type Template struct {
 type Checkup struct {
 	Department     string `json:"dept,omitempty"`
 	Items          []Item `json:"items,omitempty"`
+	ShowDiagnose   bool   `json:"showDiagnose"`
 	DiagnoseResult string `json:"diagnose,omitempty"`
 	DocterSign     string `json:"docter,omitempty"`
 	Username       string `json:"user,omitempty"`
@@ -170,6 +171,5 @@ type ImageItem struct {
 }
 
 type Single struct {
-	CheckupName string `json:"checkup"`
 	Image       string `json:"image"`
 }

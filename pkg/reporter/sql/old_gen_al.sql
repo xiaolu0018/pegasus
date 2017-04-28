@@ -1,33 +1,18 @@
-DROP TABLE IF EXISTS go_report;
-
-CREATE TABLE go_report(
-   EX_NO            VARCHAR(30),
-   EX_CHECKUPDATE   VARCHAR(30),
-   EX_IMAGE         VARCHAR(255),
-   EX_AGE           INTEGER,
-
-   P_NAME      VARCHAR(30),
-   P_SEX       INTEGER,
-   P_CARDNO    VARCHAR(30),
-   P_BIRTHDAY  VARCHAR(30),
-   P_IFMARRIED VARCHAR(5),
-   P_EMAIL     VARCHAR(30),
-   P_ADDRESS   VARCHAR(255),
-   P_CELLPHONE VARCHAR(30),
-   P_PHONE     VARCHAR(30),
-
-   NATION      VARCHAR(10),
-   ENTERPRISE  VARCHAR(255),
-
-   CONTACT_PHONE VARCHAR(30),
-   CK_DETAILS text,
-   HEALTH_SELECTED text,
-   CK_ITEMS text,
-   ANALYSE_ADVICE text,
-   FINAL_EXAM text,
-   IMAGES  text,
-   SINGLES text
-);
+drop FUNCTION IF EXISTS  arrayToArrStr(arr text[]);
+drop FUNCTION IF EXISTS  arrayToObjStr(arr text[]);
+drop FUNCTION IF EXISTS  arrayToObjStr2(arr text[]);
+drop FUNCTION IF EXISTS  arrayToArrStr2(arr text[]);
+drop FUNCTION IF EXISTS  checkNull(s text);
+drop FUNCTION IF EXISTS  getCheckupStr(exam_no varchar);
+drop FUNCTION IF EXISTS  getSelectedStr(exam_no varchar);
+drop FUNCTION IF EXISTS  getCheckAndItems(exam_no varchar);
+drop FUNCTION IF EXISTS  getFinalDiagoseStr(exam_no varchar);
+drop FUNCTION IF EXISTS  genFinalExam(exam_no varchar);
+drop FUNCTION IF EXISTS  getItemStr(exam_no varchar, ck_code varchar);
+drop FUNCTION IF EXISTS  getImageStr(exam_no varchar);
+drop FUNCTION IF EXISTS  getSingles(exam_no varchar);
+drop FUNCTION IF EXISTS  genAllData(exam_no varchar);
+drop FUNCTION IF EXISTS  getReport(exam_no VARCHAR);
 
 CREATE OR REPLACE FUNCTION arrayToArrStr(arr text[]) RETURNS text AS $$
    BEGIN
@@ -97,6 +82,7 @@ CREATE OR REPLACE FUNCTION getSelectedStr(exam_no varchar) RETURNS text AS $$
 	        FROM personal_health_info P, examination b
 	        WHERE P.person_code = b.person_code
 	        AND b.examination_no = exam_no
+	        ORDER BY P.person_code
         LOOP
             SELECT array_append(selecteds, data.selected_code::text) into selecteds;
         END LOOP;
@@ -115,7 +101,8 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
         DEP.department_name,
         I.item_name, EX_I.item_value, EX_I.exception_arrow, EX_I.reference_description, I.examination_unit,
         EX_CK.diagnose_result,
-        DEP.doctor_sign, M.previous_name username, mm.previous_name
+        DEP.doctor_sign, M.previous_name username, mm.previous_name,
+        CK.checkup_type_code, CK.department_code
         FROM examination EX
         LEFT JOIN examination_checkup EX_CK ON EX.examination_no = EX_CK.examination_no
         LEFT JOIN checkup CK ON EX_CK.checkup_code = CK.checkup_code
@@ -125,6 +112,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
         LEFT JOIN manager M ON EX_CK.diagnose_manager_code = M.manager_code
         LEFT JOIN MANAGER mm ON EX_CK.check_manager_code = mm.manager_code
         WHERE EX_CK.checkup_code IS NOT NULL
+        and CK.checkup_type_code IN ('0', '1')
         AND EX_CK.checkup_status = 2
         AND EX.examination_no = exam_no
         AND (
@@ -135,11 +123,13 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
 	        OR I.validate_type = 0
         )
         AND EX_CK.department_code NOT IN ('63')
+        ORDER BY DEP.department_code, CK.order_position, I.item_code
         LOOP
             select array_append(tmp, arrayToObjStr(ARRAY[checkNull(data.department_name), checkNull(data.item_name),
             checkNull(data.item_value), checkNull(data.exception_arrow), checkNull(data.reference_description),
             checkNull(data.examination_unit), checkNull(data.diagnose_result), checkNull(data.doctor_sign),
-            checkNull(data.username), checkNull(data.previous_name)]::text[])) into tmp;
+            checkNull(data.username), checkNull(data.previous_name),
+            checkNull(data.checkup_type_code), checkNull(data.department_code)]::text[])) into tmp;
         END LOOP;
 
         return arrayToArrStr(tmp);
@@ -243,17 +233,17 @@ CREATE OR REPLACE FUNCTION getSingles(exam_no varchar) RETURNS text AS $$
         tmp text[];
     BEGIN
         FOR data IN
-            SELECT DISTINCT C.checkup_name, T.image_url
-            FROM examination_imageinformation T
-            LEFT JOIN checkup C ON T.checkup_code = C.checkup_code
-            WHERE T.examination_no = exam_no AND T.image_url IS NOT NULL
-            AND T.checkup_code IN (SELECT regexp_split_to_table(key_value, ',') FROM con_global_config WHERE key_name = 'single_print_code')
-        LOOP
-          SELECT array_append(tmp, arrayToObjStr(ARRAY[data.checkup_name, data.image_url])) into tmp;
+        SELECT image_url
+        FROM examination_imageinformation T
+        WHERE T.examination_no = exam_no
+        AND T.image_url IS NOT NULL
+        AND T.checkup_code IN ( SELECT regexp_split_to_table(key_value, ',') FROM con_global_config WHERE key_name = 'single_print_code')
+        ORDER BY  checkup_code,t.createtime
+    LOOP
+        SELECT array_append(tmp, arrayToObjStr(ARRAY[data.image_url])) into tmp;
         END LOOP;
         RETURN arrayToArrStr(tmp);
     END;
-
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION genAllData(exam_no varchar) RETURNS void AS $$
@@ -285,19 +275,3 @@ CREATE OR REPLACE FUNCTION genAllData(exam_no varchar) RETURNS void AS $$
     END;
 
 $$ LANGUAGE plpgsql;
-
-drop FUNCTION IF EXISTS  arrayToArrStr(arr text[]);
-drop FUNCTION IF EXISTS  arrayToObjStr(arr text[]);
-drop FUNCTION IF EXISTS  arrayToObjStr2(arr text[]);
-drop FUNCTION IF EXISTS  arrayToArrStr2(arr text[]);
-drop FUNCTION IF EXISTS  checkNull(s text);
-drop FUNCTION IF EXISTS  getCheckupStr(exam_no varchar);
-drop FUNCTION IF EXISTS  getSelectedStr(exam_no varchar);
-drop FUNCTION IF EXISTS  getCheckAndItems(exam_no varchar);
-drop FUNCTION IF EXISTS  getFinalDiagoseStr(exam_no varchar);
-drop FUNCTION IF EXISTS  genFinalExam(exam_no varchar);
-drop FUNCTION IF EXISTS  getItemStr(exam_no varchar, ck_code varchar);
-drop FUNCTION IF EXISTS  getImageStr(exam_no varchar);
-drop FUNCTION IF EXISTS  getSingles(exam_no varchar);
-drop FUNCTION IF EXISTS  genAllData(exam_no varchar);
-drop FUNCTION IF EXISTS  getReport(exam_no VARCHAR);

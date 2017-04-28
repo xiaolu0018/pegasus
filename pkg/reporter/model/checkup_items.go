@@ -25,6 +25,7 @@ func parseCheckupItems(data *string) []types.Checkup {
 			ret = append(ret, types.Checkup{
 				Department:     items[0],
 				Items:          []types.Item{},
+				ShowDiagnose: 	!(items[10] == "1" || items[11] == "78"),
 				DiagnoseResult: unquote(items[6]),
 				DocterSign:     unquote(items[7]),
 				Username:       items[8],

@@ -11,8 +11,7 @@ func parseSingles(s *string) []types.Single {
 	for _, str := range sl {
 		i := types.Single{}
 		items := strutil.ClipDBObject(&str)
-		i.CheckupName = items[0]
-		i.Image = items[1]
+		i.Image = items[0]
 		l = append(l, i)
 	}
 
