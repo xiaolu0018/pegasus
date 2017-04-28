@@ -19,6 +19,7 @@ func CreateHttpRouter(dist string) http.Handler {
 	r := httprouter.New()
 	r.GET("/api/basic/signature", handler.DeveloperValidater)
 
+
 	r.POST("/api/user", authUser(user.UpsertInfoHandler))
 	r.POST("/api/user/label", authUser(user.UpdateLabelHandler))
 	r.GET("/api/user/label", authUser(user.GetLabelHandler))
@@ -43,7 +44,7 @@ func CreateHttpRouter(dist string) http.Handler {
 	r.GET("/api/branches", branch.ListHandler)
 	r.POST("/api/manage/uploadfile", authAdmin(image.SaveImageHandler))
 
-	r.GET("/api/appoin/test", appointment.ConfirmAppointment)
+	//r.GET("/api/appoin/test", appointment.ConfirmAppointment)
 
 	dist, _ = filepath.Abs(dist)
 	r.ServeFiles("/dist/*filepath", http.Dir(dist))
