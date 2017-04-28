@@ -11,7 +11,10 @@ var t2hMappings map[string]types.Health
 
 //health to template mapping
 func getH2TMappings() (map[types.Health][]types.Template, error) {
-	rows, err := DB.Query("SELECT C.health_type, C.health_name, T.template_code, T.template_name from con_health C LEFT JOIN con_health_template T ON C.health_type = T.health_type where C.group_type=1 and C.status=1 and C.health_name<>'心理压力'")
+	rows, err := DB.Query(`SELECT C.health_type, C.health_name, T.template_code, T.template_name
+	FROM con_health C LEFT JOIN con_health_template T ON C.health_type = T.health_type
+	WHERE C.group_type=1 and C.status=1 and C.health_name<>'心理压力'
+	ORDER BY order_position`)
 	if err != nil {
 		return nil, err
 	}
