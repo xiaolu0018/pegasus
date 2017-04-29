@@ -5,12 +5,16 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/login"
 	"github.com/julienschmidt/httprouter"
 )
 
 func CreateHttpRouter() http.Handler {
 	r := httprouter.New()
 	//r.GET("/api/index",GetIndexHandler)
+
+	r.POST("/api/login", login.CheckLoginHandler)
+	r.POST("/api/login/changepwd", login.ChangeLoginHandler)
 
 	r.GET("/api/organazations", ListHandler)
 	r.GET("/api/organizations/wc", ListHandlerWC)
