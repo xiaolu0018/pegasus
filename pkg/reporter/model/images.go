@@ -18,6 +18,8 @@ func parseImageItems(s *string) []types.ImageItems {
 		i.DiagnoseResult = items[1]
 		i.Images = parseImageUrls(items[2])
 		i.Items = parseItems(&items[3])
+		i.DoctorSign = items[4]
+		i.PreviousName = items[5]
 		l = append(l, i)
 	}
 

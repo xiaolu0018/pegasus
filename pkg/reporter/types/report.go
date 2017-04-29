@@ -161,6 +161,8 @@ type FinalExam struct {
 type ImageItems struct {
 	CheckupName    string      `json:"checkup"`
 	DiagnoseResult string      `json:"result"`
+	DoctorSign     string 	   `json:"doctorSign"`
+	PreviousName   string      `json:"previousName"`
 	Images         []string    `json:"images"`
 	Items          []ImageItem `json:"items"`
 }

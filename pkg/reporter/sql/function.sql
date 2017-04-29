@@ -211,16 +211,19 @@ CREATE OR REPLACE FUNCTION getImageStr(exam_no varchar) RETURNS text AS $$
         tmp text[];
     BEGIN
         FOR data IN
-            SELECT ec.checkup_code, ec.diagnose_result, ec.image_url, c.checkup_name
+            SELECT ec.checkup_code, ec.diagnose_result, ec.image_url, c.checkup_name,
+            d.doctor_sign, m.previous_name
             FROM examination_checkup ec
             LEFT JOIN checkup c ON ec.checkup_code = c.checkup_code
+            LEFT JOIN manager m ON ec.diagnose_manager_code=m.manager_code
+            LEFT JOIN department d ON d.department_code = ec.department_code
             WHERE ec.examination_no = exam_no and ec.image_url is not null
             AND EC.checkup_code NOT IN (
             SELECT regexp_split_to_table(key_value,',') from con_global_config where  key_name = 'not_print_code' OR  key_name = 'single_print_code'
             )
 
         LOOP
-            select array_append(tmp, arrayToObjStr(ARRAY[data.checkup_name, data.diagnose_result, data.image_url, getItemStr(exam_no, data.checkup_code)])) into tmp;
+            select array_append(tmp, arrayToObjStr(ARRAY[data.checkup_name, data.diagnose_result, data.image_url, getItemStr(exam_no, data.checkup_code), data.doctor_sign, data.previous_name])) into tmp;
         END LOOP;
 
         RETURN arrayToArrStr(tmp);
