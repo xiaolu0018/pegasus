@@ -1,9 +1,9 @@
 package appoint
 
 import (
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/login"
+	commonutil "192.168.199.199/bjdaos/pegasus/pkg/common/util"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
-
-	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -18,12 +18,23 @@ func AuthUser(handler func(http.ResponseWriter, *http.Request, httprouter.Params
 			unauthorizedHandler(w, r)
 			return
 		}
-		if pw == PASSWORD {
-			glog.Errorln("user", user)
-			ps = util.AddParam(ps, "user", user)
-			handler(w, r, ps)
-		} else {
-			unauthorizedHandler(w, r)
+
+		loginuser, _ := login.Get(user)
+		if loginuser != nil && loginuser.LoginAccount != "" {
+			if commonutil.Md5([]byte(pw)) == loginuser.PassWord {
+				ps = util.AddParam(ps, "user", user)
+				handler(w, r, ps)
+			} else {
+				unauthorizedHandler(w, r)
+			}
+		} else { //这里是微信服务来的请求
+			if pw == PASSWORD {
+				ps = util.AddParam(ps, "user", user)
+				handler(w, r, ps)
+
+			} else {
+				unauthorizedHandler(w, r)
+			}
 		}
 	}
 }
