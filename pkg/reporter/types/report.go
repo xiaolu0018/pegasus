@@ -33,6 +33,7 @@ type Person struct {
 	Phone     *string `json:"phone"`     //宅电
 
 	Enterprise *string `json:"enterprise"` //所属公司
+	EnterpriseDep *string `json:"enterprise_dep"`
 
 }
 

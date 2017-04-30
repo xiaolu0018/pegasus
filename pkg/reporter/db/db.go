@@ -58,6 +58,7 @@ drop FUNCTION IF EXISTS  getImageStr(exam_no varchar);
 drop FUNCTION IF EXISTS  getSingles(exam_no varchar);
 drop FUNCTION IF EXISTS  genAllData(exam_no varchar);
 drop FUNCTION IF EXISTS  getReport(exam_no VARCHAR);
+drop FUNCTION IF EXISTS  getPersonEnterprise(exam_no VARCHAR);
 
 CREATE OR REPLACE FUNCTION arrayToArrStr(arr text[]) RETURNS text AS $$
    BEGIN
@@ -295,18 +296,4 @@ CREATE OR REPLACE FUNCTION getSingles(exam_no varchar) RETURNS text AS $$
         RETURN arrayToArrStr(tmp);
     END;
 $$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION getPersonEnterprise(exam_no VARCHAR) RETURNS text AS $$
-    DECLARE
-      enterprise text;
-    BEGIN
-      SELECT  se.enterprise_name
-      FROM examination e
-      LEFT JOIN sale_order so ON so.order_code = e.group_code
-      LEFT JOIN sale_enterprise se ON se.enterprise_code = so.enterprise_code
-      WHERE e.examination_no = exam_no
-      INTO enterprise;
-      RETURN enterprise;
-    END;
-$$ LANGUAGE  plpgsql;
 `
