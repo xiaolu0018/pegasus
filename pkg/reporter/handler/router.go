@@ -10,6 +10,8 @@ func CreateHttpRouter() http.Handler {
 	r := httprouter.New()
 	r.GET("/api/report", GetReport)
 	r.GET("/api/report/list", AuthHandler(ReportListHandler))
-	r.POST("/api/report/status", AuthHandler(UpdateStatusHandler))
+
+	//这里应该是POST, 但是客户端发post不太会
+	r.GET("/api/report/status", AuthHandler(UpdateStatusHandler))
 	return r
 }

@@ -196,7 +196,9 @@ CREATE OR REPLACE FUNCTION getItemStr(exam_no varchar, ck_code varchar) RETURNS 
         tmp text[];
     BEGIN
         FOR data IN
-             select item_name, item_value from examination_item where checkup_code = ck_code and examination_no = exam_no
+             SELECT i.item_name, ei.item_value FROM examination_item ei, item i
+             WHERE ei.item_code = i.item_code AND ei.checkup_code = ck_code AND ei.examination_no = exam_no
+             ORDER BY i.order_position
              LOOP
                 SELECT array_append(tmp, arrayToObjStr2(ARRAY[data.item_name, data.item_value])) into tmp;
              END LOOP;
