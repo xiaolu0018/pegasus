@@ -5,6 +5,7 @@ import (
 
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/types"
 	"github.com/golang/glog"
+	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
 )
 
 const married_code = 2
@@ -80,4 +81,17 @@ func encodeCardNo(cardNo string) string {
 	default:
 		return cardNo
 	}
+}
+
+func UpdateStatus(exam_no, status string) error {
+	var sql string
+	switch status {
+	case "printed":
+		sql = fmt.Sprintf(`UPDATE examination SET status = %d where examination_no = '%s'`, 1090, exam_no)
+	default:
+		return fmt.Errorf("unknow status %s\n", status)
+	}
+
+	_, err := db.GetWriteDB().Exec(sql)
+	return err
 }

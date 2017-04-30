@@ -9,7 +9,8 @@ import (
 
 //"postgres://postgres:postgresql2016@192.168.199.216:5432/pinto?sslmode=disable"
 var readDB *sql.DB
-var err error
+var writeDB *sql.DB
+var err, werr error
 
 func Init(user, passwd, ip, port, db string) error {
 	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
@@ -19,22 +20,25 @@ func Init(user, passwd, ip, port, db string) error {
 	return err
 }
 
-func GetDB() *sql.DB {
+func GetReadDB() *sql.DB {
 	return readDB
+}
+
+func GetWriteDB() *sql.DB {
+	return writeDB
 }
 
 func InitFunction(user, passwd, ip, port, db string) error {
 	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		user, passwd, ip, port, db)
 
-	writeDB, err := sql.Open("postgres", addr)
-	if err != nil {
-		return err
+	writeDB, werr = sql.Open("postgres", addr)
+	if werr != nil {
+		return werr
 	}
-	defer writeDB.Close()
 
-	_, err = writeDB.Exec(initCmd)
-	return err
+	_, werr = writeDB.Exec(initCmd)
+	return werr
 }
 
 // **these sql functions need sync with sql/function.sql**

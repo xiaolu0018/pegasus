@@ -17,7 +17,7 @@ func Test(t *testing.T) {
 		fmt.Println("dbinit", err)
 	}
 	var rowsdate []types.PrintInfo
-	rows, err := db.GetDB().Query(fmt.Sprintf(`SELECT e.examination_no, e.is_group, e.enterprise_name, e.checkupdate, p.name, p.sex, p.card_no, e.status
+	rows, err := db.GetReadDB().Query(fmt.Sprintf(`SELECT e.examination_no, e.is_group, e.enterprise_name, e.checkupdate, p.name, p.sex, p.card_no, e.status
 		FROM examination AS e , person AS p WHERE e.person_code = p.person_code and e.hos_code= '%s'
 		%s AND status = %d  %s %s %s %s
 		order by e.checkupdate desc

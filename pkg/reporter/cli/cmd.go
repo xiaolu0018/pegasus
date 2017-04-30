@@ -41,7 +41,7 @@ func startCmd() *cobra.Command {
 				glog.Errorf("reporter init db err %v\n", err)
 				os.Exit(1)
 			}
-			if err := model.Init(db.GetDB()); err != nil {
+			if err := model.Init(db.GetReadDB()); err != nil {
 				glog.Errorf("reporter init model err %v\n", err)
 				os.Exit(1)
 			}

@@ -10,7 +10,7 @@ import (
 func Get(account string) (*LoginUser, error) {
 	sqlStr := fmt.Sprintf("SELECT loginname,org_code,password FROM %s WHERE loginaccount = '%s'", TABLE_LOGINUSER, account)
 	loginUser := LoginUser{}
-	if err := db.GetDB().QueryRow(sqlStr).Scan(&loginUser.LoginName, &loginUser.OrgCode, &loginUser.PassWord); err != nil {
+	if err := db.GetReadDB().QueryRow(sqlStr).Scan(&loginUser.LoginName, &loginUser.OrgCode, &loginUser.PassWord); err != nil {
 		glog.Errorln("login.Get err ", err)
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func ChangePWD(account, newpwd string) error {
 
 	newpwd = util.Md5([]byte(newpwd))
 	sqlStr := fmt.Sprintf("UPDATE TABLE %s SET password = '%s' WHERR loginaccount = '%d'", TABLE_LOGINUSER, newpwd, account)
-	if _, err := db.GetDB().Exec(sqlStr); err != nil {
+	if _, err := db.GetReadDB().Exec(sqlStr); err != nil {
 		glog.Errorln("login.ChangePED err ", err)
 		return err
 	}
