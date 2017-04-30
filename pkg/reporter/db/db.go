@@ -164,7 +164,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
 	        OR I.validate_type = 0
         )
         AND EX_CK.department_code NOT IN ('63')
-        ORDER BY DEP.department_code, CK.order_position, I.item_code
+        ORDER BY DEP.department_code, ck.checkup_code, i.order_position, I.item_code
         LOOP
             select array_append(tmp, arrayToObjStr(ARRAY[checkNull(data.department_name), checkNull(data.item_name),
             checkNull(data.item_value), checkNull(data.exception_arrow), checkNull(data.reference_description),
