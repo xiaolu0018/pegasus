@@ -295,4 +295,18 @@ CREATE OR REPLACE FUNCTION getSingles(exam_no varchar) RETURNS text AS $$
         RETURN arrayToArrStr(tmp);
     END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION getPersonEnterprise(exam_no VARCHAR) RETURNS text AS $$
+    DECLARE
+      enterprise text;
+    BEGIN
+      SELECT  se.enterprise_name
+      FROM examination e
+      LEFT JOIN sale_order so ON so.order_code = e.group_code
+      LEFT JOIN sale_enterprise se ON se.enterprise_code = so.enterprise_code
+      WHERE e.examination_no = exam_no
+      INTO enterprise;
+      RETURN enterprise;
+    END;
+$$ LANGUAGE  plpgsql;
 `

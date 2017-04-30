@@ -26,7 +26,7 @@ func GetReporterByExNo(exNo string, sync bool) (*types.Report, error) {
 	var sales, health_selected, checkupItems, analyse, finalExam, images, singles *string
 	row := DB.QueryRow(sql)
 	if err := row.Scan(&ret.Ex_No, &ret.Ex_CkDate, &ret.Ex_Image, &ret.Ex_Age, &ret.Name, &ret.Sex, &ret.CardNo,
-		&ret.Birthday, &married, &ret.Email, &ret.Address, &ret.Cellphone, &ret.Phone, &ret.Nation, &ret.Enterprise, &ret.Contact_phone,
+		&ret.Birthday, &married, &ret.Email, &ret.Address, &ret.Cellphone, &ret.Phone, &ret.Enterprise, &ret.Nation, &ret.Enterprise, &ret.Contact_phone,
 		&sales, &health_selected, &checkupItems, &analyse, &finalExam, &images, &singles); err != nil {
 		glog.Errorf("GetReporterByExNo: sql return err %v\n", err)
 		return nil, err
@@ -51,8 +51,8 @@ func GetReporterByExNo(exNo string, sync bool) (*types.Report, error) {
 
 func getSyncSQL(exam_no string) string {
 	return fmt.Sprintf(`select  EX.examination_no EX_NO , EX.checkupdate EX_CHECKUPDATE, replace(EX.image_url,'\','/') EX_IMAGE, EX.age EX_AGE,
-            	P.name P_NAME, P.sex P_SEX, P.card_no P_CARDNO, P.bithday P_BIRTHDAY, P.is_marry P_IFMARRIED, P.email P_EMAIL,
-              P.address P_ADDRESS, P.cellphone P_CELLPHONE, P.phone P_PHONE,
+              P.name P_NAME, P.sex P_SEX, P.card_no P_CARDNO, P.bithday P_BIRTHDAY, P.is_marry P_IFMARRIED, P.email P_EMAIL,
+              P.address P_ADDRESS, P.cellphone P_CELLPHONE, P.phone P_PHONE, getPersonEnterprise('%s') P_ENTERPRISE,
             	(SELECT nation_name from nation n where n.nation_code = P.nation_code) NATION,
             	se.enterprise_name ENTERPRISE,
             	(SELECT T2.contact_phone FROM examination T1, print_template T2 WHERE T1.checkup_hoscode = T2.hos_code AND T1.examination_no = '%s') CONTACT_PHONE,
@@ -69,7 +69,7 @@ func getSyncSQL(exam_no string) string {
        LEFT JOIN sale_order so ON so.order_code = EX.group_code
        LEFT JOIN sale_enterprise se ON se.enterprise_code = so.enterprise_code
        WHERE
-	        EX.examination_no = '%s'`, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no)
+	        EX.examination_no = '%s'`, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no, exam_no)
 }
 
 func encodeCardNo(cardNo string) string {
