@@ -2,9 +2,9 @@ package model
 
 import (
 	"fmt"
+	"github.com/golang/glog"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/types"
-	"github.com/golang/glog"
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
 )
 
@@ -92,6 +92,15 @@ func UpdateStatus(exam_no, status string) error {
 		return fmt.Errorf("unknow status %s\n", status)
 	}
 
-	_, err := db.GetWriteDB().Exec(sql)
-	return err
+	tx, err := db.GetWriteDB().Begin()
+	if err != nil {
+		return err
+	}
+
+	if _, err = tx.Exec(sql); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
 }
