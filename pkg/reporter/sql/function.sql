@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION getCheckupStr(exam_no varchar) RETURNS text AS $$
         LEFT JOIN checkup C ON ec.checkup_code = C .checkup_code
         LEFT JOIN department d ON ec.department_code = d.department_code
         WHERE T .examination_no = exam_no AND C .is_valid = 1
-        ORDER BY ec.checkup_status, ec.checkup_code, d.department_code, C.order_position
+        ORDER BY ec.checkup_status, d.department_code, C.order_position
    		LOOP
             select array_append(ret,  arrayToObjStr(ARRAY[data.checkup_name, data.department_name, data.checkup_status]::text[])) into ret;
    		END LOOP;
