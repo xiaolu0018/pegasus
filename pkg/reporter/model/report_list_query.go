@@ -58,7 +58,7 @@ func GetQueryAll(page int, ex_no string, name string, sex string, alreadyReport 
 	if alreadyReport {
 		statusReport = "AND e.status > 1080 AND e.status <> 1999"
 	} else {
-		statusReport = "AND e.status == 1080"
+		statusReport = "AND e.status = 1080"
 	}
 
 	if len(ex_no) != 0 {
