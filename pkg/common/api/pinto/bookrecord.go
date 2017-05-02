@@ -19,7 +19,6 @@ func GetBookRecordByBookNO(db *sql.DB, bookno string) (*types.BookRecord, error)
 func InsertBookRecord(db *sql.DB, b *types.BookRecord) error {
 	sqlStr := fmt.Sprint("INSERT INTO book_record(bookno,examination_no,truename,sex,bookid,bookidtype,booktimestamp,birthday,bookorg_code,createtime,telphone,book_code)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)")
 	if _, err := db.Exec(sqlStr, b.BookNo, b.ExaminationNo, b.Truename, b.Sex, b.Bookid, b.Bookidtype, b.Booktimestamp, b.BirthDay, b.BookorgCode, b.CreateTime, b.Telphone, b.BookCode); err != nil {
-		fmt.Println(",,,,", err)
 		return err
 	}
 	return nil

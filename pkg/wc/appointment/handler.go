@@ -108,30 +108,12 @@ func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 func CancelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	appid := ps.ByName("id")
 	userid := ps.ByName(common.AuthHeaderKey)
-	//if err := CancelAppoint(db.Appointment(), bson.ObjectIdHex(appid)); err != nil {
-	//	glog.Errorln("Appointment CancelHandler CancelAppoin", err.Error())
-	//	httputil.Response(w, 400, err)
-	//	return
-	//}
-
 	common.Go_Through_Http("POST", "/api/appointment/"+appid+"/cancel", userid)
 	httputil.Response(w, 200, "ok")
 }
 
 func ListAppointmentHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userid := ps.ByName("userid")
-	//apps, err := ListAppointment(bson.ObjectIdHex(userid), db.Appointment())
-	//if err != nil {
-	//	glog.Errorln("CapacityManage ListAppointmentHandler ListAppointment", err.Error())
-	//	httputil.Response(w, 400, err)
-	//	return
-	//}
-	//if err := json.NewEncoder(w).Encode(apps); err != nil {
-	//	httputil.Response(w, 400, err)
-	//	return
-	//} else {
-	//	httputil.Response(w, 200, nil)
-	//}
 	rwbyte, statuscode, err := common.Go_Through_Http("GET", "/api/appointmentlist/wc", userid)
 	if err != nil {
 		glog.Errorln("appointment ListAppointmentHandler Go_Through_Http, err : ", err.Error())
@@ -176,4 +158,21 @@ func GetCheckNoForReport(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	fmt.Println("mobile", mobile, checkno)
 
 	cache.Set(CACHE_TP_Check_message, userid, 8888)
+}
+
+func GetReportByAppid(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	checkno := ps.ByName("checkno")
+	userid := ps.ByName(common.AuthHeaderKey)
+	cache_checkno, err := cache.Get(CACHE_TP_Check_message, userid)
+	if err != nil {
+		glog.Errorln("appointment GetReportByAppid cache.Get", err.Error())
+		httputil.Response(w, 400, err)
+		return
+	}
+	if checkno != cache_checkno.(string) {
+		httputil.Response(w, 200, false)
+		return
+	}
+	//todo 在这先查appoint服务中的预约数据
+	httputil.Response(w, 200, true)
 }

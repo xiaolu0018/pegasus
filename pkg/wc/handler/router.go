@@ -32,13 +32,13 @@ func CreateHttpRouter(dist string) http.Handler {
 	r.GET("/api/plans", plan.GetPlansHandler)
 
 	r.PUT("/api/appointment", authUser(appointment.CreateHandler))
-	//r.POST("/api/appointment/:id/branch", authUser(appointment.UpdateHandler))
 	r.POST("/api/appointment/:appointid/confirm", authUser(appointment.ConfirmCreatHandler))
 	r.GET("/api/appointment/:appointid/confirm", authUser(appointment.GetAppointmentConfirmHandler))
 	r.POST("/api/appointments/:id/cancel", authUser(appointment.CancelHandler))
 	r.GET("/api/appointments", authUser(appointment.ListAppointmentHandler))
 	r.POST("/api/appointment/:appointid/comment", authUser(appointment.CreateCommentHandler))
 	r.POST("/api/report/:mobile", authUser(appointment.GetCheckNoForReport))
+	r.GET("/api/appoint/report/:checkno/:appid", authUser(appointment.GetReportByAppid))
 
 	r.GET("/api/branch/:id/offday", capacitymanage.GetOffDaysHandler)
 	r.POST("/api/manage/branch", authAdmin(branch.CreateHandler))

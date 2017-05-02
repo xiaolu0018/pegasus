@@ -9,16 +9,7 @@ import (
 
 func GetOffDaysHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("id")
-	//cms, err := FindCapacityManage(time.Now().Year(), int(time.Now().Month()), id, db.CapacityManage())
-	//if err != nil {
-	//	glog.Errorln("GetOffDaysHandle" + err.Error())
-	//	httputil.Response(w, 400, err)
-	//	return
-	//}
-	//offdays := FilterOffDays(cms)
-	//json.NewEncoder(w).Encode(offdays)
-	//return
-	rspbyte, statuscode, err := common.Go_Through_Http("GET","/api/offday/"+id, "")
+	rspbyte, statuscode, err := common.Go_Through_Http("GET", "/api/offday/"+id, "")
 	if statuscode != 200 {
 		httputil.ResponseJson(w, 400, err)
 	}

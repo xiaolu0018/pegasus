@@ -11,6 +11,7 @@ import (
 func GetOffDay(org_code string) (map[string]interface{}, error) {
 	cb, err := organization.GetConfigBasic(org_code)
 	if err != nil {
+		fmt.Println("err", cb)
 		return nil, err
 	}
 	sqlStr := fmt.Sprintf("SELECT date FROM %s WHERE org_code = '%s' AND used = %d", TABLE_CapacityRecords, cb.Org_Code, cb.Capacity)
@@ -31,7 +32,6 @@ func GetOffDay(org_code string) (map[string]interface{}, error) {
 
 	wg := sync.WaitGroup{}
 	wg.Add(2)
-
 	go func() {
 		r_date = GetDateAfterTimeNow(dates)
 		wg.Done()
@@ -57,6 +57,8 @@ func GetOffDay(org_code string) (map[string]interface{}, error) {
 		if value, ok := offday_map[v[:7]]; ok {
 			value = append(value, v[8:])
 			offday_map[v[:7]] = value
+		} else {
+			offday_map[v[:7]] = []string{v[8:]}
 		}
 	}
 

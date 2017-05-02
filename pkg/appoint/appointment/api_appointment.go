@@ -270,7 +270,6 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 		glog.Errorf("GetCapacityused___", capacityUsed)
 		return
 	}
-	fmt.Println("GetCapacit", capacityUsed)
 	//预约人数已满
 	if capacity <= capacityUsed {
 		return fmt.Errorf(ErrAppointmentString)

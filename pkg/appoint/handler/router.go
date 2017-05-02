@@ -18,7 +18,7 @@ func CreateHttpRouter() http.Handler {
 
 	r.GET("/api/organazations", ListHandler)
 	r.GET("/api/organizations/wc", ListHandlerWC)
-	r.PUT("/api/organazation/:code/config/basic", CreateBasicHandler)
+	r.POST("/api/organazation/:code/config/basic", CreateBasicHandler)
 	r.GET("/api/organazation/:code", GetBasicHandler)
 	r.POST("/api/organazation/:code/config/special", CreateSpecialHandler)
 
@@ -32,7 +32,7 @@ func CreateHttpRouter() http.Handler {
 	r.PUT("/api/appointment", appointment.UpdateAppointmentHandler)
 	r.GET("/api/appointment/:appointid", appointment.GetAppointmentHandler)
 	r.GET("/api/appointmentlist", appoint.AuthUser(appointment.ListAppointmentsHandler))
-	r.GET("/api/appointmentlist/wc", appoint.AuthUser(appointment.ListAppointmentsForWeChatHandler))
+	r.GET("/api/appointmentlist/wc", appointment.ListAppointmentsForWeChatHandler)
 	r.GET("/api/pinto/checkups", ListCheckupHandler)
 	return r
 }

@@ -11,7 +11,9 @@ import (
 	httputil "github.com/1851616111/util/http"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
 	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
+	"192.168.199.199/bjdaos/pegasus/pkg/common/api/pinto"
 )
 
 func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -148,6 +150,17 @@ func ListHandlerWC(rw http.ResponseWriter, r *http.Request, ps httprouter.Params
 	}
 	httputil.ResponseJson(rw, 200, &org_wcs)
 	return
+}
+
+//todo 这块直接用的是pinto的接口，最后要改
+func GetListCheckupsHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	checkups, err := pinto.ListCheckups(db.GetDB())
+	if err != nil {
+		glog.Errorln("Orgnization GetListCheckupsHandler ListCheckups err ", err.Error())
+		httputil.Response(rw, 400, err)
+		return
+	}
+	httputil.ResponseJson(rw, 200, checkups)
 }
 
 func GetPlansHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {

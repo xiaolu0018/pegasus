@@ -8,10 +8,10 @@ import (
 )
 
 func TestGetBookRecordByBookNO(t *testing.T) {
-	db, err := database.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto")
-	fmt.Println("err ______", err)
-	bookrecord, err := GetBookRecordByBookNO(db, "2017042913523149951")
-	fmt.Println("err __", err, bookrecord)
+	db, _ := database.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto")
+	if _, err := GetBookRecordByBookNO(db, "2017042913523149951"); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestInsertBookRecord(t *testing.T) {
@@ -33,6 +33,8 @@ func TestInsertBookRecord(t *testing.T) {
 		Bookidtype:     "3",
 	}
 
-	err = InsertBookRecord(db, &b)
-	fmt.Println("err", err)
+	if err = InsertBookRecord(db, &b); err != nil {
+		t.Fatal(err)
+	}
+
 }

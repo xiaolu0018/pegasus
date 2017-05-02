@@ -9,7 +9,7 @@ import (
 )
 
 func (o *Config_Basic) Create() error {
-	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, CAPACITY, WARNNUM, OFFDAYS, AVOIDNUMBERS) VALUES ($1, $2, $3, $4, $5)`, TABLE_ORG_CON_BASIC)
+	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, CAPACITY, WARNNUM, OFFDAYS, AVOIDNUMBERS) VALUES ($1, $2, $3, $4, $5)ON CONFLICT (org_code) DO UPDATE SET warnnum=EXCLUDED.warnnum,capacity=EXCLUDED.capacity,offdays=EXCLUDED.offdays,avoidnumbers=EXCLUDED.avoidnumbers`, TABLE_ORG_CON_BASIC)
 	_, err := db.GetDB().Exec(sqlStr, o.Org_Code, o.Capacity, o.WarnNum, pq.Array(o.OffDays), pq.Array(o.AvoidNumbers))
 	return err
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	"time"
+	//"time"
 )
 
 var (
@@ -25,11 +25,11 @@ func (c *Config_Basic) Validate() error {
 		return ErrWarnNumInvalid
 	}
 
-	for _, od := range c.OffDays {
-		if _, err := time.Parse("2006-01-02", od); err != nil {
-			return ErrOffDayInvalid
-		}
-	}
+	//for _, od := range c.OffDays {
+	//	if _, err := time.Parse("2006-01-02", od); err != nil {
+	//		return ErrOffDayInvalid
+	//	}
+	//}
 
 	sort.Slice(c.AvoidNumbers, func(i, j int) bool {
 		return c.AvoidNumbers[i] < c.AvoidNumbers[j]
