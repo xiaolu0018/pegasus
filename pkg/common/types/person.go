@@ -1,7 +1,7 @@
 package types
 
 type Person struct {
-	Sex            string `json:"sex"`
+	Sex            int    `json:"sex"`
 	CardNo         string `json:"card_no"`
 	IsMarry        string `json:"is_marry"`
 	Name           string `json:"name"`

@@ -138,7 +138,7 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 	result["total"] = total
 	result["data"] = apps
 
-	httputil.Response(rw, 200, result)
+	httputil.ResponseJson(rw, 200, result)
 }
 
 func ListAppointmentsForWeChatHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {

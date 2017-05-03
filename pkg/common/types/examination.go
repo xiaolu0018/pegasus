@@ -17,17 +17,17 @@ type Examination struct {
 type ExaminationCheckUp struct {
 	ExaminationNo string `json:"examination_no"`
 	CheckupCode   string `json:"checkup_code"`
-	CheckupStatus string `json:"checkup_status"`
+	CheckupStatus int    `json:"checkup_status"`
 	CreateTime    string `json:"createtime"`
 	HosCode       string `json:"hos_code"`
 }
 
 type ExaminationSale struct {
-	ExaminationNo string `json:"examination_no"`
-	SaleCode      string `json:"sale_code"`
-	SaleStatus    string `json:"sale_status"`
-	HosCode       string `json:"hos_code"`
-	SaleSellprice string `json:"sale_sellprice"`
-	Discount      string `json:"discount"`
-	Curprice      string `json:"curprice"`
+	ExaminationNo string  `json:"examination_no"`
+	SaleCode      string  `json:"sale_code"`
+	SaleStatus    string  `json:"sale_status"`
+	HosCode       string  `json:"hos_code"`
+	SaleSellprice float64 `json:"sale_sellprice"`
+	Discount      float64 `json:"discount"`
+	Curprice      float64 `json:"curprice"`
 }

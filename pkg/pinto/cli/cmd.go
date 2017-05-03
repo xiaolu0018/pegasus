@@ -41,7 +41,7 @@ func startCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			router := handler.CreateHttpRouter()
 			if err := http.ListenAndServe(addr, router); err != nil {
-				glog.Errorf("wc start err %v\n", err)
+				glog.Errorf("pinto start err %v\n", err)
 				os.Exit(1)
 			}
 		},

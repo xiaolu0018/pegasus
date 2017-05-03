@@ -7,12 +7,14 @@ import (
 	"strings"
 
 	"database/sql"
+	"encoding/json"
 	"github.com/lib/pq"
 
 	"github.com/golang/glog"
 
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
+	"192.168.199.199/bjdaos/pegasus/pkg/common/util/methods"
 )
 
 /*
@@ -25,22 +27,77 @@ import (
 	4，保存 a
 */
 func (a *Appointment) CreateAppointment() (err error) {
-	a.ID = time.Now().String()[:30]
+	if a.ID == "" {
+		a.ID = time.Now().Format("20060102150405999")
+	}
+
 	tx := &sql.Tx{}
 	if tx, err = db.GetDB().Begin(); err != nil {
 		return
 	}
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-			return
-		}
-		err = tx.Commit()
-	}()
 	err = addAppointment(tx, a)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = tx.Commit()
+	if err != nil {
+		return
+	}
+	var errs error
+	if a.PlanId != "" {
+		errs = sendToPintoWithPlan(a)
+	} else {
+		errs = sendToPintoWithOutPlan(a)
+	}
+
+	if errs != nil {
+		return err
+	}
 	return
 }
+
+func sendToPintoWithOutPlan(a *Appointment) error {
+	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/bookrecord", "", a)
+	if errs != nil || statuscode != 200 {
+		for i := 0; i < 3; i++ {
+			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/bookrecord", "", a); errs == nil && statuscode == 200 {
+				break
+			}
+		}
+	}
+	resultmap := map[string]string{}
+
+	json.Unmarshal(result, &resultmap)
+
+	sqlStr := fmt.Sprintf("UPDATE %s SET bookno = '%s' WHERE id = '%s'", TABLE_APPOINTMENT, resultmap["bookno"], a.ID)
+	if _, errs := db.GetDB().Exec(sqlStr); errs != nil {
+		return errs
+	}
+	return nil
+}
+
+func sendToPintoWithPlan(a *Appointment) error {
+	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/examwithplan", "", a)
+	if errs != nil || statuscode != 200 {
+		for i := 0; i < 3; i++ {
+			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/examwithplan", "", a); errs == nil && statuscode == 200 {
+				break
+			}
+		}
+	}
+	resultmap := map[string]string{}
+
+	json.Unmarshal(result, &resultmap)
+
+	sqlStr := fmt.Sprintf("UPDATE %s SET bookno = '%s' WHERE id = '%s'", TABLE_APPOINTMENT, resultmap["bookno"], a.ID)
+	if _, errs := db.GetDB().Exec(sqlStr); errs != nil {
+		return errs
+	}
+	return nil
+}
+
 func (a *Appointment) CancelAppointment() (err error) {
 	tx := &sql.Tx{}
 	if tx, err = db.GetDB().Begin(); err != nil {
@@ -94,14 +151,15 @@ func (a *Appointment) UpdateAppointment() (err error) {
 
 func GetAppointment(appointid string) (*Appointment, error) {
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel FROM %s WHERE id = '%s'`, TABLE_APPOINTMENT, appointid)
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sales_code FROM %s WHERE id = '%s'`, TABLE_APPOINTMENT, appointid)
 
 	var id, org_code, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
 	var appointtime, operatetime int64
 	var appointednum int
 	var ifsingle, ifcancel bool
+	var salescode pq.StringArray
 	err := db.GetDB().QueryRow(sqlStr).Scan(&id, &appointtime, &org_code, &planid, &cardtype, &cardno, &mobile, &appointor, &merrystatus, &status, &appoint_channel,
-		&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel)
+		&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel, salescode)
 	if err != nil {
 		return nil, err
 	}
@@ -110,6 +168,7 @@ func GetAppointment(appointid string) (*Appointment, error) {
 		OrgCode:         org_code,
 		AppointTime:     appointtime,
 		PlanId:          planid,
+		SaleCodes:       []string(salescode),
 		CardType:        cardtype,
 		CardNo:          cardno,
 		Mobile:          mobile,
@@ -222,11 +281,12 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	var sales []string
 	var sqlStr string
 	if a.PlanId != "" {
-		if sales, err = GetCheckupsByplan(tx, a.PlanId); err != nil {
+		if sales, err = GetSaleCodesByplan(tx, a.PlanId); err != nil {
 			glog.Errorf("planid err", err.Error())
 			return
 		}
 	}
+	fmt.Println("sale_codes", sales)
 	date := time.Unix(a.AppointTime, 0).Format("2006-01-02")
 	if len(sales) > 0 {
 		if itemLimits, err = GetLimit(tx, a.OrgCode, sales); err != nil {
@@ -287,17 +347,18 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	}
 
 	a.AppointedNum = getAppointedNum((capacityUsed + 1), avoidNumbers)
+	a.SaleCodes = sales
 	//保存预约
 	sqlStr = fmt.Sprintf("INSERT INTO %s(id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,appointorid,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,reportid,ifsingle,ifcancel) `+
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,reportid,ifsingle,ifcancel,sale_codes) `+
 		"VALUES ('%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s',"+
-		"'%s','%s','%s','%s','%s','%d','%s','%s','%d','%s','%v','%v') ON CONFLICT (id)DO UPDATE SET appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid"+
+		"'%s','%s','%s','%s','%s','%d','%s','%s','%d','%s','%v','%v',$1) ON CONFLICT (id)DO UPDATE SET appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid"+
 		`, cardtype=EXCLUDED.cardtype,cardno=EXCLUDED.cardno,mobile=EXCLUDED.mobile,appointor=EXCLUDED.appointor,merrystatus=EXCLUDED.merrystatus,status=EXCLUDED.status,appoint_channel=EXCLUDED.appoint_channel,`+
 		`company=EXCLUDED.company,"group"=EXCLUDED."group",remark=EXCLUDED.remark,operator=EXCLUDED.operatetime=EXCLUDED.operatetime,ifsingle=EXCLUDED.ifsingle,ifcancel=EXCLUDED.ifcancel`,
 		TABLE_APPOINTMENT, a.ID, a.AppointTime, a.OrgCode, a.PlanId, a.CardType, a.CardNo, a.Mobile, a.Appointor, a.Appointorid, a.MerryStatus, a.Status,
 		a.Appoint_Channel, a.Company, a.Group, a.Remark, a.Operator, a.OperateTime, a.OrderID, a.CommentID, a.AppointedNum, a.ReportId, a.IfSingle, a.IfCancel)
 	fmt.Println("sqlStr", sqlStr)
-	if _, err = tx.Exec(sqlStr); err != nil {
+	if _, err = tx.Exec(sqlStr, pq.Array(a.SaleCodes)); err != nil {
 		glog.Errorf("TABLE_AppointmentsqlStr", err.Error())
 		return
 	}
@@ -309,7 +370,7 @@ func deleteAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	var salecodes []string
 	var salesUsed map[string]int
 	appointdatestring := time.Unix(a.AppointTime, 0).Format("2006-01-02")
-	if salecodes, err = GetCheckupsByplan(tx, a.PlanId); err != nil {
+	if salecodes, err = GetSaleCodesByplan(tx, a.PlanId); err != nil {
 		glog.Errorln("CancelAPpointment GetSalesByplan err", err.Error())
 		return
 	}
@@ -447,6 +508,7 @@ func GetSalesUsed(tx *sql.Tx, orgcode, date string, sales []string) (map[string]
 		itmeStr[k] = fmt.Sprintf(`'%s'`, salecode)
 	}
 
+	//todo 这里应该进一步通过sales查询checkup
 	sql_ := fmt.Sprintf("SELECT used,sale_code FROM %s  WHERE org_code = '%s' AND date = '%s' AND sale_code IN (%s)",
 		TABLE_SaleRecords, orgcode, date, strings.Join(itmeStr, ","))
 	var used int

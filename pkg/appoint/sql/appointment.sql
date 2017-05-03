@@ -12,6 +12,7 @@ CREATE TABLE go_appoint_appointment
   appointtime bigint,
   org_code VARCHAR(30) references go_appoint_organization(org_code),
   planid VARCHAR(30) references go_appoint_plan(id),
+  sale_codes VARCHAR(30)[],
   cardtype VARCHAR(10) not null,
   cardno VARCHAR(20) not null,
   mobile VARCHAR(15) not null,
@@ -30,6 +31,7 @@ CREATE TABLE go_appoint_appointment
   address VARCHAR(100),
   appointednum integer,
   reportid VARCHAR(3),
+  bookno VARCHAR(30),
   ifsingle boolean,
   ifcancel boolean
 );
@@ -52,7 +54,7 @@ CREATE TABLE go_appoint_plan(
     name VARCHAR(30),
     avatar_img VARCHAR(50),
     detail_img VARCHAR(),
-    checkups VARCHAR(30)[],
+    sale_codes VARCHAR(30)[],
     ifshow boolean
 );
 

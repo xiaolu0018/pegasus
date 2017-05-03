@@ -21,6 +21,7 @@ import (
 	appoint_Appointment "192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
 	"fmt"
 	"math/rand"
+	"strconv"
 )
 
 func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -169,7 +170,7 @@ func GetReportByAppid(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 		httputil.Response(w, 400, err)
 		return
 	}
-	if checkno != cache_checkno.(string) {
+	if checkno != strconv.Itoa(cache_checkno.(int)) {
 		httputil.Response(w, 200, false)
 		return
 	}

@@ -235,7 +235,7 @@
 			$(function(){
 				//页面数据加载			
 				access();
-				
+				var mobile;
 				//个人信息
 				
 				$.getJSON("http://www.elepick.com/api/user",{},function(data){
@@ -248,6 +248,7 @@
 						$("header h1 a.mui-pull-left>img").attr("src",data.WC_Info.headimgurl);
 						$("header h1 .mui-pull-right>h4").html("<span>"+data.WC_Info.nickname+"</span>\(<span>"+data.sex+"</span>\)");
 						$("header h1 .mui-pull-right>p>span").html(data.mobile);
+						mobile=data.mobile;
 					}
 				});
 				
@@ -275,7 +276,7 @@
 								case '待评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data.serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><button data-id="'+data[g].appid+'" class="mui-btn mui-btn-warning myjudge">待评价</button></p></div></div></li>';
 					
 					if(!(data[g].reportid=="")){
-						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p type="button" class="mui-btn mui-btn-outlined">查看报告</p></div></div></a></li>';
+						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p href="'+data[g].appid+'" type="button" class="mui-btn mui-btn-outlined">查看报告</p></div></div></a></li>';
 					}else{
 						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p>未出报告</p></div></div></a></li>';
 					}
@@ -284,7 +285,7 @@
 									break;
 								case '已评价':listRange+='<li class="mui-table-view-cell mui-media"><div class="mui-media-body mui-row"><div class="mui-pull-left mui-col-xs-6"><p><span>'+data[g].org_name+'</span></p><p>体检日期:<span>'+data[g].operatetime+'</span></p><p>预约日期:<span>'+data[g].appointdate+'</span></p></div><div class="mui-pull-right mui-col-xs-6"><p><span>'+data[g].name+'</span></p><p><button href="'+data[g].serve_mobile+'" class="tel mui-btn mui-btn-success"><span class="mui-icon mui-icon-phone"></span></button><span class="myfinish">已评价</span></p></div></div></li>';
 								if(!(data[g].reportid=="")){
-						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p type="button" class="mui-btn mui-btn-outlined">查看报告</p></div></div></a></li>';
+						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p href="'+data[g].appid+'" type="button" class="mui-btn mui-btn-outlined">查看报告</p></div></div></a></li>';
 					}else{
 						listreport+='<li class="mui-table-view-cell mui-media"><a href="javascript:;"><img class="mui-media-object mui-pull-left" src="img/rep.png"><div class="mui-media-body"><div class="mui-pull-left"><p>'+data[g].name+'</p><p class="mui-ellipsis">'+data[g].appointdate+'</p><p>'+data[g].org_name+'</p></div><div class="mui-pull-right"><p>未出报告</p></div></div></a></li>';
 					}
@@ -300,9 +301,9 @@
 				var snum=60;
 				var time1=null;
 				
-				
+				var appids="";
 				//查看报告点击出现弹框
-				$("#myreport>ul>li").on('tap','.mui-pull-right>.mui-btn',function(e){
+				$("#myreport>ul").on('tap','li .mui-pull-right>.mui-btn',function(e){
 					clearInterval(time1);
 //					e.detail.gesture.preventDefault(); //修复iOS 8.x平台存在的bug，使用plus.nativeUI.prompt会造成输入法闪一下又没了
 					var btnArray = ['确定', '取消'];					
@@ -311,7 +312,7 @@
 					$(".mui-popup-text").css("visibility",'hidden');
 					$(".mui-popup-buttons").hide();
 					$(".mui-popup-input>button").removeAttr("disabled").removeClass('mui-disabled');
-					
+					appids=$(e.target).attr("href");
 				});
 				//发送验证码点击按钮事件
 				
@@ -319,33 +320,58 @@
 					if($(this).attr('disabled')=="disabled"){
 						return false;
 					}else{
-						clearInterval(time1);
-						snum=60;
+						
+						$.ajax({
+							url:"http://www.elepick.com/api/report/"+mobile,
+							type:"post",
+							data:{},
+							success:function(data, textStatus, xhr){
+								if(xhr.status=='200'){
+									clearInterval(time1);
+									snum=60;
+									//发送成功，倒计时
+									$(".mui-popup-text").css("visibility",'visible');
+									time1=setInterval(function(){
+										$(".mui-popup-input>button").attr("disabled",'true');
+										snum--;
+										$(".mui-popup-input>button").html(snum+"s后重发");
+										if(snum<=0){
+											snum=0;
+											$(".mui-popup-text").css("visibility",'hidden');
+											$(".mui-popup-input>button").removeAttr("disabled").removeClass('mui-disabled').html("重新发送");
+											return clearInterval(time1);
+										}
+									},1000);
+								}
+							}
+						})
+						
 						//发送验证码功能实现
 						
-						//发送成功，倒计时
-						$(".mui-popup-text").css("visibility",'visible');
-						time1=setInterval(function(){
-							$(".mui-popup-input>button").attr("disabled",'true');
-							snum--;
-							$(".mui-popup-input>button").html(snum+"s后重发");
-							if(snum<=0){
-								snum=0;
-								$(".mui-popup-text").css("visibility",'hidden');
-								$(".mui-popup-input>button").removeAttr("disabled").removeClass('mui-disabled').html("重新发送");
-								return clearInterval(time1);
-							}
-						},1000);
+						
 					}
 					
 				});
 				//验证码输入匹配函数
+				var checkBool=true;
 				$("body").on('input','#checknum',function(){
 					//验证码匹配
 					if((snum>0)&&(snum<60)){
-						if($(this).val()=='1111'){
-							mui.toast("加载检查报告中");
-							window.location.href='report.html';
+						if(($(this).val().length>=4)&&(checkBool)){
+							checkBool=false;
+							var url="http://www.elepick.com/api/appoint/report/"+$(this).val().substr(0,4)+"/"+appids;
+							$.getJSON(url,{},function(data, textStatus, xhr){
+								checkBool=true;
+								if(xhr.status=="200"){
+									console.log(data);
+									clearInterval(time1);
+									snum=60;
+									mui.toast("加载检查报告中");
+//									window.location.href='report.html';
+								}else{
+									
+								}
+							});	
 						}
 					}
 					

@@ -13,7 +13,7 @@ var SexToCode = map[string]int{
 	"女": 2,
 }
 
-var MarryToCode = map[string]int{
-	"未婚": 1,
-	"已婚": 2,
+var MarryToCode = map[string]string{
+	"未婚": "1",
+	"已婚": "2",
 }

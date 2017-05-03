@@ -40,17 +40,18 @@ func TestGetItemByplan(t *testing.T) {
 func TestCreatAppoint(t *testing.T) {
 	dbinit()
 	a := Appointment{
-		ID:              "112313",
+		ID:              "",
 		Appointor:       "name1",
 		CardNo:          "cardid1",
-		CardType:        "cardType1",
-		Mobile:          "mobile1",
+		CardType:        "身份证",
+		Mobile:          "18799552120",
 		MerryStatus:     "未婚",
 		Status:          "预约",
 		Appoint_Channel: "微信",
 		AppointedNum:    0,
+		Sex:             "男",
 		PlanId:          "1",
-		OrgCode:         "000101",
+		OrgCode:         "0001002",
 		AppointTime:     time.Now().Unix(),
 		OperateTime:     time.Now().Unix(),
 		OrderID:         "order13",
@@ -58,9 +59,6 @@ func TestCreatAppoint(t *testing.T) {
 	}
 	//
 	err := a.CreateAppointment()
-	//fmt.Println("err", err)
-
-	//err := GenRsaKey(4096)
 	fmt.Println("err", err)
 }
 

@@ -24,6 +24,7 @@ type Config_Basic struct {
 	WarnNum      int      `json:"warnnum"`
 	OffDays      []string `json:"offdays"`       //休息日
 	AvoidNumbers []int64  `json:"avoid_numbers"` //不可使用的预约号
+	IpAddress    string   `json:"ip_address"`    //这里用来记录不同的pinto服务
 }
 
 //组织特殊项的容量

@@ -68,7 +68,6 @@ func (c *Config) sync() error {
 		return err
 	}
 
-	glog.Infof("SyncOrganizations cached orgs %v\n", orgs)
 	cache.Set("inner_system", CACHE_ORG, orgs)
 
 	olds, err := org.ListDBOrgs()
@@ -96,8 +95,6 @@ func (c *Config) sync() error {
 		glog.Errorf("Sync checkups cached cks err %v\n", err)
 		return err
 	}
-
-	glog.Infof("Sync checkups cached cks %v\n", cks)
 	cache.Set("inner_system", CACHE_CHECKUP, cks)
 
 	return nil

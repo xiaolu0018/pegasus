@@ -16,10 +16,11 @@ const VALIDATE_MERRY_YES = "已婚"
 var ErrAppointmentString = "Can't make an appointment"
 
 type Appointment struct {
-	ID          string `json:"id"`
-	PlanId      string `json:"planid"` //套餐
-	AppointTime int64  `json:"appointtime"`
-	OrgCode     string `json:"org_code"` //分院
+	ID          string   `json:"id"`
+	PlanId      string   `json:"planid"` //套餐
+	SaleCodes   []string `json:"sale_codes"`
+	AppointTime int64    `json:"appointtime"`
+	OrgCode     string   `json:"org_code"` //分院
 
 	CardNo          string `json:"cardno"`
 	CardType        string `json:"cardtype"`
@@ -31,6 +32,7 @@ type Appointment struct {
 	Appoint_Channel string `json:"appoint_channel"` //预约渠道
 	Appointorid     string `json:"appointorid"`     //预约人id
 
+	Sex          string `json:"sex"`
 	Company      string `json:"company"`
 	Group        string `json:"group"`
 	Remark       string `json:"remark"`
@@ -71,7 +73,7 @@ var TABLE_SaleRecords = "go_appoint_sale_records"
 
 type ManagerItem struct {
 	Date     string
-	SaleCode string
+	SaleCode string //todo 这个应该为checkup
 	Used     int
 	OrgCode  string
 }
@@ -84,7 +86,7 @@ type Plan struct {
 	Name      string   `json:"name"`
 	AvatarImg string   `json:"imageurl"` //todo 暂时为了保持和微信一致
 	DetailImg string   `json:"detailsurl"`
-	Checkups  []string //一个套餐中应该含有几种检查类型
+	SaleCodes []string //一个套餐中应该含有几种检查类型
 	IfShow    bool     //是否显示  false 显示  ture 隐藏
 }
 

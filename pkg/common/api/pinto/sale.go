@@ -3,6 +3,8 @@ package pinto
 import (
 	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
 	"database/sql"
+	"fmt"
+	"strings"
 )
 
 //Sale_Code string
@@ -40,4 +42,32 @@ func ListSales(db *sql.DB) ([]types.Sale, error) {
 	}
 
 	return l, nil
+}
+
+func GetSalesBySaleCodes(db *sql.DB, codes []string) ([]types.Sale, error) {
+
+	sqlCodes := make([]string, len(codes))
+	for k, salecode := range codes {
+		sqlCodes[k] = fmt.Sprintf(`'%s'`, salecode)
+	}
+	sqlStr := fmt.Sprintf("SELECT sale_code,sale_sellprice,sale_discount FROM sale WHERE sale_code IN (%s)", strings.Join(sqlCodes, ","))
+
+	rows, err := db.Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	sale := types.Sale{}
+	sales := []types.Sale{}
+
+	for rows.Next() {
+		if err = rows.Scan(&sale.Sale_Code, &sale.Sale_SellPrice, &sale.Sale_Discount); err != nil {
+			return nil, err
+		}
+		sales = append(sales, sale)
+	}
+	if rows.Err() != nil {
+		return nil, rows.Err()
+	}
+	return sales, nil
 }

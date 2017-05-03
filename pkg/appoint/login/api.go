@@ -1,16 +1,17 @@
 package login
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util"
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
 	"fmt"
 	"github.com/golang/glog"
+
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
+	"192.168.199.199/bjdaos/pegasus/pkg/common/util/md5"
 )
 
 func Get(account string) (*LoginUser, error) {
 	sqlStr := fmt.Sprintf("SELECT loginname,org_code,password FROM %s WHERE loginaccount = '%s'", TABLE_LOGINUSER, account)
 	loginUser := LoginUser{}
-	if err := db.GetReadDB().QueryRow(sqlStr).Scan(&loginUser.LoginName, &loginUser.OrgCode, &loginUser.PassWord); err != nil {
+	if err := db.GetDB().QueryRow(sqlStr).Scan(&loginUser.LoginName, &loginUser.OrgCode, &loginUser.PassWord); err != nil {
 		glog.Errorln("login.Get err ", err)
 		return nil, err
 	}
@@ -20,9 +21,9 @@ func Get(account string) (*LoginUser, error) {
 
 func ChangePWD(account, newpwd string) error {
 
-	newpwd = util.Md5([]byte(newpwd))
+	newpwd = md5.Md5([]byte(newpwd))
 	sqlStr := fmt.Sprintf("UPDATE TABLE %s SET password = '%s' WHERR loginaccount = '%d'", TABLE_LOGINUSER, newpwd, account)
-	if _, err := db.GetReadDB().Exec(sqlStr); err != nil {
+	if _, err := db.GetDB().Exec(sqlStr); err != nil {
 		glog.Errorln("login.ChangePED err ", err)
 		return err
 	}

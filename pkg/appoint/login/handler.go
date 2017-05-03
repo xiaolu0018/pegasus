@@ -1,11 +1,14 @@
 package login
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util"
-	httputil "github.com/1851616111/util/http"
+	"net/http"
+
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
-	"net/http"
+
+	httputil "github.com/1851616111/util/http"
+
+	"192.168.199.199/bjdaos/pegasus/pkg/common/util/md5"
 )
 
 func CheckLoginHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -42,7 +45,7 @@ func CheckLogin(loginaccount, password string) (bool, error) {
 		glog.Errorln("login.CheckLogin err ", err)
 		return false, err
 	}
-	if util.Md5([]byte(password)) == loginuser.PassWord {
+	if md5.Md5([]byte(password)) == loginuser.PassWord {
 		return true, nil
 	}
 	return false, nil

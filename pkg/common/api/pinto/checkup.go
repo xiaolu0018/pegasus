@@ -3,6 +3,8 @@ package pinto
 import (
 	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
 	"database/sql"
+	"fmt"
+	"strings"
 )
 
 func ListCheckups(db *sql.DB) ([]types.Checkup, error) {
@@ -59,4 +61,30 @@ func GetCheckupBySaleCode(db *sql.DB, code string) ([]types.Checkup, error) {
 
 	return l, nil
 
+}
+
+func GetCheckupCodesBySaleCodes(db *sql.DB, salecodes []string) ([]string, error) {
+
+	itmeStr := make([]string, len(salecodes))
+	for k, salecode := range salecodes {
+		itmeStr[k] = fmt.Sprintf(`'%s'`, salecode)
+	}
+	sqlStr := fmt.Sprintf("SELECT checkup_code FROM sale_checkup WHERE sale_code IN (%s)", strings.Join(itmeStr, ","))
+	rows, err := db.Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var checkupcode string
+	var checkupcodes []string
+	for rows.Next() {
+		if err = rows.Scan(&checkupcode); err != nil {
+			return nil, err
+		}
+		checkupcodes = append(checkupcodes, checkupcode)
+	}
+	if rows.Err() != nil {
+		return nil, err
+	}
+	return checkupcodes, nil
 }
