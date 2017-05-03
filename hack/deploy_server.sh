@@ -27,14 +27,14 @@ function target::Prepare() {
 
 function target::Start() {
     cd ~/${runDirName}
-    ./pegasus_$1 $1 start> ./$1.log 2>&1 &
+    ./pegasus_$1 $1 $2> ./$1_$2.log 2>&1 &
 }
 
 function startTarget() {
     cd ~
     target::Kill_old $1
     target::Prepare $1
-    target::Start $1
+    target::Start $1 $2
 }
 
 function deployDist() {
@@ -58,9 +58,11 @@ function deployPublicKey() {
 init_Dir
 deployDist
 deployPublicKey
-startTarget wc
-startTarget rpt
-startTarget app
+#startTarget wc start
+startTarget wc start-activity
+#startTarget rpt start
+#startTarget app start
+
 clean
 
 

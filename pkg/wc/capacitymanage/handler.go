@@ -18,7 +18,7 @@ func GetOffDaysHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	//offdays := FilterOffDays(cms)
 	//json.NewEncoder(w).Encode(offdays)
 	//return
-	rspbyte, statuscode, err := common.Go_Through_Http("GET","/api/offday/"+id, "")
+	rspbyte, statuscode, err := common.Go_Through_Http("GET", "/api/offday/"+id, "")
 	if statuscode != 200 {
 		httputil.ResponseJson(w, 400, err)
 	}

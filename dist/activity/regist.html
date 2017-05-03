@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+		<title>我要报名</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+   		<link rel="stylesheet" href="css/weui.min.css" />
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            list-style: none;
+        }
+        html,body{
+        	width:100%;
+        	font-size: 62.5%;
+        }
+        body{
+            background: url("img/8.png") #75ADBE no-repeat center;
+            background-size: 100%;
+            font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+            
+            color: #F7FAFB;
+        }
+        .container{
+        	width:100%;
+        	box-sizing:border-box;
+            padding:50px 6% 4%;
+            font-size:1.8rem;
+        }
+        .container>p{
+        	margin-bottom:0.6em;
+        }
+        p.file {
+            position: relative;
+            display: block;
+            background:center no-repeat;
+            background-size: cover;
+            background-color:rgba(250,250,250,.6);
+            border-radius: 12px;
+            border: 1px solid #99D3F5;
+            width:60px;
+            height:60px;
+            overflow: hidden;
+            color: #ffffff;
+            font-weight: 600;
+            text-decoration: none;
+            text-indent: 0;
+            line-height: 60px;
+            text-align: center;
+            margin-bottom:0.6em;
+            /*background-image:url(../../dist/img/banner1.jpg);*/
+        }
+       
+        p.file:hover {
+            background-color: #AADFFD;
+            border-color: #78C3F3;
+            color: #004974;
+        }
+        input{
+            width:100%;
+            box-sizing:border-box;
+            background:rgba(250,250,250,.5);
+            color: #333;
+            border-radius: 6px;
+            font-size: 1.8rem;
+            padding:0.5em 1em;
+            border: 0;
+            margin-bottom: 0.6em;
+        }
+        input[type="radio"]{
+            width:1em;
+            height:1em;
+            vertical-align:-webkit-baseline-middle;
+        }
+        div.btn_container{
+            text-align: center;
+            margin-top: 30px;
+        }
+        label{
+            font-size: 1.4rem;
+        }
+        button{
+            background: #B4D465;
+            color: #ffffff;
+            font-size: 1.8rem;
+           	padding:0.5em 2em;
+            border:0;
+            border-radius: 8px;
+            box-shadow: 2px 3px 5px #36523A;
+            outline:none;
+        }
+        button:active{
+        	background:#5CA97A;
+        }
+        @media only screen and (min-width:768px ) {
+        	.container{
+        		font-size:2rem;
+        	}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <p>上传照片</p>
+        <p id="picture" class="file">+</p>
+        <p>姓名</p>
+        <input type="text" name="name">
+        <p>公司/部门</p>
+        <input type="text" name="company">
+        <p>联系电话</p>
+        <input name="mobile" type="number">
+        <p>报名宣言（请勾选）</p>
+        <ul class="declaration">
+            <li>
+                <input type="radio" name="declaration" id="dec01">
+                <label for="dec01">我想陪你久一点</label>
+            </li>
+            <li>
+                <input type="radio" name="declaration" id="dec02">
+                <label for="dec02">实在不行就回家，至少还有口热饭吃</label>
+            </li>
+            <li>
+                <input type="radio" name="declaration" id="dec03">
+                <label for="dec03">别人问我飞的高不高，只有你问我飞得累不累</label>
+            </li>
+            <li>
+                <input type="radio" name="declaration" id="dec04">
+                <label for="dec04">我家有个帅老爸</label>
+            </li>
+            <li>
+                <input type="radio" name="declaration" id="dec05">
+                <label for="dec05">我家有个美娇娘</label>
+            </li>
+        </ul>
+        <div class="btn_container">
+            <button >提交</button>
+        </div>
+    </div>
+    
+    <!--提示消息-->
+    <div id="toast" style="display: none;">
+	    <div class="weui_mask_transparent"></div>
+	    <div class="weui_toast">
+	        <i class="weui_icon_toast"></i>
+	        <p class="weui_toast_content">已完成</p>
+	    </div>
+	</div>
+	
+</body>
+
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+	$(function(){
+		
+		var $toast = $('#toast');
+	    function showToast(htdata){
+            if ($toast.css('display') != 'none') return;
+			$("#toast>.weui_toast>p").html(htdata);
+            $toast.fadeIn(100);
+            setTimeout(function () {
+                $toast.fadeOut(100);
+            }, 2000);
+        };
+        //获取url参数
+		var request={};
+		function UrlSearch(){
+		   var name,value; 
+		   var str=location.href; //取得整个地址栏
+		   var num=str.indexOf("?") 
+		   str=str.substr(num+1); //取得所有参数   stringvar.substr(start [, length ]
+		
+		   var arr=str.split("&"); //各个参数放到数组里
+		   for(var i=0;i < arr.length;i++){ 
+			    num=arr[i].indexOf("="); 
+			    if(num>0){ 
+				    name=arr[i].substring(0,num);
+				    value=arr[i].substr(num+1);
+				    request[name]=value;
+				    console.log("request."+name+":"+request[name]+";");
+			    } 
+		    } 
+		   	$.getJSON('http://www.elepick.com/api/activity/jsconfig',{"openid":request.openid},function(data){
+		   		if (typeof data === 'string') {
+					    data = JSON.parse(data);
+				}
+		   		wx.config({
+						debug:true,
+						appId:data.appid,
+						timestamp:data.timestamp,
+						nonceStr:data.noncestr,
+						signature:data.signature,
+						jsApiList:['checkJsApi','chooseImage','previewImage','uploadImage']
+				});
+		   	});
+		  
+		}; 
+		UrlSearch();
+		//图片上传
+		var baseUrl="http://www.elepick.com";
+		var images = { 
+					localId: [], 
+					serverId: [] 
+				};
+			//图片选取
+			$("#picture").on('touchstart',function(e){
+				if(request=={}){
+					showToast("请关注公众号");
+				}else{
+					wx.chooseImage({
+					    count: 1, // 默认9
+					    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+					    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+					    success: function (res) {
+					        images.localId = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片					    	
+					    	$("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
+					    	console.log(res.localIds);
+					    	console.log(images.localId);
+					    }
+					});
+					 // 5.2 图片预览
+	//				  document.querySelector('#previewImage').onclick = function () {
+	//				    wx.previewImage({
+	//				      current: 'http://img5.douban.com/view/photo/photo/public/p1353993776.jpg',
+	//				      urls: [
+	//				        'http://img3.douban.com/view/photo/photo/public/p2152117150.jpg',
+	//				        'http://img5.douban.com/view/photo/photo/public/p1353993776.jpg',
+	//				        'http://img3.douban.com/view/photo/photo/public/p2152134700.jpg'
+	//				      ]
+	//				    });
+	//				  };				 
+				};
+			});//pictrue--upload
+			
+			$(".btn_container").on("touchstart","button",function(e){
+				console.log(images);
+				if(images.localId.length<=0){
+					showToast("没有选择图片");
+					return false;
+				}else{
+					// 上传图片
+				    images.serverId ="";
+				    wx.uploadImage({
+				        localId: images.localId[0],
+				        isShowProgressTips: 1,
+				        success: function (res) {
+				            var formData={
+							    "openid":"",
+							    "name": "",
+							    "image":"",
+							    "company": "",
+							    "mobile": "",
+							    "declaration": ""
+							};
+							//获取表单值
+							formData.openid=request.openid;
+							formData.name=$("input[name='name']").val();
+							formData.image=res.serverId;
+							formData.company=$("input[name='company']").val();
+							formData.mobile=$("input[name='mobile']").val();
+							$(".declaration>li").each(function(i,n){
+								if($(this).children("input[name='declaration']").prop("checked")){
+									formData.declaration=String($(this).index());
+								}
+							});
+							//非空验证
+							if(formData.name.image<=0){
+								showToast('没有选择图片');
+							}else if(formData.name.length<=0){
+								showToast("姓名不能为空");
+							}else if(formData.company.length<=0){
+								showToast("部门不能为空");
+							}else if(formData.mobile.length<=0){
+								showToast("联系电话不能为空");
+							}else if(formData.declaration==""){
+								showToast("请选择报名宣言");
+							}else{
+								//提交
+								console.log(formData);
+								$.ajax({
+									type:"post",
+									url:baseUrl+"/api/activity/voter",
+									data:JSON.stringify(formData),
+									success:function(data, textStatus, xhr){											
+										if(xhr.status=="200"){
+											localStorage.formData=formData;
+											showToast("报名成功");
+											setTimeout(function(){
+												window.loaction.href="placard.html";
+											},100);
+										}else{
+											showToast("注册失败!");
+											alert(textStatus+"-"+xhr.status);
+										}
+										
+									},
+									error:function(xhr, textStatus){
+											console.log(xhr);
+						                    alert(xhr.responseText);
+																		
+									},
+									complete:function(xhr,textStatus){
+										if(xhr.status==409){
+											showToast("您已经报过名了");
+										}
+									}
+								});	
+							};
+							
+				        },
+				        fail: function (res) {
+				        	formData={
+							    "openid":"",
+							    "name": "",
+							    "image":"",
+							    "company": "",
+							    "mobile": "",
+							    "declaration": ""
+							};
+				          alert(JSON.stringify(res));
+				        }
+				    });
+				}
+				
+			});//form submit
+			
+			
+		
+		
+				 
+		
+       
+
+		
+
+		
+		
+		
+	});
+	
+</script>
+</html>

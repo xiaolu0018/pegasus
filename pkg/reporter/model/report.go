@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/types"
 	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
+	"192.168.199.199/bjdaos/pegasus/pkg/reporter/types"
 )
 
 const married_code = 2
@@ -24,7 +24,7 @@ func GetReporterByExNo(exNo string, sync bool) (*types.Report, error) {
 	ret := &types.Report{}
 	var married, isGroup int
 	var sales, health_selected, checkupItems, analyse, finalExam,
-	images, singles, ex_enterprise, p_enterprise *string
+		images, singles, ex_enterprise, p_enterprise *string
 	row := DB.QueryRow(sql)
 	if err := row.Scan(&ret.Ex_No, &ret.Ex_CkDate, &ret.Ex_Image, &ret.Ex_Age, &ret.Name, &ret.Sex, &ret.CardNo,
 		&ret.Birthday, &married, &ret.Email, &ret.Address, &ret.Cellphone, &ret.Phone,

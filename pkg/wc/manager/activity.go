@@ -5,8 +5,8 @@ import (
 	"github.com/1851616111/util/weichat/handler"
 )
 
-func CreateActivity() error {
-	article := event.NewArticleAction("第一次订阅推送测试", "第一次订阅推送测试", "http://wx.qlogo.cn/mmopen/PiajxSqBRaELA3P616lZg1b33Vzv8Hhc6GnPEOmUZG7Gl8sL4aNic6WhOmezogpWmoXad53BuoVXmPHTsnVLbbvA/0", "http://www.elepick.com:8080/swagger-ui/dist/")
+func WatchEvent() error {
+	article := event.NewArticleAction("跟衰老 Say Bye Bye", "晒合影, 喊好友来助力！！！", "http://www.elepick.com/dist/activity/img/head.png", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd09c7682905819e6&redirect_uri=http%3a%2f%2fwww.elepick.com%2fapi%2factivity%2findex&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect")
 	handler.EventManager.Registe(event.E_Subscribe, article)
 	handler.EventManager.Registe(event.E_UnSubscribe, article)
 	return nil

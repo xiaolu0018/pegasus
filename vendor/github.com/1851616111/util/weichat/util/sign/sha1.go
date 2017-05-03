@@ -8,7 +8,7 @@ import (
 )
 
 // sort by value
-func Sign(nonce, timestamp, token string) string {
+func SignToken(nonce, timestamp, token string) string {
 	ps := []string{nonce, timestamp, token}
 	sort.Strings(ps)
 
@@ -19,4 +19,9 @@ func Sha1(data string) string {
 	t := sha1.New()
 	io.WriteString(t, data)
 	return fmt.Sprintf("%x", t.Sum(nil))
+}
+
+func SignJsTicket(ticket, noncestr, url string, timestamp int64) string {
+	target := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s", ticket, noncestr, timestamp, url)
+	return Sha1(target)
 }

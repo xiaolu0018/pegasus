@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/token"
-	"github.com/1851616111/util/weichat/manager/user"
 	"github.com/golang/glog"
 	"gopkg.in/mgo.v2/bson"
+
+	"github.com/1851616111/util/weichat/manager/user"
+
+	wctoken "github.com/1851616111/util/weichat/util/api-token"
 )
 
 const WC_USER_INFO_CH_LEN = 500
@@ -61,7 +63,7 @@ type cache struct {
 func (c *cache) Init() error {
 	var openIDs []string
 	var err error
-	if openIDs, err = user.ListUserIDs(token.TokenCtrl.GetToken()); err != nil {
+	if openIDs, err = user.ListUserIDs(wctoken.TokenCtrl.GetToken()); err != nil {
 		return err
 	}
 
