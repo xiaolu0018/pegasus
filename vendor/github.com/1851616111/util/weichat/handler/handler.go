@@ -29,7 +29,7 @@ func init() {
 func DeveloperValidater(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	r.ParseForm()
 
-	s := sign.Sign(r.FormValue("nonce"), r.FormValue("timestamp"), APP_ID)
+	s := sign.SignToken(r.FormValue("nonce"), r.FormValue("timestamp"), APP_ID)
 
 	if s != r.FormValue("signature") {
 		w.WriteHeader(400)
@@ -48,6 +48,7 @@ func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
+	glog.Infof("weichat event action: %s\n", string(xmlData))
 	e := event.Event{}
 	if err := xml.Unmarshal(xmlData, &e); err != nil {
 		httputil.Response(w, 400, err)
@@ -68,6 +69,7 @@ func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func AuthValidator(tokenCallBack func(*token.Token, *httprouter.Params) error, handler func(http.ResponseWriter, *http.Request, httprouter.Params)) func(http.ResponseWriter, *http.Request, httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
 		r.ParseForm()
 		code := r.FormValue("code")
 		glog.Errorf("authValidater get user code=%s\n", code)

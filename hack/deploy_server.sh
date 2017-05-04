@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-runDirName=pegasus_running
 
-function init_Dir() {
-   if [ -d ~/${runDirName} ]; then
-      rm -rf ~/${runDirName}
+function makeDir() {
+   if [ -d ~/$1 ]; then
+      rm -rf ~/$1
    fi
 
-    mkdir ~/${runDirName}
+    mkdir ~/$1
 }
 
 function clean() {
@@ -21,46 +20,46 @@ function target::Kill_old() {
 }
 
 function target::Prepare() {
-    cp pegasus pegasus_$1
-    mv pegasus_$1 ~/${runDirName}/
+    makeDir pegasus_$1
+    cp pegasus ~/pegasus_$1/pegasus_$1
+    deployDist pegasus_$1
 }
 
 function target::Start() {
-    cd ~/${runDirName}
-    ./pegasus_$1 $1 start> ./$1.log 2>&1 &
+    cd ~/pegasus_$1
+    ./pegasus_$1 $1 $2> ./$1_$2.log 2>&1 &
 }
 
 function startTarget() {
     cd ~
     target::Kill_old $1
     target::Prepare $1
-    target::Start $1
+    target::Start $1 $2
 }
 
 function deployDist() {
-
-    if [ -d ~/${runDirName}/dist ]; then
-      rm -rf ~/${runDirName}/dist
+    if [ -d ~/$1/dist ]; then
+      rm -rf ~/$1/dist
     fi
 
-    tar -zxvf dist.tar.gz -C ~/${runDirName}
+    tar -zxvf dist.tar.gz -C ~/$1
 }
 
-function deployPublicKey() {
-    if [ -d ~/${runDirName}/public.pem ]; then
-      rm -rf ~/${runDirName}/public.pem
-    fi
+#function deployPublicKey() {
+#    if [ -d ~/${runDirName}/public.pem ]; then
+#      rm -rf ~/${runDirName}/public.pem
+#    fi
+#
+#    tar -zxvf dist.tar.gz -C ~/${runDirName}
+#    mv public.pem ~/${runDirName}
+#}
 
-    tar -zxvf dist.tar.gz -C ~/${runDirName}
-    mv public.pem ~/${runDirName}
-}
 
-init_Dir
-deployDist
-deployPublicKey
-startTarget wc
-startTarget rpt
-startTarget app
+#startTarget wc start
+startTarget wc start-activity
+#startTarget rpt start
+#startTarget app start
+
 clean
 
 

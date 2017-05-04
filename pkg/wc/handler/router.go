@@ -15,8 +15,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func CreateHttpRouter(dist string) http.Handler {
-	r := httprouter.New()
+func AddApiToRouter(r *httprouter.Router, dist string) http.Handler {
 	r.GET("/api/basic/signature", handler.DeveloperValidater)
 	r.POST("/api/basic/signature", handler.EventAction)
 

@@ -32,9 +32,8 @@ type Person struct {
 	Cellphone *string `json:"cellphone"` //手机
 	Phone     *string `json:"phone"`     //宅电
 
-	Enterprise *string `json:"enterprise"` //所属公司
+	Enterprise    *string `json:"enterprise"` //所属公司
 	EnterpriseDep *string `json:"enterprise_dep"`
-
 }
 
 type Info struct {
@@ -162,7 +161,7 @@ type FinalExam struct {
 type ImageItems struct {
 	CheckupName    string      `json:"checkup"`
 	DiagnoseResult string      `json:"result"`
-	DoctorSign     string 	   `json:"doctorSign"`
+	DoctorSign     string      `json:"doctorSign"`
 	PreviousName   string      `json:"previousName"`
 	Images         []string    `json:"images"`
 	Items          []ImageItem `json:"items"`

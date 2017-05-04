@@ -11,7 +11,7 @@ import (
 
 const TO_CACHE_SCOPE = "snsapi_userinfo"
 
-func completeUserInfo(t *tk.Token, ps *httprouter.Params) error {
+func CompleteAccessTokenInfo(t *tk.Token, ps *httprouter.Params) error {
 	var token string
 	var ok bool
 	var id string = t.Open_ID
@@ -26,6 +26,13 @@ func completeUserInfo(t *tk.Token, ps *httprouter.Params) error {
 	}
 
 	newPs := util.AddParam(*ps, "bear_token", token)
+	*ps = newPs
+
+	return nil
+}
+
+func CompleteOpenidInfo(t *tk.Token, ps *httprouter.Params) error {
+	newPs := util.AddParam(*ps, "openid", t.Open_ID)
 	*ps = newPs
 
 	return nil

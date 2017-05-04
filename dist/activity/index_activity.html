@@ -1,0 +1,461 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>晒合影活动</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" href="css/weui.min.css" />
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        html,body{
+            width:100%;
+            height:100%;
+        }
+        ul,li{
+            list-style: none;
+        }
+        .scroll-box{
+            width:100%;
+            background:url(img/bg.png) 100% no-repeat;
+        }
+        header{
+            width:100%;
+            background:url(img/head.png) no-repeat;
+            background-size:contain;
+            position:relative;
+        }
+        header>a#mylink{
+            color:#F7926F;
+            text-align: center;
+            text-decoration: none;
+            display:block;
+            line-height: 1.6;
+            font-weight:300;
+            background:transparent;
+            border:1px solid #F7926F;
+            position:absolute;
+            left:2em;
+            font-size:10px;
+            bottom:40%;
+        }
+
+        .btnbox{
+            overflow: hidden;
+        }
+        .regist-btn{
+            background-color:#B3D465;
+            width:35%;
+            margin:15px auto 18px;
+            box-shadow: 1px 2px 2px #1A3440;
+        }
+        .main{
+            padding:5px 5px 10px;
+        }
+        .weui_search_bar {
+            background-color: #fff;
+        }
+        .weui_search_outer:after{
+            background:#efeff4;
+            border-color:#ddd;
+
+        }
+        .main ul.my-panel{
+            overflow: hidden;
+        }
+        .main .my-panel>.panel-box{
+            box-sizing: border-box;
+            width:49.5%;
+            float:left;
+            padding:1em 5px 0.5em;
+            margin-top:1%;
+            background:#fff;
+            position:relative;
+            color:#fff;
+        }
+        .main .my-panel>.panel-box:nth-of-type(even){
+            margin-right:0;
+            float:right;
+        }
+        .img-box{
+            width:100%;
+            overflow: hidden;
+            margin-bottom:8px;
+        }
+        .img-box>img{
+            width:100%;
+            height:100%;
+        }
+        .panel-box>.panel-footer{
+            overflow: hidden;
+        }
+        .panel-footer .perleft{
+            float:left;
+            width:40%;
+            color:#B3D465;
+            line-height:1.2;
+            white-space: nowrap;
+
+        }
+        .panel-footer .perleft>p{
+            text-overflow: clip;
+        }
+        .panel-footer button{
+            float:right;
+            width:55%;
+            background:#B3D465;
+            white-space: nowrap;
+            text-overflow: clip;
+            padding-left:0;
+            padding-right:0;
+        }
+        .panel-box>p.checkbox{
+            position:absolute;
+            padding:0 3px;
+            top:1em;
+            right:1em;
+            background:url(img/4.png) no-repeat;
+            background-size:cover;
+        }
+        .panel-box>p.checkbox:after{
+            content:"";
+            display:block;
+            height:3px;
+            width:100%;
+        }
+        .main .my-paging{
+            color:#333;
+            overflow: hidden;
+            text-align: center;
+            box-sizing: border-box;
+            padding:1em 0;
+        }
+        .my-paging ul{
+            overflow:hidden;
+
+        }
+        .my-paging ul>li{
+            float:left;
+            padding:0 0.5em 0 0;
+        }
+        .my-paging .sigpage input{
+            width:2em;
+            background:rgba(255,255,255,0.3);
+            border:none;
+            border-radius:4px;
+            outline: none;
+            padding:3px 1em;
+            text-align: center;
+            color:#333;
+        }
+        .pagelist>span:active{
+            color:#fff;
+        }
+        #sec,#clip,#negfir,#negsec{
+            display:none;
+        }
+    </style>
+</head>
+<body ontouchstart="">
+<div class="scroll-box">
+    <header>
+        <a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
+    </header>
+    <div class='btnbox'>
+        <a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
+    </div>
+    <div class="main">
+        <div class="weui_search_bar" id="searchinp">
+            <form class="weui_search_outer">
+                <div class="weui_search_inner">
+                    <i class="weui_icon_search"></i>
+                    <input type="search" class="weui_search_input" id="search_input" placeholder="请输入姓名或编号">
+                    <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+                </div>
+                <label for="search_input" class="weui_search_text" id="search_text" style="display: none;">
+                    <i class="weui_icon_search"></i>
+                    <span>搜索</span>
+                </label>
+            </form>
+            <a href="javascript:" class="weui_search_cancel" id="search_cancel">确认</a>
+        </div>
+        <ul class="my-panel">
+
+        </ul>
+        <div class='my-paging'>
+            <p class='pagelist'>
+
+                <span>上一页</span>
+                <span id="fir">1</span>
+                <span id="sec">2</span>
+                <span id="clip" class="my-clip">&middot;&middot;&middot;&middot;</span>
+                <span id="negsec" class="last-pg">51</span>
+                <span id="negfir" class="last-pg">52</span>
+                <span>下一页</span>
+
+            </p>
+            <p class='sigpage'>
+                跳到
+                <input type="number" value="1"/>
+                页
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script>
+    $(function(){
+        var baseUrl="http://www.elepick.com";
+        var page=1;//当前页码
+        var pageSize=8;//单页面显示的用户数量；
+        var MAXPAGE=52;
+        var openid="";
+        var inpKey="";//搜索框val
+        var telWidth=$(window).width();//屏幕宽度
+        $('header').css("height",telWidth+"px");
+
+        //图片宽高自适应设置；
+        var imgboxWidth=$("div.img-box").width();
+        $("div.img-box").each(function(){
+            $(this).css("height",imgboxWidth+"px");
+        });
+
+
+        //获取url参数
+        var request={};
+        function UrlSearch(){
+            var name,value;
+            var str=location.href; //取得整个地址栏
+            var num=str.indexOf("?")
+            str=str.substr(num+1); //取得所有参数   stringvar.substr(start [, length ]
+            var arr=str.split("&"); //各个参数放到数组里
+            for(var i=0;i < arr.length;i++){
+                num=arr[i].indexOf("=");
+                if(num>0){
+                    name=arr[i].substring(0,num);
+                    value=arr[i].substr(num+1);
+                    request[name]=value;
+                }
+            }
+            openid=request.openid;
+        };
+
+        UrlSearch();
+        ajaxPage({});
+
+        //页码变化时的ajax,并解析渲染
+        function ajaxPage(parameter){
+            $.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
+//				$.getJSON("data/img.json",parameter,function(data){
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
+                if(data==null){
+
+                }else{
+                    //数据解析
+                    $("#searchinp input[type='search']").val("");
+                    inpKey="";
+                    page=data.index;
+                    $(".sigpage>input").val(page);
+                    pageSize=data.size;
+                    MAXPAGE=data.total_pages;
+                    var pageNum=data.page_data.length;
+                    var pageData=data.page_data;
+                    var fragment="";
+                    for(var g=0;g<pageNum;g++){
+                        fragment+='<li class="panel-box"><div class="img-box"><img src="'+pageData[g].image+'" class="panel-img"></div><div class="panel-footer"><div class="perleft"><span class="name">'+pageData[g].name+'</span><p><span class="ticNum">'+pageData[g].voteCount+'</span>票</p></div><button class="weui_btn weui_btn_primary">投他一票</button></div><p class="checkbox">编号<span class="checkNum">'+pageData[g].voterid+'</span></p></li>'
+                    };
+                    $(".main>ul.my-panel").html(fragment);
+                    if(MAXPAGE>0){
+                        if(MAXPAGE>4){
+                            $("#clip").show();
+                            $("#fir").show().html("1");
+                            $("#sec").show().html("2");
+                            $("#negfir").show().html(MAXPAGE);
+                            $("#negsec").show().html(MAXPAGE-1);
+                        }else if(MAXPAGE==4){
+                            $("#clip").hide();
+                            $("#fir").show().html("1");
+                            $("#sec").show().html("2");
+                            $("#negfir").show().html(MAXPAGE);
+                            $("#negsec").show().html(MAXPAGE-1);
+                        }else if(MAXPAGE==3){
+                            $("#clip,#negsec").hide();
+                            $("#fir").show().html("1");
+                            $("#sec").show().html("2");
+                            $("#negfir").show().html(MAXPAGE);
+                        }else if(MAXPAGE==2){
+                            $("#clip,#negsec,#sec").hide();
+                            $("#fir").show().html("1");
+                            $("#negfir").show().html(MAXPAGE);
+                        }else if(MAXPAGE==1){
+                            $("#clip,#sec,#negfir,#negsec").hide();
+                            $("#fir").html(MAXPAGE);
+                        }
+                    }
+                    //图片宽高自适应设置；
+                    var imgboxWidth=$("div.img-box").width();
+                    $("div.img-box").each(function(){
+                        $(this).css("height",imgboxWidth+"px");
+                    });
+
+                }
+            });//ajax-end
+        };//ajax-function-end
+
+        //我要报名
+        $("#goRegist").on('touchstart',function(e){
+            if(request.openid){
+                alert("正在跳转");
+                alert("http://www.elepick.com/dist/activity/regist.html?openid="+request.openid);
+                window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
+            }else{
+                //未关注公众号
+                alert("请关注公众号");
+            }
+        });
+        //搜索框
+        $("#searchinp input[type='search']").focus(function(){
+            $("#search_cancel").show(0);
+        });
+        $("#searchinp input[type='search']").blur(function(){
+            $("#search_cancel").hide(0);
+        });
+        //搜索框清除点击事件
+        $("#searchinp").on('touchstart','#search_clear',function(){
+            $("#searchinp input[type='search']").val("");
+        });
+        //搜索框搜索
+        $(".main").on('touchstart','#search_cancel',function(e){
+            inpKey=$(e.target).val();
+            var param={"key":inpKey};
+            ajaxPage(param);
+        });
+        //////////////
+        //上一页，下一页
+        $(".pagelist").on('touchstart','span',function(e){
+            if($(e.target).index()==0){
+                //上一页
+                if(page>1){
+                    page--;
+                    if(inpKey.length>0){
+                        var para={
+                            "key":inpKey,
+                            "index":page
+                        }
+                    }else{
+                        var para={"index":page};
+                    }
+                    ajaxPage(para);
+                }
+                if(page<=1){
+                    page=1;
+                }
+            }else if((e.target)==$(".pagelist>span:last-of-type").get(0)){
+                //下一页
+                if(page<MAXPAGE){
+                    page++;
+                    if(inpKey.length>0){
+                        var para={
+                            "key":inpKey,
+                            "index":page
+                        }
+                    }else{
+                        var para={"index":page};
+                    }
+                    ajaxPage(para);
+                }
+                if(page>=MAXPAGE){
+                    page=MAXPAGE;
+                }
+
+            }else{
+                if(Number($(e.target).html())>=1){
+                    var oldpage=page;
+                    page=Number($(e.target).html());
+                    if(page==oldpage){
+
+                    }else{
+                        if(inpKey.length>0){
+                            var para={
+                                "key":inpKey,
+                                "index":page
+                            };
+                        }else{
+                            var para={"index":page};
+                        }
+                        ajaxPage(para);
+                    }
+                }
+            }
+        });
+        //页面直接跳转
+        $(".sigpage").on("input",'input',function(e){
+            if(($(e.target).val()>0)&&($(e.target).val()<=MAXPAGE)){
+                //有效页码
+                var mycache=$(e.target).val();
+                setTimeout(function(){
+                    if($(e.target).val()==mycache){
+                        page=mycache;
+                        if(inpKey.length>0){
+                            var para={
+                                "key":inpKey,
+                                "index":page
+                            };
+                        }else{
+                            var para={"index":page};
+                        }
+                        ajaxPage(para);
+                    };
+                },600);
+
+
+            }
+        });
+
+        //投票按钮
+        //重复提交变量
+        var resub=true;
+        $(".main>ul.my-panel").on('touchstart','li.panel-box button',function(e){
+            var $this=$(e.target);
+            var voterid=$this.parent(".panel-footer").siblings("p.checkbox").children("span.checkNum").html();
+            if(resub){
+                resub=false;
+                if(request.openid!=undefined){
+                    $.ajax({
+                        type:"post",
+                        url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
+                        data:{},
+                        success:function(xhr){
+                            resub=true;
+                            if(xhr.status=="200"){
+                                var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
+                                $this.siblings(".perleft").find('span.ticNum').html(++lastNum);
+                            }
+                        },
+                        complete:function(xhr){
+                            resub=true;
+                            if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){
+                                alert("每天最多投三票");
+                            }
+                        }
+                    });
+                }else{
+                    resub=true;
+                    //没有关注
+                    alert("没有关注");
+                }
+            }
+
+
+        });
+    });
+
+</script>
+</html>

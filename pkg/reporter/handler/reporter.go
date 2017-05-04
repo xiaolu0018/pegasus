@@ -141,16 +141,16 @@ func ReportListHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 func UpdateStatusHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ex_no, status := r.FormValue("examination_no"), r.FormValue("status")
 	if len(ex_no) == 0 || len(ex_no) > 50 {
-		httputil.Response(w, 400,  "examination_no format wrong")
+		httputil.Response(w, 400, "examination_no format wrong")
 		return
 	}
-	if len(status) == 0 || len(status)  > 50 {
-		httputil.Response(w, 400,  "status format wrong")
+	if len(status) == 0 || len(status) > 50 {
+		httputil.Response(w, 400, "status format wrong")
 		return
 	}
 
 	if err := model.UpdateStatus(ex_no, status); err != nil {
-		httputil.Response(w, 400,  fmt.Sprintf("update status err %v\n", err))
+		httputil.Response(w, 400, fmt.Sprintf("update status err %v\n", err))
 		return
 	}
 
