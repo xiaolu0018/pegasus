@@ -136,6 +136,15 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 	return &l, nil
 }
 
+func (d DB) GetVoter(openid string) (*Voter, error) {
+	v := Voter{}
+	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM ` +TABLE_VOTER +` WHERE openid = $1`, openid).
+		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount); err != nil {
+		return nil, err
+	}
+	return &v, nil
+}
+
 func (d DB) updateVoterImageStatus(image string) (err error) {
 	_, err = d.Exec(`UPDATE `+TABLE_VOTER+` SET image = concat(image, '.jpg') , imageCached = TRUE where image = $1`, image)
 	return

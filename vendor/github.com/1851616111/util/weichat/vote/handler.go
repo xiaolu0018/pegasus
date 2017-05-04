@@ -1,21 +1,22 @@
 package vote
 
 import (
-	"encoding/json"
-	"net/http"
-	"strconv"
-
 	"fmt"
+	"time"
+	"strings"
+	"strconv"
+	"net/http"
+	"database/sql"
+	"encoding/json"
+	"path/filepath"
+
+	"github.com/golang/glog"
+	"github.com/julienschmidt/httprouter"
 	httputil "github.com/1851616111/util/http"
 	"github.com/1851616111/util/rand"
 	"github.com/1851616111/util/weichat/handler"
 	apiotoken "github.com/1851616111/util/weichat/util/api-token"
 	"github.com/1851616111/util/weichat/util/sign"
-	"github.com/golang/glog"
-	"github.com/julienschmidt/httprouter"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 var dbI DBInterface
@@ -30,6 +31,7 @@ func AddRouter(r *httprouter.Router, dist string) {
 	r.POST("/api/basic/signature", handler.EventAction)
 
 	r.GET("/api/activity/voters", ListVotersHandler)
+	r.GET("/api/activity/voter", GetVoterByOpenIDHandler)
 	r.POST("/api/activity/voter", RegisterVoterHandler)
 	r.POST("/api/activity/voter/:voterid/vote", VoteHandler)
 
@@ -160,6 +162,27 @@ func ListVotersHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	}
 
 	httputil.ResponseJson(w, 200, l)
+	return
+}
+
+func GetVoterByOpenIDHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	openid := r.FormValue("openid")
+	if len(openid) == 0 {
+		httputil.Response(w, 400, "param openid not found")
+		return
+	}
+
+	v, err := dbI.GetVoter(openid)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			httputil.Response(w, 404, "not found")
+			return
+		}
+		httputil.Response(w, 400, err)
+		return
+	}
+
+	httputil.ResponseJson(w, 200, v)
 	return
 }
 
