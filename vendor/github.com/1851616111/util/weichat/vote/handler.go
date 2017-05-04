@@ -22,7 +22,7 @@ var dbI DBInterface
 var URL_REGISTER_HTML string
 var APPID string
 
-const DEFAULT_PAGE_SIZE = "20"
+const DEFAULT_PAGE_SIZE = "8"
 
 func AddRouter(r *httprouter.Router, dist string) {
 
@@ -116,28 +116,44 @@ func VoteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func ListVotersHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	indexS, sizeS := r.FormValue("index"), r.FormValue("size")
-	if len(indexS) == 0 {
-		indexS = "1"
+	indexStr, sizeStr, keyStr := r.FormValue("index"), r.FormValue("size"), r.FormValue("key")
+	if len(indexStr) == 0 {
+		indexStr = "1"
 	}
 
-	if len(sizeS) == 0 {
-		sizeS = DEFAULT_PAGE_SIZE
+	if len(sizeStr) == 0 {
+		sizeStr = DEFAULT_PAGE_SIZE
 	}
 
-	index, err := strconv.Atoi(indexS)
+	if len(indexStr) > 5 || len(sizeStr) > 5 || len(keyStr) > 50 {
+		httputil.Response(w, 400, "invalid params")
+		return
+	}
+
+	index, err := strconv.Atoi(indexStr)
 	if err != nil {
 		httputil.Response(w, 400, err)
 		return
 	}
 
-	size, err := strconv.Atoi(sizeS)
+	size, err := strconv.Atoi(sizeStr)
 	if err != nil {
 		httputil.Response(w, 400, err)
 		return
 	}
 
-	l, err := dbI.ListVoters(index, size)
+	var searchKey interface{}
+	if len(keyStr) > 0 {
+		searchVoterID, err := strconv.Atoi(keyStr)
+		if err == nil {
+			searchKey = searchVoterID
+		} else {
+			searchKey = keyStr
+		}
+	}
+
+
+	l, err := dbI.ListVoters(searchKey, index, size)
 	if err != nil {
 		httputil.Response(w, 400, err)
 		return

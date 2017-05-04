@@ -229,8 +229,8 @@
 			
 			//页码变化时的ajax,并解析渲染
 			function ajaxPage(parameter){
-//				$.getJSON("http://www.elepick.com/api/activity/voters",parameter,function(data){
-				$.getJSON("data/img.json",parameter,function(data){
+				$.getJSON("http://www.elepick.com/api/activity/voters",parameter,function(data){
+//				$.getJSON("data/img.json",parameter,function(data){
 					if (typeof data === 'string') {
 					    data = JSON.parse(data);
 					}

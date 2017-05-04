@@ -61,3 +61,10 @@ func (v Voter) ValidateRegister() error {
 func (v *Voter) Complete() {
 	v.VotedCount = 0
 }
+
+type VoterList struct {
+	Index 		int `json:"index"`
+	Size 		int `json:"size"`
+	TotalPages 	int `json:"total_pages"`
+	PageData 	[]Voter `json:"page_data"`
+}

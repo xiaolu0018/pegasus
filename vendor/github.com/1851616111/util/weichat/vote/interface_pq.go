@@ -90,23 +90,50 @@ func (d DB) Vote(openID, votedID string) (err error) {
 	return tx.Commit()
 }
 
-func (d DB) ListVoters(index, size int) ([]Voter, error) {
-	rows, err := d.Query(`SELECT voterid, name, image, votedcount FROM `+TABLE_VOTER+` ORDER BY votedcount DESC LIMIT $1 OFFSET $2`, size, index-1)
+func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
+	var sql string = `SELECT voterid, name, image, votedcount FROM `+TABLE_VOTER+` WHERE imagecached %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
+	var countSQL string = `SELECT count(*) FROM `+TABLE_VOTER+` WHERE imagecached %s`
+	var sqlCondition string
+	if key == nil {
+		sqlCondition = ""
+	} else {
+		switch value := key.(type) {
+		case int:
+			sqlCondition = fmt.Sprintf(`AND voterid = %d`, value)
+		case string:
+			sqlCondition = fmt.Sprintf("AND name like '%s'", value)
+		}
+	}
+
+	rows, err := d.Query(fmt.Sprintf(sql, sqlCondition, size, index - 1))
 	if err != nil {
 		return nil, err
 	}
 
-	l := []Voter{}
+	vs := []Voter{}
 	for rows.Next() {
 		v := Voter{}
 		if err := rows.Scan(&v.ID, &v.Name, &v.Image, &v.VotedCount); err != nil {
 			glog.Errorf("list voters scan row err %v\n", err)
 			continue
 		}
-		l = append(l, v)
+		vs = append(vs, v)
 	}
 
-	return l, nil
+	var tatol int
+	d.QueryRow(fmt.Sprintf(countSQL, sqlCondition)).Scan(&tatol)
+	l := VoterList{
+		Index:      index,
+		Size:       size,
+		TotalPages: tatol /8,
+		PageData:   vs,
+	}
+
+	if tatol%8 > 0 {
+		l.TotalPages ++
+	}
+
+	return &l, nil
 }
 
 func (d DB) updateVoterImageStatus(image string) (err error) {
