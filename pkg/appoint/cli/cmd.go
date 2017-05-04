@@ -11,6 +11,7 @@ import (
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/handler"
 	"192.168.199.199/bjdaos/pegasus/pkg/appoint/model"
 
+	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
 	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/pinto"
 )
 
@@ -41,6 +42,7 @@ func startCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
+			appointment.Init()
 			go syncController.Run()
 
 		},

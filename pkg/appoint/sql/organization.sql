@@ -18,6 +18,7 @@ CREATE TABLE go_appoint_organization_basic_con(
    WARNNUM       INTEGER DEFAULT 0,
    OFFDAYS       VARCHAR(10)[] DEFAULT ARRAY[]::VARCHAR[],
    AVOIDNUMBERS  INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+   ip_address VARCHAR
 );
 
 CREATE TABLE go_appoint_organization_special_con(

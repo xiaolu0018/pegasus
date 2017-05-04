@@ -28,6 +28,7 @@ func InsertBookRecord(db *sql.DB, b *types.BookRecord) error {
 	return nil
 }
 
+
 func MapToBookRecord(result map[string]interface{}) types.BookRecord {
 	br := types.BookRecord{}
 	if cartno, ok := result["cardno"]; ok {
@@ -66,6 +67,10 @@ func MapToBookRecord(result map[string]interface{}) types.BookRecord {
 
 	if AppointedNum, ok := result["appointednum"]; ok {
 		br.BookCode = strconv.FormatInt(int64(AppointedNum.(float64)), 10)
+	}
+
+	if appoint_channel, ok := result["appoint_channel"]; ok {
+		br.AppointChannel = appoint_channel.(string)
 	}
 
 	br.BookNo = operTime.Format("20060102150405")

@@ -14,7 +14,7 @@ import (
 )
 
 func GetExam(db *sql.DB, exam_no string) (*types.Examination, error) {
-	sqlStr := fmt.Sprintf("SELECT status,Person_code FROM examination WHERE examination_no = '%s'", exam_no)
+	sqlStr := fmt.Sprintf("SELECT status,person_code FROM examination WHERE examination_no = '%s'", exam_no)
 	exam := types.Examination{}
 	if err := db.QueryRow(sqlStr).Scan(&exam.Status, &exam.PersonCode); err != nil {
 		return nil, err
@@ -50,13 +50,13 @@ func GetExaminationNo(db *sql.DB, exam types.Examination) string {
 }
 
 func InsertExam_Checkup(db *sql.DB, exam_checkup types.ExaminationCheckUp) error {
-	sqlStr := fmt.Sprintf("INSERT INTO examination_checkup(examination_no,checkup_code,checkup_status,createtime,hos_code) VALUES($1,$2,$3,$4,$5)")
+	sqlStr := fmt.Sprint("INSERT INTO examination_checkup(examination_no,checkup_code,checkup_status,createtime,hos_code) VALUES($1,$2,$3,$4,$5)")
 	_, err := db.Exec(sqlStr, exam_checkup.ExaminationNo, exam_checkup.CheckupCode, exam_checkup.CheckupStatus, exam_checkup.CreateTime, exam_checkup.HosCode)
 	return err
 }
 
 func InsertExam_Sale(db *sql.DB, exam_sale types.ExaminationSale) error {
-	sqlStr := fmt.Sprintf("INSERT INTO examination_checkup(examination_no,sale_code,sale_status,hos_code,sale_sellprice,discount,curprice) VALUES($1,$2,$3,$4,$5,$6,$7)")
+	sqlStr := fmt.Sprint("INSERT INTO examination_checkup(examination_no,sale_code,sale_status,hos_code,sale_sellprice,discount,curprice) VALUES($1,$2,$3,$4,$5,$6,$7)")
 	_, err := db.Exec(sqlStr, exam_sale.ExaminationNo, exam_sale.SaleCode, exam_sale.SaleStatus, exam_sale.HosCode, exam_sale.SaleSellprice, exam_sale.Discount, exam_sale.Curprice)
 	return err
 }
@@ -157,7 +157,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		err = tx.Commit()
 	}()
 
-	sqlStr := fmt.Sprintf("INSERT INTO person(sex,card_no,is_marry,name,cellphone,createtime,person_code,idcard_type_code,hos_code)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)")
+	sqlStr := fmt.Sprint("INSERT INTO person(sex,card_no,is_marry,name,cellphone,createtime,person_code,idcard_type_code,hos_code)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)")
 	_, err = tx.Exec(sqlStr, person.Sex, person.CardNo, person.IsMarry, person.Name, person.CellPhone, person.CreateTime, person.PersonCode, person.IdcardTypeCode, person.HosCode)
 	if err != nil {
 		glog.Error("pinto.SaveExaminations person err ", err)
@@ -173,7 +173,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 	}
 
 	for _, exam_checkup := range exam_checkups {
-		sqlStr = fmt.Sprintf("INSERT INTO examination_checkup(examination_no,checkup_code,checkup_status,createtime,hos_code) VALUES($1,$2,$3,$4,$5)")
+		sqlStr = fmt.Sprint("INSERT INTO examination_checkup(examination_no,checkup_code,checkup_status,createtime,hos_code) VALUES($1,$2,$3,$4,$5)")
 		if _, err = tx.Exec(sqlStr, exam_checkup.ExaminationNo, exam_checkup.CheckupCode, exam_checkup.CheckupStatus, exam_checkup.CreateTime, exam_checkup.HosCode); err != nil {
 			glog.Error("pinto.SaveExaminations examination_checkup err ", err)
 			return
@@ -181,7 +181,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 	}
 
 	for _, exam_sale := range exam_sales {
-		sqlStr = fmt.Sprintf("INSERT INTO examination_sale(examination_no,sale_code,sale_status,hos_code,sale_sellprice,discount,curprice) VALUES($1,$2,$3,$4,$5,$6,$7)")
+		sqlStr = fmt.Sprint("INSERT INTO examination_sale(examination_no,sale_code,sale_status,hos_code,sale_sellprice,discount,curprice) VALUES($1,$2,$3,$4,$5,$6,$7)")
 		if _, err = tx.Exec(sqlStr, exam_sale.ExaminationNo, exam_sale.SaleCode, exam_sale.SaleStatus, exam_sale.HosCode, exam_sale.SaleSellprice, exam_sale.Discount, exam_sale.Curprice); err != nil {
 			glog.Error("pinto.SaveExaminations examination_sale err ", err)
 			return
@@ -194,6 +194,11 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		return
 	}
 
-	//todo 应该也同时更新serial_number
+	//同时更新serial_number
+	sqlStr = fmt.Sprintf("UPDATE serial_number SET seq_number = seq_number+1 WHERE hos_code = '%s' AND code = '001'", b.BookorgCode)
+	if _, err = tx.Exec(sqlStr); err != nil {
+		return
+	}
+
 	return
 }

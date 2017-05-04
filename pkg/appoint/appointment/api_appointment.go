@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"bytes"
 	"strings"
 
 	"database/sql"
@@ -29,6 +30,10 @@ import (
 func (a *Appointment) CreateAppointment() (err error) {
 	if a.ID == "" {
 		a.ID = time.Now().Format("20060102150405999")
+	}
+
+	if total := GetAppointmentByCardNo(a.CardNo, a.AppointTime); total > 0 {
+		return fmt.Errorf("This user info had appointed!")
 	}
 
 	tx := &sql.Tx{}
@@ -188,6 +193,16 @@ func GetAppointment(appointid string) (*Appointment, error) {
 		IfCancel:        ifcancel,
 	}
 	return &a, nil
+}
+
+func GetAppointmentByCardNo(cardno string, appointtime int64) int {
+	sqlStr := fmt.Sprintf("SELECT count(id) FROM %s WHERE cardno = '%s' AND appointtime = %d", TABLE_APPOINTMENT, cardno, appointtime)
+	var count int
+	if err := db.GetDB().QueryRow(sqlStr).Scan(&count); err != nil {
+		glog.Errorln("appoint.GetAppointmentByCardNo err ", err)
+		return 0
+	}
+	return count
 }
 
 func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org_code, search, userid string) ([]Appointment, int, error) {
@@ -570,18 +585,110 @@ func getAppointedNum(n int, sortArray []int64) int {
 	return n + i
 }
 
+//改变没有应约的状态
 func changeAppointmentStatus() {
-	//for {
-	//	if time.Now().Hour() == 23 {
-	//		go func() {
-	//			sqlStr := fmt.Sprintf(`UPDATE %s SET status = '爽约' WHERE status = '预约'`, TABLE_Appointment)
-	//			if _, err := db.GetDB().Exec(sqlStr); err != nil {
-	//				glog.Errorln("appointmen.changeAppointmentStatus err ", err.Error())
-	//			}
-	//		}()
-	//	}
-	//	time.Sleep(time.Hour)
-	//}
+	for {
+		if time.Now().Hour() == 23 {
+			go func() {
+				sqlStr := fmt.Sprintf(`UPDATE %s SET status = '爽约' WHERE status = '%s'`, TABLE_APPOINTMENT, STATUS_SUCCESS)
+				if _, err := db.GetDB().Exec(sqlStr); err != nil {
+					glog.Errorln("appointmen.changeAppointmentStatus err ", err.Error())
+				}
+			}()
+		}
+		time.Sleep(time.Hour)
+	}
+}
+
+//将体检状态 预约 改为体检中,或待评价 ，每5分钟更新一次
+var ExamStatusToAppointStatus = map[int]string{
+	1040: "体检中",
+	1041: "体检中",
+	1042: "体检中",
+	1050: "待评价",
+}
+
+func changeAppoitmentStatusToExaming() {
+	for {
+		time.Sleep(5 * time.Minute)
+		//只需查体检日期是当天的就行
+		appointStartDate := GetDayFirstSec(time.Now())
+		appointEndDate := GetDayLastSec(time.Now())
+
+		sqlStr := fmt.Sprintf("SELECT app.bookno,app.org_code,basic.ip_address FROM %s app LEFT JOIN  go_appoint_organization_basic_con basic  ON app.org_code = basic.org_code WHERE app.appointtime >= %d AND app.appointtime < %d AND app.status IN ('%s','%s')", TABLE_APPOINTMENT, appointStartDate, appointEndDate, STATUS_SUCCESS, STATUS_EXAMING)
+
+		rows, err := db.GetDB().Query(sqlStr)
+		if err != nil {
+			glog.Errorln("appoint.changeAppoitmentStatusToExaming db query err ", err)
+			continue
+		}
+		var bookno, org_code, ip_address string
+
+		org_booknos := map[string][]string{}
+		ip_org := map[string][]string{}
+		for rows.Next() {
+			if err = rows.Scan(&bookno, &org_code, &ip_address); err != nil {
+				glog.Errorln("appoint.changeAppoitmentStatusToExaming db.rows.Scan err ", err)
+				rows.Close()
+				continue
+			}
+			if _, ok := org_booknos[org_code]; ok {
+				org_booknos[org_code] = append(org_booknos[org_code], bookno)
+			} else {
+				org_booknos[org_code] = []string{bookno}
+			}
+
+			if _, ok := ip_org[ip_address]; ok {
+				ip_org[ip_address] = append(ip_org[ip_address], org_code)
+			} else {
+				ip_org[ip_address] = []string{org_code}
+			}
+		}
+
+		if rows.Err() != nil {
+			rows.Close()
+			glog.Errorln("appoint.changeAppoitmentStatusToExaming rows.err() ", rows.Err())
+			continue
+		}
+		rows.Close()
+
+		for key, orgs := range ip_org {
+			tmp_map := make(map[string]interface{})
+
+			tmp_books := []string{}
+			for _, org := range orgs {
+				tmp_books = append(tmp_books, org_booknos[org]...)
+			}
+
+			tmp_map["bookno"] = tmp_books
+			rebyte, _, err := methods.Go_Through_HttpWithBody("GET", key, "/api/exam/status", "", tmp_map)
+			if err != nil {
+				glog.Errorln("appoint.changeAppoitmentStatusToExaming Go_Through_HttpWithBody err ", err)
+			}
+			var result_https interface{}
+			err = json.NewDecoder(bytes.NewReader(rebyte)).Decode(&result_https)
+
+			if result_https == nil {
+				continue
+			}
+			glog.Errorln("appoint.changeAppointmentStatusToExaming result_http___", result_https, err)
+
+			for _, result_http := range result_https.([]interface{}) {
+				if status, ok := result_http.(map[string]interface{})["status"]; ok && int(status.(float64)) > 0 {
+					if bookno, ok := result_http.(map[string]interface{})["bookno"]; ok {
+						appointstatus := ExamStatusToAppointStatus[int(status.(float64))]
+						fmt.Println("appoint status", appointstatus)
+						if appointstatus != "" {
+							sqlStr = fmt.Sprintf("UPDATE %s SET status = '%s' WHERE bookno = '%s' AND status <> '%s'", TABLE_APPOINTMENT, appointstatus, bookno.(string), appointstatus)
+							if _, err = db.GetDB().Exec(sqlStr); err != nil {
+								glog.Errorln("appoint.changeAppointmentStatusToExaming UPDATE TABLE_APPOINTMENT err ", err)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 func GetApp_for_wechatsByAppointments(a []Appointment) []App_For_WeChat {

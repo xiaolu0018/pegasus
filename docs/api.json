@@ -835,7 +835,7 @@
         }
       }
     },
-    "/api/appointment/report/:checkno/:appid":{
+    "/api/appoint/report/:checkno/:appid":{
       "get": {
         "tags": [
           "Appointment"

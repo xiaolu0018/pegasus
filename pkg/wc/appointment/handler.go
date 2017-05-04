@@ -31,7 +31,10 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		httputil.Response(w, 400, err)
 		return
 	}
-	cm.ID = bson.NewObjectIdWithTime(time.Now()).Hex()
+	if cm.ID == "" {
+		cm.ID = bson.NewObjectIdWithTime(time.Now()).Hex()
+	}
+
 	cm.UserID = ps.ByName(common.AuthHeaderKey)
 	result := make(map[string]string)
 	result["appointid"] = cm.ID
