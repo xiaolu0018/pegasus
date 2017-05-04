@@ -26,7 +26,23 @@
 				width:100%;
 				background:url(img/head.png) no-repeat;
 				background-size:contain;
+				position:relative;
 			}
+			header>a#mylink{
+				color:#F7926F;
+				text-align: center;
+				text-decoration: none;
+				display:block;
+				line-height: 1.6;
+				font-weight:300;
+				background:transparent;
+				border:1px solid #F7926F;
+				position:absolute;
+				left:2em;
+				font-size:10px;
+				bottom:40%;
+			}
+			
 			.btnbox{
 				overflow: hidden;
 			}
@@ -138,11 +154,16 @@
 			.pagelist>span:active{
 				color:#fff;
 			}
+			#sec,#clip,#negfir,#negsec{
+				display:none;
+			}
 		</style>
 	</head>
 	<body ontouchstart="">
 		<div class="scroll-box">
-			<header></header>
+			<header>
+				<a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
+			</header>
 			<div class='btnbox'>
 				<a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
 			</div>
@@ -162,7 +183,7 @@
 			        <a href="javascript:" class="weui_search_cancel" id="search_cancel">确认</a>
 			    </div>
 				<ul class="my-panel">
-
+					
 				</ul>
 				<div class='my-paging'>
 					<p class='pagelist'>
@@ -189,11 +210,12 @@
 	<script src="js/jquery-2.1.4.min.js"></script>
 	<script>
 		$(function(){
-			var page=0;//当前页码
+			var baseUrl="http://www.elepick.com";
+			var page=1;//当前页码
 			var pageSize=8;//单页面显示的用户数量；
 			var MAXPAGE=52;
 			var openid="";
-			
+			var inpKey="";//搜索框val
 			var telWidth=$(window).width();//屏幕宽度
 			$('header').css("height",telWidth+"px");
 			
@@ -229,7 +251,7 @@
 			
 			//页码变化时的ajax,并解析渲染
 			function ajaxPage(parameter){
-				$.getJSON("http://www.elepick.com/api/activity/voters",parameter,function(data){
+				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
 //				$.getJSON("data/img.json",parameter,function(data){
 					if (typeof data === 'string') {
 					    data = JSON.parse(data);
@@ -238,9 +260,9 @@
 						
 					}else{
 						//数据解析
-						if(page==0){
-							page=data.index;
-						}
+						$("#searchinp input[type='search']").val("");
+						inpKey="";
+						page=data.index;
 						$(".sigpage>input").val(page);
 						pageSize=data.size;
 						MAXPAGE=data.total_pages;
@@ -293,7 +315,7 @@
 				if(request.openid){
 					alert("正在跳转");
 					alert("http://www.elepick.com/dist/activity/regist.html?openid="+request.openid);
-					window.location.href="http://www.elepick.com/dist/activity/regist.html?openid="+request.openid;
+					window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
 				}else{
 					//未关注公众号
 					alert("请关注公众号");
@@ -312,8 +334,8 @@
 			});
 			//搜索框搜索
 			$(".main").on('touchstart','#search_cancel',function(e){
-				var inpval=$(e.target).val();
-				var param={"key":inpval};
+				inpKey=$(e.target).val();
+				var param={"key":inpKey};
 				ajaxPage(param);
 			});
 			//////////////
@@ -323,7 +345,15 @@
 					//上一页
 					if(page>1){
 						page--;
-						ajaxPage();
+						if(inpKey.length>0){
+							var para={
+								"key":inpKey,
+								"index":page
+							}
+						}else{
+							var para={"index":page};
+						}
+						ajaxPage(para);
 					}
 					if(page<=1){
 						page=1;
@@ -332,7 +362,15 @@
 					//下一页
 					if(page<MAXPAGE){
 						page++;
-						ajaxPage({});
+						if(inpKey.length>0){
+							var para={
+								"key":inpKey,
+								"index":page
+							}
+						}else{
+							var para={"index":page};
+						}
+						ajaxPage(para);
 					}
 					if(page>=MAXPAGE){
 						page=MAXPAGE;
@@ -345,8 +383,15 @@
 						if(page==oldpage){
 							
 						}else{
-							
-							ajaxPage({});
+							if(inpKey.length>0){
+								var para={
+										"key":inpKey,
+										"index":page
+								};
+							}else{
+								var para={"index":page};
+							}
+							ajaxPage(para);
 						}
 					}
 				}
@@ -359,7 +404,15 @@
 					setTimeout(function(){
 						if($(e.target).val()==mycache){
 							page=mycache;
-							ajaxPage({});
+							if(inpKey.length>0){
+								var para={
+										"key":inpKey,
+										"index":page
+								};
+							}else{
+								var para={"index":page};
+							}
+							ajaxPage(para);
 						};
 					},600);
 					
@@ -377,23 +430,23 @@
 					resub=false;
 					$.ajax({
 						type:"post",
-						url:"127.0.0.1:9000/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
+						url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
 						data:{},
 						success:function(xhr){
-							resub=false;
+							resub=true;
 							if(xhr.status=="200"){
 								var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
 								$this.siblings(".perleft").find('span.ticNum').html(++lastNum);
 							}
 						},
 						complete:function(xhr){
-							resub=false;
-							if(xhr.status=="409"){
+							resub=true;
+							if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){
 								alert("每天最多投三票");
 							}
 						}
 					});
-				}else{
+				}else if(!(request.openid)){
 					//没有关注
 					alert("没有关注");
 				}

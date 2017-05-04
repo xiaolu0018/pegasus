@@ -130,13 +130,11 @@
 		if(localStorage.formData==undefined){
 			alert("error");
 		}else{
-			$("#pictrue").attr("src",  );
+			$("#pictrue").attr("src",localStorage.formData.imageData);
 			$("#company").html(localStorage.formData.company);
 			$("#name").html(localStorage.formData.name);
 			$(".text>img").attr("src","img/"+(100+Number(localStorage.formData.declaration))+".png");
-		}
-		
-		
+		}		
 	});
 </script>
 </html>

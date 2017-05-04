@@ -61,7 +61,7 @@ func (d DB) Vote(openID, votedID string) (err error) {
 
 	records := []int64(voteRecords)
 	if !hasVoteRight(records) {
-		err = errors.New("vote num are only allowed 3 times per day")
+		err = errors.New("vote chance large than 3")
 		return
 	}
 

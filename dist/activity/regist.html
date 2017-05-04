@@ -138,23 +138,18 @@
         <button >提交</button>
     </div>
 </div>
-
-<!--提示消息-->
 <div id="toast" style="display: none;">
     <div class="weui_mask_transparent"></div>
     <div class="weui_toast">
-        <i class="weui_icon_toast weui-icon-info weui-icon_msg"></i>
+        <i class="weui_icon_toast"></i>
         <p class="weui_toast_content">已完成</p>
     </div>
 </div>
-
 </body>
-
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/jweixin-1.0.0.js"></script>
 <script type="text/javascript">
     $(function(){
-        //提示框显示
         var $toast = $('#toast');
         function showToast(htdata){
             if ($toast.css('display') != 'none') return;
@@ -164,7 +159,6 @@
                 $toast.fadeOut(100);
             }, 2000);
         };
-        //获取url参数
         var request={};
         function UrlSearch(){
             var name,value;
@@ -198,10 +192,8 @@
 
         };
         UrlSearch();
-        //图片上传
         var baseUrl="http://www.elepick.com";
         var images = {};
-        //图片选取
         $("#picture").on('touchstart',function(e){
             if(request=={}){
                 showToast("请关注公众号");
@@ -217,13 +209,12 @@
                 });
 
             };
-        });//pictrue--upload
+        });
 
         $(".btn_container").on("touchstart","button",function(e){
             if(!(images.localId)){
                 showToast("没有选择图片");
             }else{
-                // 上传图片
                 wx.uploadImage({
                     localId: images.localId[0],
                     isShowProgressTips: 1,
@@ -236,7 +227,6 @@
                             "mobile": "",
                             "declaration": ""
                         };
-                        //获取表单值
                         formData.openid=request.openid;
                         formData.name=$("input[name='name']").val();
                         formData.image=res.serverId;
@@ -248,8 +238,6 @@
                                 formData.declaration=String($(this).index());
                             }
                         });
-                        alert(formData);
-                        //非空验证
                         if(!(images.serverId)){
                             showToast('图片上传失败');
                         }else if(formData.name.length<=0){
@@ -261,7 +249,6 @@
                         }else if(formData.declaration==""){
                             showToast("请选择报名宣言");
                         }else{
-                            //提交
                             $.ajax({
                                 type:"post",
                                 url:baseUrl+"/api/activity/voter",
@@ -270,20 +257,20 @@
                                     localStorage.formData=formData;
                                     $("#picture").html('+');
                                     if(xhr.status=="200"){
+                                        alert("200");
+                                        showToast("注册成功!");
                                         window.location.href="placard.html";
                                     }else{
                                         showToast("注册失败!");
                                         alert(textStatus+"-"+xhr.status);
                                     }
-
                                 },
                                 error:function(xhr, textStatus){
-                                    console.log(xhr);
-                                    alert(xhr.responseText);
-
+                                    showToast(xhr);
                                 },
                                 complete:function(xhr,textStatus){
-                                    if(xhr.status==409){
+                                    if(xhr.status=="409"){
+                                        alert("409");
                                         showToast("您已经报过名了");
                                     }
                                 }
@@ -305,9 +292,8 @@
                 });
             }
 
-        });//form submit
+        });
 
     });
-
 </script>
 </html>
