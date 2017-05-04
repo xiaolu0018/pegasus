@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-runDirName=pegasus_running
 
 function makeDir() {
    if [ -d ~/$1 ]; then
@@ -46,19 +45,21 @@ function deployDist() {
     tar -zxvf dist.tar.gz -C ~/$1
 }
 
-function deployPublicKey() {
-    if [ -d ~/${runDirName}/public.pem ]; then
-      rm -rf ~/${runDirName}/public.pem
-    fi
+#function deployPublicKey() {
+#    if [ -d ~/${runDirName}/public.pem ]; then
+#      rm -rf ~/${runDirName}/public.pem
+#    fi
+#
+#    tar -zxvf dist.tar.gz -C ~/${runDirName}
+#    mv public.pem ~/${runDirName}
+#}
 
-    tar -zxvf dist.tar.gz -C ~/${runDirName}
-    mv public.pem ~/${runDirName}
-}
 
 #startTarget wc start
 startTarget wc start-activity
 #startTarget rpt start
 #startTarget app start
+
 clean
 
 
