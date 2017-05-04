@@ -5,4 +5,5 @@ type DBInterface interface {
 	Register(voter *Voter) error
 	Vote(openid, votedID string) error
 	ListVoters(index, size int) ([]Voter, error)
+	updateVoterImageStatus(image string) error
 }

@@ -81,8 +81,13 @@ func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 	}
 	v.Complete()
 
+	if CH_CACHE_IMAGES != nil {
+		CH_CACHE_IMAGES <- v.Image
+	}
+
 	if err := dbI.Register(v); err != nil {
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint ") {
+			glog.Errorf("weichat regist voter err %v\n", err)
 			httputil.Response(w, 409, "user duplicate")
 			return
 		}

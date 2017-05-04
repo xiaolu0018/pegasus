@@ -143,7 +143,7 @@
     <div id="toast" style="display: none;">
 	    <div class="weui_mask_transparent"></div>
 	    <div class="weui_toast">
-	        <i class="weui_icon_toast"></i>
+	        <i class="weui_icon_toast weui-icon-info weui-icon_msg"></i>
 	        <p class="weui_toast_content">已完成</p>
 	    </div>
 	</div>
@@ -154,7 +154,7 @@
 <script type="text/javascript" src="js/jweixin-1.0.0.js"></script>
 <script type="text/javascript">
 	$(function(){
-		
+		//提示框显示
 		var $toast = $('#toast');
 	    function showToast(htdata){
             if ($toast.css('display') != 'none') return;
@@ -235,10 +235,10 @@
 			});//pictrue--upload
 			
 			$(".btn_container").on("touchstart","button",function(e){
-				console.log(images);
-				if(images.localId.length<=0){
-					showToast("没有选择图片");
-					return false;
+
+				if(images.localId.length <=0){
+				    alert(images.localId.length);
+                    alert("请选择图片");
 				}else{
 					// 上传图片
 				    images.serverId ="";
@@ -246,6 +246,7 @@
 				        localId: images.localId[0],
 				        isShowProgressTips: 1,
 				        success: function (res) {
+				            alert("success");
 				            var formData={
 							    "openid":"",
 							    "name": "",
@@ -265,20 +266,7 @@
 									formData.declaration=String($(this).index());
 								}
 							});
-							//非空验证
-							if(formData.name.image<=0){
-								showToast('没有选择图片');
-							}else if(formData.name.length<=0){
-								showToast("姓名不能为空");
-							}else if(formData.company.length<=0){
-								showToast("部门不能为空");
-							}else if(formData.mobile.length<=0){
-								showToast("联系电话不能为空");
-							}else if(formData.declaration==""){
-								showToast("请选择报名宣言");
-							}else{
-								//提交
-								console.log(formData);
+
 								$.ajax({
 									type:"post",
 									url:baseUrl+"/api/activity/voter",
@@ -286,29 +274,24 @@
 									success:function(data, textStatus, xhr){											
 										if(xhr.status=="200"){
 											localStorage.formData=formData;
-											showToast("报名成功");
-											setTimeout(function(){
-												window.loaction.href="placard.html";
-											},100);
+											$("#picture").html('+');
+											alert("报名成功");
+											window.location.href="http://www.elepick.com/dist/activity/placard.html";
 										}else{
-											showToast("注册失败!");
+                                            alert("注册失败!");
 											alert(textStatus+"-"+xhr.status);
 										}
 										
 									},
 									error:function(xhr, textStatus){
-											console.log(xhr);
 						                    alert(xhr.responseText);
-																		
 									},
 									complete:function(xhr,textStatus){
 										if(xhr.status==409){
-											showToast("您已经报过名了");
+                                            alert("您已经报过名了");
 										}
 									}
 								});	
-							};
-							
 				        },
 				        fail: function (res) {
 				        	formData={
@@ -323,21 +306,8 @@
 				        }
 				    });
 				}
-				
+
 			});//form submit
-			
-			
-		
-		
-				 
-		
-       
-
-		
-
-		
-		
-		
 	});
 	
 </script>

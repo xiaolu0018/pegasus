@@ -7,6 +7,8 @@ import (
 	"192.168.199.199/bjdaos/pegasus/pkg/common/util/database"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/handler"
 	"192.168.199.199/bjdaos/pegasus/pkg/wc/manager"
+	"os"
+	"path/filepath"
 )
 
 func NewActivityConfig() *ActivityConfig {
@@ -64,4 +66,25 @@ func (o *ActivityConfig) Start(router *httprouter.Router) error {
 
 func (o *ActivityConfig) GetAbsPath() string {
 	return fmt.Sprintf("%s://%s/%s", o.Schema, o.Domain, o.DistBasePath)
+}
+
+func (o *ActivityConfig) GetVoteCachedImagePath() (string, error) {
+	absPath, err := filepath.Abs(o.LocalDistPath)
+	if err != nil {
+		return "", err
+	}
+
+	target := fmt.Sprintf("%s/voterimages", absPath)
+	_, err = os.Stat(target)
+	if err != nil {
+		//if os.IsNotExist(err) {
+		//	if err := os.MkdirAll(target, os.ModeDir); err != nil {
+		//		return "", err
+		//	}
+		//	return target, nil
+		//}
+		return "", err
+	}
+
+	return absPath, nil
 }

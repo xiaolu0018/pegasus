@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS  GO_WEICHAT_ACTIVITY_VOTER (
    mobile varchar(20),
    declaration varchar(50),
    votedcount integer DEFAULT 0,
-   voteRecords integer[]
+   voteRecords integer[],
+   imageCached	boolean DEFAULT false
 );
 `
 
@@ -47,7 +48,6 @@ func (d DB) Init() (err error) {
 }
 
 func (d DB) Register(v *Voter) error {
-	fmt.Printf("--------------------->register %#v\n", *v)
 	_, err := d.Exec(`INSERT INTO `+TABLE_VOTER+` (openid, name, image, company, mobile, declaration)
 	VALUES($1,$2,$3,$4,$5,$6)`, v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration)
 	return err
@@ -107,6 +107,11 @@ func (d DB) ListVoters(index, size int) ([]Voter, error) {
 	}
 
 	return l, nil
+}
+
+func (d DB) updateVoterImageStatus(image string) (err error) {
+	_, err = d.Exec(`UPDATE `+TABLE_VOTER+` SET image = concat(image, '.jpg') , imageCached = TRUE where image = $1`, image)
+	return
 }
 
 func hasVoteRight(records []int64) bool {
