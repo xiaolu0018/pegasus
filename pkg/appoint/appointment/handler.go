@@ -1,16 +1,16 @@
 package appointment
 
 import (
-	"time"
-	"strings"
-	"strconv"
-	"net/http"
 	"encoding/json"
 	"gopkg.in/mgo.v2/bson"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
 
+	httputil "github.com/1851616111/util/http"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
-	httputil "github.com/1851616111/util/http"
 
 	tm "bjdaos/pegasus/pkg/common/util/time"
 )

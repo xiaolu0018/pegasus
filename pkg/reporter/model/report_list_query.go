@@ -1,11 +1,11 @@
 package model
 
 import (
-	"fmt"
-	"errors"
-	"regexp"
-	"github.com/golang/glog"
 	"bjdaos/pegasus/pkg/reporter/types"
+	"errors"
+	"fmt"
+	"github.com/golang/glog"
+	"regexp"
 )
 
 func InjectionPrevention(to_match_str string) bool {

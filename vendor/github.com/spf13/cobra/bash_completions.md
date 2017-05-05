@@ -95,7 +95,7 @@ cmd := &cobra.Command{
 }
 ```
 
-Notice we put the "ValidArgs" on the "get" subcommand. Doing so will give results like
+Notice we put the "ValidArgs" on the "get" subcommand. Doing so will give ret like
 
 ```bash
 # kubectl get [tab][tab]

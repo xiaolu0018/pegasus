@@ -8,7 +8,7 @@ The router is optimized for high performance and a small memory footprint. It sc
 
 ## Features
 
-**Only explicit matches:** With other routers, like [`http.ServeMux`][http.ServeMux], a requested URL path could match multiple patterns. Therefore they have some awkward pattern priority rules, like *longest match* or *first registered, first matched*. By design of this router, a request can only match exactly one or no route. As a result, there are also no unintended matches, which makes it great for SEO and improves the user experience.
+**Only explicit matches:** With other routers, like [`http.ServeMux`][http.ServeMux], a requested URL path could match multiple patterns. Therefore they have some awkward pattern priority rules, like *longest match* or *first registered, first matched*. By design of this router, a request can only match exactly one or no route. As a m, there are also no unintended matches, which makes it great for SEO and improves the user experience.
 
 **Stop caring about trailing slashes:** Choose the URL style you like, the router automatically redirects the client if a trailing slash is missing or if there is one extra. Of course it only does so, if the new path has a handler. If you don't like it, you can [turn off this behavior](https://godoc.org/github.com/julienschmidt/httprouter#Router.RedirectTrailingSlash).
 

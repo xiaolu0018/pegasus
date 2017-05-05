@@ -7,7 +7,7 @@ import (
 )
 
 func (o *ActivityConfig) StartActivity(r *httprouter.Router) error {
-	dbI, err := vote.NewDBInterface(o.Ip, o.Port, o.User, o.Passｗord, o.Database)
+	dbI, err := vote.NewDBInterface(o.Ip, o.Port, o.User, o.Password, o.Database)
 	if err != nil {
 		return err
 	}

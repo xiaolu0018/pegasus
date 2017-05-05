@@ -4,6 +4,6 @@ type DBConfig struct {
 	Ip       string
 	Port     string
 	User     string
-	Passｗord string
+	Password string
 	Database string
 }

@@ -28,7 +28,6 @@ func InsertBookRecord(db *sql.DB, b *types.BookRecord) error {
 	return nil
 }
 
-
 func MapToBookRecord(result map[string]interface{}) types.BookRecord {
 	br := types.BookRecord{}
 	if cartno, ok := result["cardno"]; ok {

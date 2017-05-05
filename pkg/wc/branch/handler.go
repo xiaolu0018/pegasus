@@ -1,11 +1,12 @@
 package branch
 
 import (
-	"net/http"
 	"bjdaos/pegasus/pkg/wc/common"
 	httputil "github.com/1851616111/util/http"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
+
 // curl 192.168.199.168:9000/api/manager/branches
 func ListHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 

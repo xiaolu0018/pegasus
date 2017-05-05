@@ -21,6 +21,6 @@ type PagesNumLimitPageNo struct {
 }
 
 type PageAndData struct {
-	Page int         `json:"page"`		 //总页数
+	Page int         `json:"page"` //总页数
 	Data []PrintInfo `json:"data"`
 }

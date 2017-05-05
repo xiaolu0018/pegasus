@@ -4,7 +4,6 @@ import (
 	"bjdaos/pegasus/pkg/common/api/pinto"
 	"bjdaos/pegasus/pkg/pinto/server/db"
 	"encoding/json"
-	"fmt"
 	httputil "github.com/1851616111/util/http"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
@@ -55,7 +54,7 @@ func CreateExamsHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.P
 }
 
 func GetExamStatusHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	result := make(map[string]interface{})
+	result := make(map[string][]string)
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		glog.Errorf("pinto.handler CreateExamsHandler Decode req params err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
@@ -66,50 +65,36 @@ func GetExamStatusHandler(rw http.ResponseWriter, r *http.Request, ps httprouter
 	return
 }
 
-func GetExaminationStatus(result map[string]interface{}) []map[string]interface{} {
-	var booknosStrs []string
-	booknos, ok := result["bookno"]
-	if ok {
-		for _, val := range booknos.([]interface{}) {
-			booknosStrs = append(booknosStrs, val.(string))
-		}
-	}
-
-	if len(booknosStrs) == 0 {
+func GetExaminationStatus(m map[string][]string) map[string]int {
+	booknos, ok := m["booknos"]
+	if !ok {
 		return nil
 	}
 
-	itmeStr := make([]string, len(booknosStrs))
-	for k, salecode := range booknosStrs {
-		itmeStr[k] = fmt.Sprintf(`'%s'`, salecode)
+	if len(booknos) == 0 {
+		return nil
 	}
-	sqlStr := fmt.Sprintf("SELECT b.bookno,COALESCE(b.examination_no,''), COALESCE(e.status, 0) FROM book_record b LEFT JOIN examination e ON b.examination_no=e.examination_no WHERE b.bookno IN (%s)", strings.Join(itmeStr, ","))
 
-	rows, err := db.GetReadDB().Query(sqlStr)
+	rows, err := db.GetReadDB().Query(`SELECT b.bookno, COALESCE(e.status, 0)
+	FROM book_record b LEFT JOIN examination e
+	ON b.examination_no=e.examination_no
+	WHERE b.bookno IN (%s)"`, strings.Join(booknos, ","))
 	if err != nil {
 		glog.Errorln("pinto.GetExaminationStatus GetExamStatusHandler err ", err)
 		return nil
 	}
-
-	results := make([]map[string]interface{}, 0)
-
 	defer rows.Close()
-	var bookno, exam_no string
-	var status int
+
+	ret := map[string]int{}
 	for rows.Next() {
-		if err = rows.Scan(&bookno, &exam_no, &status); err != nil {
+		var bookno string
+		var status int
+		if err = rows.Scan(&bookno, &status); err != nil {
 			return nil
 		}
-		result_ := make(map[string]interface{})
-		result_["bookno"] = bookno
-		result_["examno"] = exam_no
-		result_["status"] = status
-		results = append(results, result_)
+
+		ret[bookno] = status
 	}
 
-	if rows.Err() != nil {
-		glog.Errorln("pinto.GetExaminationStatus rows.Err() ", err)
-		return nil
-	}
-	return results
+	return ret
 }

@@ -135,7 +135,7 @@ var ip = flag.IntP("flagname", "f", 1234, "help message")
 flag.Lookup("flagname").NoOptDefVal = "4321"
 ```
 
-Would result in something like
+Would m in something like
 
 | Parsed Arguments | Resulting Value |
 | -------------    | -------------   |

@@ -1,22 +1,22 @@
 package vote
 
 import (
-	"fmt"
-	"time"
-	"strings"
-	"strconv"
-	"net/http"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"net/http"
 	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
 
-	"github.com/golang/glog"
-	"github.com/julienschmidt/httprouter"
 	httputil "github.com/1851616111/util/http"
 	"github.com/1851616111/util/rand"
 	"github.com/1851616111/util/weichat/handler"
 	apiotoken "github.com/1851616111/util/weichat/util/api-token"
 	"github.com/1851616111/util/weichat/util/sign"
+	"github.com/golang/glog"
+	"github.com/julienschmidt/httprouter"
 )
 
 var dbI DBInterface
@@ -153,7 +153,6 @@ func ListVotersHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 			searchKey = keyStr
 		}
 	}
-
 
 	l, err := dbI.ListVoters(searchKey, index, size)
 	if err != nil {

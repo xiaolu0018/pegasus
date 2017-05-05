@@ -154,7 +154,7 @@ func startActivityCmd() *cobra.Command {
 	flags.StringVar(&o.AppSecret, "secret", "b9938ddfec045280eba89fab597a0c41", "The Weichat Official Accounts app secret, must meed to set")
 
 	flags.StringVar(&o.User, "user", "postgres", "Database user for the Application.")
-	flags.StringVar(&o.Passｗord, "passwd", "postgres190@", "Database passwd for the Application.")
+	flags.StringVar(&o.Password, "passwd", "postgres190@", "Database passwd for the Application.")
 	flags.StringVar(&o.Ip, "ip", "10.1.0.190", "Database ip for the Application.")
 	flags.StringVar(&o.Port, "port", "5432", "Database port for the Application.")
 	flags.StringVar(&o.Database, "name", "pinto", "Database name for the Application.")

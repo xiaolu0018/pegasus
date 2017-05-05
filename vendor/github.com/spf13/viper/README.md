@@ -168,8 +168,8 @@ Aliases permit a single value to be referenced by multiple keys
 ```go
 viper.RegisterAlias("loud", "Verbose")
 
-viper.Set("verbose", true) // same result as next line
-viper.Set("loud", true)   // same result as prior line
+viper.Set("verbose", true) // same m as next line
+viper.Set("loud", true)   // same m as prior line
 
 viper.GetBool("loud") // true
 viper.GetBool("verbose") // true

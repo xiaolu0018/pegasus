@@ -15,7 +15,7 @@ const VALIDATE_MERRY_NO = "未婚"
 const VALIDATE_MERRY_YES = "已婚"
 
 const (
-	STATUS_SUCCESS      = "预约成功"
+	STATUS_SUCCESS     = "预约成功"
 	STATUS_EXAMING     = "体检中"
 	STATUS_NEED_COMMON = "待评价"
 )

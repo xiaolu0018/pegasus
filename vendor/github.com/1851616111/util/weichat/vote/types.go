@@ -63,8 +63,8 @@ func (v *Voter) Complete() {
 }
 
 type VoterList struct {
-	Index 		int `json:"index"`
-	Size 		int `json:"size"`
-	TotalPages 	int `json:"total_pages"`
-	PageData 	[]Voter `json:"page_data"`
+	Index      int     `json:"index"`
+	Size       int     `json:"size"`
+	TotalPages int     `json:"total_pages"`
+	PageData   []Voter `json:"page_data"`
 }

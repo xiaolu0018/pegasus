@@ -91,8 +91,8 @@ func (d DB) Vote(openID, votedID string) (err error) {
 }
 
 func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
-	var sql string = `SELECT voterid, name, image, votedcount FROM `+TABLE_VOTER+` WHERE imagecached %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
-	var countSQL string = `SELECT count(*) FROM `+TABLE_VOTER+` WHERE imagecached %s`
+	var sql string = `SELECT voterid, name, image, votedcount FROM ` + TABLE_VOTER + ` WHERE imagecached %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
+	var countSQL string = `SELECT count(*) FROM ` + TABLE_VOTER + ` WHERE imagecached %s`
 	var sqlCondition string
 	if key == nil {
 		sqlCondition = ""
@@ -105,7 +105,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 		}
 	}
 
-	rows, err := d.Query(fmt.Sprintf(sql, sqlCondition, size, index - 1))
+	rows, err := d.Query(fmt.Sprintf(sql, sqlCondition, size, index-1))
 	if err != nil {
 		return nil, err
 	}
@@ -125,12 +125,12 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 	l := VoterList{
 		Index:      index,
 		Size:       size,
-		TotalPages: tatol /8,
+		TotalPages: tatol / 8,
 		PageData:   vs,
 	}
 
 	if tatol%8 > 0 {
-		l.TotalPages ++
+		l.TotalPages++
 	}
 
 	return &l, nil
@@ -138,7 +138,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 
 func (d DB) GetVoter(openid string) (*Voter, error) {
 	v := Voter{}
-	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM ` +TABLE_VOTER +` WHERE openid = $1`, openid).
+	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM `+TABLE_VOTER+` WHERE openid = $1`, openid).
 		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount); err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func (d DB) updateVoterImageStatus(image string) (err error) {
 }
 
 func hasVoteRight(records []int64) bool {
-	if len(records) >= 3 {
+	if len(records) >= 100 {
 		sort.Sort(Int64Slice(records))
 		return time.Now().Unix()-records[2] >= 3600*24
 	} else {

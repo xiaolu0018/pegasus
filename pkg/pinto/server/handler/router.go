@@ -9,12 +9,11 @@ import (
 func CreateHttpRouter() http.Handler {
 	r := httprouter.New()
 
+	r.POST("/api/create/bookrecord", CreateBookRecordHandler)
 
-	r.POST("/api/create/bookrecord",CreateBookRecordHandler)
+	r.POST("/api/create/examwithplan", CreateExamsHandler)
 
-	r.POST("/api/create/examwithplan",CreateExamsHandler)
-
-	r.GET("/api/exam/status",GetExamStatusHandler)
+	r.GET("/api/examination/status", GetExamStatusHandler)
 
 	return r
 }
