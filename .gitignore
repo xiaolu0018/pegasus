@@ -5,6 +5,9 @@
 *.dll
 *.so
 *.dylib
+pegasus.iml
+pegasus
+.idea
 
 # Test binary, build with `go test -c`
 *.test
@@ -15,3 +18,5 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
+
+将删除 pkg/pinto/server/model/
