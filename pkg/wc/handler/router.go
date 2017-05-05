@@ -8,7 +8,6 @@ import (
 	"bjdaos/pegasus/pkg/wc/banner"
 	"bjdaos/pegasus/pkg/wc/branch"
 	"bjdaos/pegasus/pkg/wc/capacitymanage"
-	"bjdaos/pegasus/pkg/wc/image"
 	"bjdaos/pegasus/pkg/wc/plan"
 	"bjdaos/pegasus/pkg/wc/user"
 	"github.com/1851616111/util/weichat/handler"
@@ -24,10 +23,7 @@ func AddApiToRouter(r *httprouter.Router, dist string) http.Handler {
 	r.GET("/api/user/label", authUser(user.GetLabelHandler))
 	r.GET("/api/user", authUser(user.GetHandler))
 
-	r.PUT("/api/banner", authAdmin(banner.UpsertHandler))
 	r.GET("/api/banners", banner.GetHandler)
-
-	r.PUT("/api/plan", authAdmin(plan.UpsertHandler))
 	r.GET("/api/plans", plan.GetPlansHandler)
 
 	r.PUT("/api/appointment", authUser(appointment.CreateHandler))
@@ -40,12 +36,7 @@ func AddApiToRouter(r *httprouter.Router, dist string) http.Handler {
 	r.GET("/api/appoint/report/:checkno/:appid", authUser(appointment.GetReportByAppid))
 
 	r.GET("/api/branch/:id/offday", capacitymanage.GetOffDaysHandler)
-	r.POST("/api/manage/branch", authAdmin(branch.CreateHandler))
-	r.PUT("/api/manage/branch/:id", authAdmin(branch.UpdateHandler))
 	r.GET("/api/branches", branch.ListHandler)
-	r.POST("/api/manage/uploadfile", authAdmin(image.SaveImageHandler))
-
-	//r.GET("/api/appoin/test", appointment.ConfirmAppointment)
 
 	dist, _ = filepath.Abs(dist)
 	r.ServeFiles("/dist/*filepath", http.Dir(dist))

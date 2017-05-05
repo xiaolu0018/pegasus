@@ -5,8 +5,6 @@ import (
 	"sync"
 )
 
-const MonthInt_ = 3
-
 //分院容量管理信息
 type CapacityManage struct {
 	ID            bson.ObjectId `json:"-" bson:"_id,omitempty"`

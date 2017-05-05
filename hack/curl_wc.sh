@@ -18,7 +18,7 @@ curl -XPOST 127.0.0.1:9000/api/activity/voter -d '{
     "declaration": "123"
 }'
 
-curl -XPOST 127.0.0.1:9000/api/activity/voter/17/vote?openid=1212312312312
+curl -XPOST 127.0.0.1:9000/api/activity/voter/2/vote?openid=oH4HtwKG9vdjmtHLnsOjThkPb2dA
 
 curl 127.0.0.1:9000/api/activity/voters
 curl 192.168.199.198:9000/api/activity/voter?openid=oH4HtwGsY-0JSjhNhJLA7jYYOMsQ

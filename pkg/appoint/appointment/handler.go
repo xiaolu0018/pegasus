@@ -1,18 +1,18 @@
 package appointment
 
 import (
-	"encoding/json"
-	"net/http"
-	"strconv"
 	"time"
+	"strings"
+	"strconv"
+	"net/http"
+	"encoding/json"
+	"gopkg.in/mgo.v2/bson"
 
 	"github.com/golang/glog"
-
 	"github.com/julienschmidt/httprouter"
-
 	httputil "github.com/1851616111/util/http"
-	"gopkg.in/mgo.v2/bson"
-	"strings"
+
+	tm "bjdaos/pegasus/pkg/common/util/time"
 )
 
 func CreateAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -109,7 +109,7 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 			httputil.Response(rw, 400, err)
 			return
 		}
-		beginInt64 = GetDayFirstSec(begintime)
+		beginInt64 = tm.TodayStartSec(begintime)
 	} else {
 		beginInt64 = 0
 	}
@@ -121,7 +121,7 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 			httputil.Response(rw, 400, err)
 			return
 		}
-		endInt64 = GetDayLastSec(endtime)
+		endInt64 = tm.TodayStartSec(endtime)
 	} else {
 		endInt64 = 0
 	}

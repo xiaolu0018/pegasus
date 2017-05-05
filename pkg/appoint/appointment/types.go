@@ -1,6 +1,7 @@
 package appointment
 
 const TABLE_APPOINTMENT = "go_appoint_appointment"
+const TABLE_ORGANIZATION_CONFIG_BASIC = "go_appoint_organization_basic_con"
 const TABLE_BANNER = "go_appoint_banner"
 
 const VALIDATE_CHANNEL_WC = "微信"

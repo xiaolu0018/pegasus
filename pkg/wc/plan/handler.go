@@ -2,8 +2,6 @@ package plan
 
 import (
 	"bjdaos/pegasus/pkg/wc/common"
-	"bjdaos/pegasus/pkg/wc/db"
-	"encoding/json"
 	"fmt"
 	httputil "github.com/1851616111/util/http"
 	"github.com/golang/glog"
@@ -12,27 +10,6 @@ import (
 	"net/http"
 	"time"
 )
-
-func UpsertHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	p := Plan{}
-	var err error
-	if err = json.NewDecoder(r.Body).Decode(&p); err != nil {
-		httputil.ResponseJson(w, 404, "params invalid")
-		return
-	}
-
-	if err = p.Validate(); err != nil {
-		httputil.ResponseJson(w, 404, err.Error())
-		return
-	}
-
-	if err = p.UpSert(db.Plan()); err != nil {
-		glog.Errorln("plan upsertHandler", err.Error())
-		httputil.ResponseJson(w, 404, err.Error())
-		return
-	}
-	httputil.ResponseJson(w, 200, "ok")
-}
 
 func GetPlansHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 

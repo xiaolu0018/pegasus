@@ -42,7 +42,7 @@ func startCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			appointment.Init()
+			go appointment.StartController()
 			go syncController.Run()
 
 		},
