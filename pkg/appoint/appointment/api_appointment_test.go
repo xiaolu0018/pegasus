@@ -1,12 +1,10 @@
 package appointment
 
 import (
-	"bjdaos/pegasus/pkg/appoint/db"
 	"fmt"
 	"strings"
 	"testing"
 	//"time"
-	"bjdaos/pegasus/pkg/appoint/organization"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -14,11 +12,27 @@ import (
 	"os"
 	"reflect"
 	"time"
+
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/organization"
+	tm "bjdaos/pegasus/pkg/common/util/time"
 )
 
 func dbinit() {
 	if err := db.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto"); err != nil {
 		fmt.Println("dbinit", err)
+	}
+}
+
+func TestGetSaleCodesByplan(t *testing.T) {
+	dbinit()
+	tx, err := db.GetDB().Begin()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := GetSaleCodesByplan(tx, "1"); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -28,13 +42,8 @@ func TestGetItemByplan(t *testing.T) {
 	sql := fmt.Sprintf("SELECT offdays FROM %s WHERE org_code = '%s'", "go_appoint_organization_basic_con", planid)
 	var items string
 	if err := db.GetDB().QueryRow(sql).Scan(&items); err != nil {
-		fmt.Println(err)
+		t.Fatal(err)
 	}
-	//if is, ok := items.(string); ok {
-	//	fmt.Println("fdfisis ", is)
-	//}
-	itemss := strings.Split(items[1:len(items)-1], ",")
-	fmt.Println("fdf ", items, itemss)
 }
 
 func TestCreatAppoint(t *testing.T) {
@@ -102,7 +111,7 @@ func TestJson__(t *testing.T) {
 	//dbinit()
 	//app, total, err := GetAppointmentList(0, 20, 0, 0, "", "")
 	begintime := time.Time{}
-	fmt.Println("time", GetDayFirstSec(begintime))
+	fmt.Println("time", tm.TodayStartSec(begintime))
 
 	a := Comment{}
 	fmt.Println(GetJsonType(a))

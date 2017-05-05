@@ -22,7 +22,8 @@ func TestGetCheckupBySaleCode(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := GetCheckupBySaleCode(db, "00000902170036"); err != nil {
+	if _, err := GetCheckupsBySaleCode(db, "00000902170036"); err != nil {
 		t.Fatal(err)
 	}
+
 }

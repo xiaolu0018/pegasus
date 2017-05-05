@@ -10,10 +10,10 @@ func CreateHttpRouter() http.Handler {
 	r := httprouter.New()
 
 	r.POST("/api/create/bookrecord", CreateBookRecordHandler)
-
 	r.POST("/api/create/examwithplan", CreateExamsHandler)
-
 	r.GET("/api/examination/status", GetExamStatusHandler)
+
+	r.GET("/api/sales/checkups", GetCheckupCodesBySaleCodesHandler)
 
 	return r
 }

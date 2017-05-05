@@ -15,6 +15,7 @@ import (
 	"bjdaos/pegasus/pkg/appoint/db"
 	"bjdaos/pegasus/pkg/appoint/organization"
 	"bjdaos/pegasus/pkg/common/util/methods"
+	"errors"
 )
 
 /*
@@ -195,7 +196,7 @@ func GetAppointment(appointid string) (*Appointment, error) {
 }
 
 func GetAppointmentByCardNo(cardno string, appointtime int64) int {
-	sqlStr := fmt.Sprintf("SELECT count(id) FROM %s WHERE cardno = '%s' AND appointtime = %d", TABLE_APPOINTMENT, cardno, appointtime)
+	sqlStr := fmt.Sprintf("SELECT count(*) FROM %s WHERE cardno = '%s' AND appointtime = %d", TABLE_APPOINTMENT, cardno, appointtime)
 	var count int
 	if err := db.GetDB().QueryRow(sqlStr).Scan(&count); err != nil {
 		glog.Errorln("appoint.GetAppointmentByCardNo err ", err)
@@ -300,37 +301,40 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 			return
 		}
 	}
-	fmt.Println("sale_codes", sales)
+
+	if len(sales) == 0 {
+		return errors.New("plan sales empty")
+	}
+
+
+
 	date := time.Unix(a.AppointTime, 0).Format("2006-01-02")
-	if len(sales) > 0 {
-		if itemLimits, err = GetLimit(tx, a.OrgCode, sales); err != nil {
-			glog.Errorf("GetLimit err", err.Error())
-			return
-		}
+	if itemLimits, err = GetLimit(tx, a.OrgCode, sales); err != nil {
+		glog.Errorf("GetLimit err", err.Error())
+		return
+	}
 
-		if itemused, err = GetSalesUsed(tx, a.OrgCode, date, sales); err != nil {
-			glog.Errorf("GetItemAppointedNum err ", err.Error())
-			return
-		}
+	if itemused, err = GetSalesUsed(tx, a.OrgCode, date, sales); err != nil {
+		glog.Errorf("GetItemAppointedNum err ", err.Error())
+		return
+	}
 
-		for item, itemLimit := range itemLimits {
-			if appedCount, ok := itemused[item]; ok {
-				if itemLimit <= appedCount {
-					return fmt.Errorf(ErrAppointmentString)
-				}
+	for item, itemLimit := range itemLimits {
+		if appedCount, ok := itemused[item]; ok {
+			if itemLimit <= appedCount {
+				return fmt.Errorf(ErrAppointmentString)
 			}
 		}
-		fmt.Println("itemAppoint", itemused)
-		//更新 该分院的 特殊项目的预约数量
-		for item, used := range itemused {
-			sqlStr = SetSaleAppointed_SQL(used+1, a.OrgCode, date, item)
-			fmt.Println("sqlstr", sqlStr, used+1)
-			if _, err = tx.Exec(sqlStr); err != nil {
-				glog.Errorf("SetItemAppointed_SQL", err.Error())
-				return
-			}
+	}
+	fmt.Println("itemAppoint", itemused)
+	//更新 该分院的 特殊项目的预约数量
+	for item, used := range itemused {
+		sqlStr = SetSaleAppointed_SQL(used+1, a.OrgCode, date, item)
+		fmt.Println("sqlstr", sqlStr, used+1)
+		if _, err = tx.Exec(sqlStr); err != nil {
+			glog.Errorf("SetItemAppointed_SQL", err.Error())
+			return
 		}
-
 	}
 
 	var capacity, warnnum, capacityUsed int
@@ -424,16 +428,16 @@ func GetLimit(tx *sql.Tx, orgcode string, itemcodes []string) (map[string]int, e
 		itmeStr[id] = fmt.Sprintf(`'%s'`, itemcodes)
 	}
 
-	sql_ := fmt.Sprintf("SELECT capacity,sale_code FROM %s  WHERE org_code = '%s' AND sale_code IN (%s)",
-		organization.TABLE_ORG_CON_SPECIAL, orgcode, strings.Join(itmeStr, ","))
-	fmt.Println("sql___", sql_)
 	var limit int
 	var itemcode string
-	var rows *sql.Rows
-	var err error
-	if rows, err = tx.Query(sql_); err != nil {
+	sql := fmt.Sprintf("SELECT capacity,sale_code FROM %s  WHERE org_code = '%s' AND sale_code IN (%s)",
+		organization.TABLE_ORG_CON_SPECIAL, orgcode, strings.Join(itmeStr, ","))
+
+	rows, err := tx.Query(sql);
+	if err != nil {
 		return nil, err
 	}
+
 	result := make(map[string]int)
 	defer rows.Close()
 	for rows.Next() {

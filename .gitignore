@@ -8,7 +8,7 @@
 pegasus.iml
 pegasus
 .idea
-
+dist.tar.gz
 # Test binary, build with `go test -c`
 *.test
 

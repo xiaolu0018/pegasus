@@ -23,7 +23,7 @@ var dbI DBInterface
 var URL_REGISTER_HTML string
 var APPID string
 
-const DEFAULT_PAGE_SIZE = "8"
+const DEFAULT_PAGE_SIZE = "100"
 
 func AddRouter(r *httprouter.Router, dist string) {
 

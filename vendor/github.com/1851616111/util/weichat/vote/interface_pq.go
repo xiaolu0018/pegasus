@@ -91,7 +91,7 @@ func (d DB) Vote(openID, votedID string) (err error) {
 }
 
 func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
-	var sql string = `SELECT voterid, name, image, votedcount FROM ` + TABLE_VOTER + ` WHERE imagecached %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
+	var sql string = `SELECT voterid, COALESCE(name, ''), COALESCE(image, ''), votedcount FROM ` + TABLE_VOTER + ` WHERE imagecached %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
 	var countSQL string = `SELECT count(*) FROM ` + TABLE_VOTER + ` WHERE imagecached %s`
 	var sqlCondition string
 	if key == nil {
@@ -125,11 +125,11 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 	l := VoterList{
 		Index:      index,
 		Size:       size,
-		TotalPages: tatol / 8,
+		TotalPages: tatol / 100,
 		PageData:   vs,
 	}
 
-	if tatol%8 > 0 {
+	if tatol%100 > 0 {
 		l.TotalPages++
 	}
 

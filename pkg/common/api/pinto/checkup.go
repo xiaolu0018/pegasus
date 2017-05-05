@@ -36,7 +36,7 @@ func ListCheckups(db *sql.DB) ([]types.Checkup, error) {
 //SELECT * FROM examination_log WHERE examination_no = '0001001170003658';
 //SELECT * FROM examination_sale WHERE examination_no = '0001001170003658';
 
-func GetCheckupBySaleCode(db *sql.DB, code string) ([]types.Checkup, error) {
+func GetCheckupsBySaleCode(db *sql.DB, code string) ([]types.Checkup, error) {
 	rows, err := db.Query(`select c.checkup_code, c.checkup_name, c.brief_name
 	from sale_checkup sc, checkup c
 	where sc.checkup_code = c.checkup_code

@@ -28,6 +28,7 @@ type ActivityConfig struct {
 	DistBasePath  string
 	LocalDistPath string
 
+	AppSignToken string
 	AppID     string
 	AppSecret string
 }
@@ -42,12 +43,12 @@ func (o *ActivityConfig) Start(router *httprouter.Router) error {
 		return err
 	}
 
-	if err := manager.CreateMenu(o.Schema, o.Domain); err != nil {
+	if err := manager.CreateMenu(o.AppID, o.Schema, o.Domain); err != nil {
 		return err
 
 	}
 
-	if err := manager.WatchEvent(); err != nil {
+	if err := manager.WatchEvent(o.AppID, o.Schema, o.Domain); err != nil {
 		return err
 	}
 

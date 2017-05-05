@@ -14,7 +14,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-var APP_ID string
+var APP_Sign_Token string
 var Token *token.Config
 var EventManager *event.EventManager
 var EOnceL sync.Once
@@ -29,8 +29,7 @@ func init() {
 func DeveloperValidater(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	r.ParseForm()
 
-	s := sign.SignToken(r.FormValue("nonce"), r.FormValue("timestamp"), APP_ID)
-
+	s := sign.SignToken(r.FormValue("nonce"), r.FormValue("timestamp"), APP_Sign_Token)
 	if s != r.FormValue("signature") {
 		w.WriteHeader(400)
 	} else {

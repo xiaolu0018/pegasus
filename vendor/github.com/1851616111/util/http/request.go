@@ -16,6 +16,16 @@ type ContentType string
 var ContentType_JSON ContentType = "application/json"
 var ContentType_FORM ContentType = "application/x-www-form-urlencoded"
 
+type HttpSpec struct {
+	URL         string            `json:"url"`
+	Method      string            `json:"method"`
+	ContentType ContentType       `json:"content_type"`
+	URLParams   *Params           `json:"url_params"`
+	BodyParams  *Body             `json:"body_params"`
+	Header      map[string]string `json:"header"`
+	BasicAuth   *BasicAuth        `json:"basicauth"`
+}
+
 func NewRequest(spec *HttpSpec) (*http.Request, error) {
 	var req *http.Request
 	var body io.Reader = nil
@@ -77,14 +87,14 @@ func NewRequest(spec *HttpSpec) (*http.Request, error) {
 	return req, nil
 }
 
-type HttpSpec struct {
-	URL         string            `json:"url"`
-	Method      string            `json:"method"`
-	ContentType ContentType       `json:"content_type"`
-	URLParams   *Params           `json:"url_params"`
-	BodyParams  *Body             `json:"body_params"`
-	Header      map[string]string `json:"header"`
-	BasicAuth   *BasicAuth        `json:"basicauth"`
+func ReadJsonObj(spec *HttpSpec, obj interface{}) error {
+	req, err  := NewRequest(spec)
+	if err != nil {
+		return err
+	}
+	defer req.Body.Close()
+
+	return json.NewDecoder(req.Body).Decode(obj)
 }
 
 type BasicAuth struct {
