@@ -287,6 +287,12 @@ func GetAppointmentList(page_index, page_size int, begintime, endtime int64, org
 		return nil, 0, rows.Err()
 	}
 
+	for k, app := range apps {
+		app.AppointTimeString = time.Unix(app.AppointTime, 0).Format("2006-01-02")
+		app.OperateTimeString = time.Unix(app.OperateTime, 0).Format("2006-01-02")
+		apps[k] = app
+	}
+
 	return apps, totalnums, nil
 }
 

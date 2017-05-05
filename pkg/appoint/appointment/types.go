@@ -14,7 +14,7 @@ const VALIDATE_MERRY_NO = "未婚"
 const VALIDATE_MERRY_YES = "已婚"
 
 const (
-	STATUS_SUCCESS      = "预约成功"
+	STATUS_SUCCESS     = "预约成功"
 	STATUS_EXAMING     = "体检中"
 	STATUS_NEED_COMMON = "待评价"
 )
@@ -22,11 +22,12 @@ const (
 var ErrAppointmentString = "Can't make an appointment"
 
 type Appointment struct {
-	ID          string   `json:"id"`
-	PlanId      string   `json:"planid"` //套餐
-	SaleCodes   []string `json:"sale_codes"`
-	AppointTime int64    `json:"appointtime"`
-	OrgCode     string   `json:"org_code"` //分院
+	ID                string   `json:"id"`
+	PlanId            string   `json:"planid"` //套餐
+	SaleCodes         []string `json:"sale_codes"`
+	AppointTime       int64    `json:"appointtime"`
+	AppointTimeString string   `json:"appoint_time_string"`
+	OrgCode           string   `json:"org_code"` //分院
 
 	CardNo          string `json:"cardno"`
 	CardType        string `json:"cardtype"`
@@ -38,15 +39,16 @@ type Appointment struct {
 	Appoint_Channel string `json:"appoint_channel"` //预约渠道
 	Appointorid     string `json:"appointorid"`     //预约人id
 
-	Sex          string `json:"sex"`
-	Company      string `json:"company"`
-	Group        string `json:"group"`
-	Remark       string `json:"remark"`
-	Operator     string `json:"operator"`
-	OperateTime  int64  `json:"operatetime"` //创建时间
-	OrderID      string `json:"orderid"`
-	CommentID    string `json:"commentid"`
-	AppointedNum int    `json:"appointednum"` //最后生产的预约号
+	Sex               string `json:"sex"`
+	Company           string `json:"company"`
+	Group             string `json:"group"`
+	Remark            string `json:"remark"`
+	Operator          string `json:"operator"`
+	OperateTime       int64  `json:"operatetime"` //创建时间
+	OperateTimeString string `json:"operate_time_string"`
+	OrderID           string `json:"orderid"`
+	CommentID         string `json:"commentid"`
+	AppointedNum      int    `json:"appointednum"` //最后生产的预约号
 
 	ReportId string `json:"reportid"` //用来记录体检报告号
 

@@ -24,25 +24,27 @@ func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	cfg := org.Config_Basic{}
+	//cfg := org.Config_Basic{}
+	cfg := make(map[string]interface{})
 	if err := json.NewDecoder(r.Body).Decode(&cfg); err != nil {
 		glog.Errorf("orgnization.CreateBasicHandler decode req params err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
 		return
 	}
 
-	cfg.Org_Code = code
-	if err := cfg.Validate(); err != nil {
-		glog.Errorf("orgnization.CreateBasicHandler validate req params err %v\n", err)
-		httputil.Response(rw, 400, cfg.Validate())
-		return
-	}
-
-	if err := cfg.Create(); err != nil {
-		glog.Errorf("orgnization.CreateBasicHandler Create err %v\n", err.Error())
-		httputil.Response(rw, 400, err)
-		return
-	}
+	glog.Errorln("cfg ___,", cfg)
+	//cfg.Org_Code = code
+	//if err := cfg.Validate(); err != nil {
+	//	glog.Errorf("orgnization.CreateBasicHandler validate req params err %v\n", err)
+	//	httputil.Response(rw, 400, cfg.Validate())
+	//	return
+	//}
+	//
+	//if err := cfg.Create(); err != nil {
+	//	glog.Errorf("orgnization.CreateBasicHandler Create err %v\n", err.Error())
+	//	httputil.Response(rw, 400, err)
+	//	return
+	//}
 
 	httputil.Response(rw, 200, "ok")
 }
