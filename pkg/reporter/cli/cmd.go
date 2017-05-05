@@ -7,10 +7,10 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 
-	//"192.168.199.199/bjdaos/pegasus/pkg/common/util/safe"
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/handler"
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/model"
+	//"bjdaos/pegasus/pkg/common/util/safe"
+	"bjdaos/pegasus/pkg/reporter/db"
+	"bjdaos/pegasus/pkg/reporter/handler"
+	"bjdaos/pegasus/pkg/reporter/model"
 )
 
 func NewReporterCmd(name string) *cobra.Command {

@@ -1,11 +1,11 @@
 package model
 
 import (
-	"192.168.199.199/bjdaos/totem/pkg/types"
-	"errors"
 	"fmt"
-	"github.com/golang/glog"
+	"errors"
 	"regexp"
+	"github.com/golang/glog"
+	"bjdaos/pegasus/pkg/reporter/types"
 )
 
 func InjectionPrevention(to_match_str string) bool {

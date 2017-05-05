@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/md5"
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/common/util/md5"
 )
 
 func Get(account string) (*LoginUser, error) {

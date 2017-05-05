@@ -9,7 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/cobra"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/server/start"
+	"bjdaos/pegasus/pkg/wc/server/start"
 )
 
 func NewWeiChatCmd(name string) *cobra.Command {

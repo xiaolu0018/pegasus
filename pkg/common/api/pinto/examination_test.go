@@ -1,8 +1,8 @@
 package pinto
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/database"
+	"bjdaos/pegasus/pkg/common/types"
+	"bjdaos/pegasus/pkg/common/util/database"
 	"fmt"
 	"testing"
 )

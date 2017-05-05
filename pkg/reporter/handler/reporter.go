@@ -13,9 +13,9 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/model"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
-	//"192.168.199.199/bjdaos/pegasus/pkg/common/util/safe"
+	"bjdaos/pegasus/pkg/reporter/model"
+	"bjdaos/pegasus/pkg/wc/util"
+	//"bjdaos/pegasus/pkg/common/util/safe"
 )
 
 func AuthHandler(handler func(w http.ResponseWriter, r *http.Request, ps httprouter.Params)) func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

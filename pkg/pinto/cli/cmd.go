@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"os"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/pinto/server/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/pinto/server/handler"
+	"bjdaos/pegasus/pkg/pinto/server/db"
+	"bjdaos/pegasus/pkg/pinto/server/handler"
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 )

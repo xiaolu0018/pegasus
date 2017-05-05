@@ -1,8 +1,8 @@
 package plan
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"bjdaos/pegasus/pkg/wc/common"
+	"bjdaos/pegasus/pkg/wc/db"
 	"encoding/json"
 	"fmt"
 	httputil "github.com/1851616111/util/http"

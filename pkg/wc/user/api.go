@@ -6,8 +6,8 @@ import (
 
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"bjdaos/pegasus/pkg/wc/common"
+	"bjdaos/pegasus/pkg/wc/db"
 )
 
 func (u *User) Upsert() error {

@@ -10,10 +10,10 @@ import (
 
 	httputil "github.com/1851616111/util/http"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/api/pinto"
+	"bjdaos/pegasus/pkg/appoint/appointment"
+	"bjdaos/pegasus/pkg/appoint/db"
+	org "bjdaos/pegasus/pkg/appoint/organization"
+	"bjdaos/pegasus/pkg/common/api/pinto"
 )
 
 func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {

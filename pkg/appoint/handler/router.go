@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/login"
+	"bjdaos/pegasus/pkg/appoint/appointment"
+	"bjdaos/pegasus/pkg/appoint/login"
 	"github.com/julienschmidt/httprouter"
 )
 

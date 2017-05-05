@@ -1,7 +1,7 @@
 package user
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
+	"bjdaos/pegasus/pkg/wc/util"
 	"errors"
 	"github.com/1851616111/util/validator/mobile"
 )

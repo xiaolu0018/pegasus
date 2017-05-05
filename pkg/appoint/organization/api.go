@@ -1,8 +1,8 @@
 package organization
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/common/types"
 	"fmt"
 	"github.com/lib/pq"
 )

@@ -9,8 +9,8 @@ import (
 	"database/sql"
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
-	"192.168.199.199/bjdaos/pegasus/pkg/pinto/server/db"
+	"bjdaos/pegasus/pkg/common/types"
+	"bjdaos/pegasus/pkg/pinto/server/db"
 )
 
 func GetExam(db *sql.DB, exam_no string) (*types.Examination, error) {

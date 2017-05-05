@@ -1,12 +1,12 @@
 package appointment
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/db"
 	"fmt"
 	"strings"
 	"testing"
 	//"time"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
+	"bjdaos/pegasus/pkg/appoint/organization"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"

@@ -1,7 +1,7 @@
 package common
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint"
+	"bjdaos/pegasus/pkg/appoint"
 	"bytes"
 	"encoding/json"
 	"fmt"

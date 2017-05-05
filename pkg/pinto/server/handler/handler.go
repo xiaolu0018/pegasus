@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/common/api/pinto"
-	"192.168.199.199/bjdaos/pegasus/pkg/pinto/server/db"
+	"bjdaos/pegasus/pkg/common/api/pinto"
+	"bjdaos/pegasus/pkg/pinto/server/db"
 	"encoding/json"
 	"fmt"
 	httputil "github.com/1851616111/util/http"

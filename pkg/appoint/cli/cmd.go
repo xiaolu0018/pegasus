@@ -7,12 +7,12 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/handler"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/model"
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/handler"
+	"bjdaos/pegasus/pkg/appoint/model"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
-	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/pinto"
+	"bjdaos/pegasus/pkg/appoint/appointment"
+	org "bjdaos/pegasus/pkg/appoint/pinto"
 )
 
 func NewAppointManagerCmd(name string) *cobra.Command {

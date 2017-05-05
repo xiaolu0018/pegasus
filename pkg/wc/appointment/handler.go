@@ -14,11 +14,11 @@ import (
 	"github.com/1851616111/util/message"
 	"github.com/julienschmidt/httprouter"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
+	"bjdaos/pegasus/pkg/appoint/cache"
+	"bjdaos/pegasus/pkg/wc/common"
+	"bjdaos/pegasus/pkg/wc/user"
 
-	appoint_Appointment "192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
+	appoint_Appointment "bjdaos/pegasus/pkg/appoint/appointment"
 	"fmt"
 	"math/rand"
 	"strconv"

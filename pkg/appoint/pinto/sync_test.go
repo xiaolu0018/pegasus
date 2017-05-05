@@ -1,7 +1,7 @@
 package pinto
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/db"
 	"fmt"
 	"testing"
 )

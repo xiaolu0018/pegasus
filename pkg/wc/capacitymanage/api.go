@@ -11,9 +11,9 @@ import (
 
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/branch"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
+	"bjdaos/pegasus/pkg/wc/branch"
+	"bjdaos/pegasus/pkg/wc/db"
+	"bjdaos/pegasus/pkg/wc/util"
 )
 
 //容量管理初始话

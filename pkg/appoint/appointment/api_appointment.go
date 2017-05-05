@@ -13,9 +13,9 @@ import (
 
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/methods"
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/organization"
+	"bjdaos/pegasus/pkg/common/util/methods"
 )
 
 /*

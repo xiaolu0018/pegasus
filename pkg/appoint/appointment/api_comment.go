@@ -1,7 +1,7 @@
 package appointment
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/db"
 	"database/sql"
 	"fmt"
 	"github.com/golang/glog"

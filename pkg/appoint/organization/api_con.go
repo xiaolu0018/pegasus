@@ -5,7 +5,7 @@ import (
 
 	"github.com/lib/pq"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/db"
 )
 
 func (o *Config_Basic) Create() error {

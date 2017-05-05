@@ -5,10 +5,10 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
+	"bjdaos/pegasus/pkg/wc/util"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/login"
-	commonutil "192.168.199.199/bjdaos/pegasus/pkg/common/util/md5"
+	"bjdaos/pegasus/pkg/appoint/login"
+	commonutil "bjdaos/pegasus/pkg/common/util/md5"
 )
 
 const PASSWORD = "58f06cdfa46d12688c23405b"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/types"
+	"bjdaos/pegasus/pkg/reporter/db"
+	"bjdaos/pegasus/pkg/reporter/types"
 )
 
 const married_code = 2

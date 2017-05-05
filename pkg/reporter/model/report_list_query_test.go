@@ -1,8 +1,8 @@
 package model
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/db"
-	"192.168.199.199/bjdaos/totem/pkg/types"
+	"bjdaos/pegasus/pkg/reporter/db"
+	"bjdaos/totem/pkg/types"
 	"fmt"
 
 	"testing"

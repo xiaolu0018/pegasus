@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/error"
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/common/util/error"
 	"fmt"
 )
 

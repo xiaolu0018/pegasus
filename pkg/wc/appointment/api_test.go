@@ -1,7 +1,7 @@
 package appointment
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"bjdaos/pegasus/pkg/wc/db"
 	"fmt"
 	"gopkg.in/mgo.v2/bson"
 	"testing"

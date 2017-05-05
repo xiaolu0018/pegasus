@@ -1,7 +1,7 @@
 package appointment
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
+	"bjdaos/pegasus/pkg/appoint/cache"
 	"github.com/golang/glog"
 	"os"
 )

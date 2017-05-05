@@ -8,7 +8,7 @@ import (
 	id "github.com/1851616111/util/validator/identity"
 	"github.com/1851616111/util/validator/mobile"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
+	"bjdaos/pegasus/pkg/appoint/organization"
 	"database/sql"
 	"github.com/golang/glog"
 	"time"

@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/pinto"
+	"bjdaos/pegasus/pkg/appoint/cache"
+	"bjdaos/pegasus/pkg/appoint/pinto"
 	httputil "github.com/1851616111/util/http"
 	"github.com/julienschmidt/httprouter"
 	"net/http"

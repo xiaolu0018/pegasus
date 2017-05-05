@@ -1,7 +1,7 @@
 package model
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/reporter/types"
+	"bjdaos/pegasus/pkg/reporter/types"
 	"github.com/1851616111/util/strings"
 )
 

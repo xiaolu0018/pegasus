@@ -1,7 +1,7 @@
 package user
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
+	"bjdaos/pegasus/pkg/wc/common"
 )
 
 const (

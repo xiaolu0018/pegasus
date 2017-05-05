@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/cache"
-	org "192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
-	pintoapi "192.168.199.199/bjdaos/pegasus/pkg/common/api/pinto"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/database"
+	"bjdaos/pegasus/pkg/appoint/cache"
+	org "bjdaos/pegasus/pkg/appoint/organization"
+	pintoapi "bjdaos/pegasus/pkg/common/api/pinto"
+	"bjdaos/pegasus/pkg/common/types"
+	"bjdaos/pegasus/pkg/common/util/database"
 )
 
 const CACHE_ORG = "organizations"

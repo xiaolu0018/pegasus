@@ -10,8 +10,8 @@ import (
 	"encoding/json"
 	"github.com/golang/glog"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/appointment"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
+	"bjdaos/pegasus/pkg/appoint/appointment"
+	"bjdaos/pegasus/pkg/wc/user"
 )
 
 func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {

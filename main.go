@@ -1,7 +1,7 @@
 package main
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/cmd"
+	"bjdaos/pegasus/pkg/cmd"
 	"os"
 )
 

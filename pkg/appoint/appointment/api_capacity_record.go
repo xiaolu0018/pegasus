@@ -1,8 +1,8 @@
 package appointment
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/db"
-	"192.168.199.199/bjdaos/pegasus/pkg/appoint/organization"
+	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/appoint/organization"
 	"fmt"
 	"sync"
 	"time"

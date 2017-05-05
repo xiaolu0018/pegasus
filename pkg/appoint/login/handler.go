@@ -8,7 +8,7 @@ import (
 
 	httputil "github.com/1851616111/util/http"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/md5"
+	"bjdaos/pegasus/pkg/common/util/md5"
 )
 
 func CheckLoginHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {

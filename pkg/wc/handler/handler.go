@@ -5,8 +5,8 @@ import (
 	tk "github.com/1851616111/util/weichat/util/user-token"
 	"github.com/julienschmidt/httprouter"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/user"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/util"
+	"bjdaos/pegasus/pkg/wc/user"
+	"bjdaos/pegasus/pkg/wc/util"
 )
 
 const TO_CACHE_SCOPE = "snsapi_userinfo"

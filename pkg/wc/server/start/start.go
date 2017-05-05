@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/common/util/database"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/handler"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/manager"
+	"bjdaos/pegasus/pkg/common/util/database"
+	"bjdaos/pegasus/pkg/wc/handler"
+	"bjdaos/pegasus/pkg/wc/manager"
 	"os"
 	"path/filepath"
 )

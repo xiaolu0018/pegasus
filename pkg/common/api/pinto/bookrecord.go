@@ -6,7 +6,7 @@ import (
 
 	"database/sql"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/common/types"
+	"bjdaos/pegasus/pkg/common/types"
 	"strconv"
 )
 

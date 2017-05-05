@@ -1,7 +1,7 @@
 package branch
 
 import (
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"bjdaos/pegasus/pkg/wc/db"
 	"testing"
 )
 

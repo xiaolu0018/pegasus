@@ -6,8 +6,8 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/common"
-	"192.168.199.199/bjdaos/pegasus/pkg/wc/db"
+	"bjdaos/pegasus/pkg/wc/common"
+	"bjdaos/pegasus/pkg/wc/db"
 	httputil "github.com/1851616111/util/http"
 )
 
