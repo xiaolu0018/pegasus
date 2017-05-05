@@ -10,6 +10,14 @@ import (
 	"time"
 )
 
+//将体检状态 预约 改为体检中,或待评价 ，每5分钟更新一次
+var StatusMappings = map[int]string{
+	1040: "体检中",
+	1041: "体检中",
+	1042: "体检中",
+	1050: "待评价",
+}
+
 type org struct {
 	orgCode    string
 	ordAddress string
@@ -79,12 +87,21 @@ func batchUpdateStatus(bookStatsM map[string]int) error {
 	if bookStatsM == nil {
 		return nil
 	}
-	for bookNo, status := range bookStatsM {
-		if status != 0 {
-			sql := fmt.Sprintf("UPDATE %s SET status = '%d' WHERE bookno = '%s' AND status <> '%d'", TABLE_APPOINTMENT, status, bookNo, status)
-			if _, err := db.GetDB().Exec(sql); err != nil {
-				return err
-			}
+
+	var sql string
+	for bookNo, statusCode := range bookStatsM {
+		if statusCode == 0 {
+			continue
+		}
+		status, exist := StatusMappings[statusCode]
+		if exist {
+			sql = fmt.Sprintf("UPDATE %s SET status = '%s' WHERE bookno = '%s' AND status <> '%s'", TABLE_APPOINTMENT, status, bookNo, status)
+		} else {
+			sql = fmt.Sprintf("UPDATE %s SET status = '%d' WHERE bookno = '%s' AND status <> '%d'", TABLE_APPOINTMENT, statusCode, bookNo, statusCode)
+		}
+
+		if _, err := db.GetDB().Exec(sql); err != nil {
+			return err
 		}
 	}
 

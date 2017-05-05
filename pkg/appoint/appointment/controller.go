@@ -8,14 +8,6 @@ import (
 	"github.com/golang/glog"
 )
 
-//将体检状态 预约 改为体检中,或待评价 ，每5分钟更新一次
-var ExamStatusToAppointStatus = map[int]string{
-	1040: "体检中",
-	1041: "体检中",
-	1042: "体检中",
-	1050: "待评价",
-}
-
 func StartController() {
 	appBrokenTicker := time.NewTicker(time.Hour)
 	appSyncTicker := time.NewTicker(time.Minute * 5)
@@ -61,7 +53,7 @@ func syncStatus() error {
 
 		bookStatsM, err := listOrgBookStatus(targetOrg.ordAddress, targetBookNos)
 		if err != nil {
-			glog.Errorf("appoint.appSyncStatus.listOrgBookStatus: err %v\n" ,err)
+			glog.Errorf("appoint.appSyncStatus.listOrgBookStatus: err %v\n", err)
 			continue
 		}
 
