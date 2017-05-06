@@ -200,6 +200,7 @@
 				$("head").append('<script id="ios" type="text\/javascript" src="js\/jweixin-1.2.0.js"><\/script>');
 			};
 		})();
+		//获取wx配置参数
 	   	$.getJSON(baseUrl+'/api/activity/jsconfig',{"openid":request.openid},function(data){
 	   		if (typeof data === 'string') {
 				    data = JSON.parse(data);
@@ -252,7 +253,7 @@
 					showToast("没有选择图片",myinfo);
 				}else{
 					// 上传图片
-				    
+				    showAlert("图片的本地路径:"+images.localId);
 				    wx.uploadImage({
 				        localId: images.localId,
 				        isShowProgressTips: 1,

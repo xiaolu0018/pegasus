@@ -436,8 +436,10 @@
 			//搜索框搜索
 			$(".main").on('touchstart','#search_cancel',function(e){
 				inpKey=$("#searchinp input[type='search']").val();
-				var param={"key":inpKey};
-				ajaxPage(param);
+				if(inpKey.length>0){
+					var param={"key":inpKey};
+					ajaxPage(param);
+				}
 			});
 			//////////////
 			//上一页，下一页

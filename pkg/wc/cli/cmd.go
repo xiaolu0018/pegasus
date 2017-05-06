@@ -160,7 +160,7 @@ func startActivityCmd() *cobra.Command {
 
 	flags.StringVar(&o.User, "user", "wxhd", "Database user for the Application.")
 	flags.StringVar(&o.Password, "passwd", "wXHd2069", "Database passwd for the Application.")
-	flags.StringVar(&o.Ip, "ip", "10.1.108.21", "Database ip for the Application.")
+	flags.StringVar(&o.Ip, "ip", "10.0.108.21", "Database ip for the Application.")
 	flags.StringVar(&o.Port, "port", "5432", "Database port for the Application.")
 	flags.StringVar(&o.Database, "name", "wxhd", "Database name for the Application.")
 
