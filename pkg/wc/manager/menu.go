@@ -1,16 +1,16 @@
 package manager
 
 import (
-	"fmt"
+"fmt"
 
-	"github.com/1851616111/util/weichat/manager/menu"
-	wcpitoken "github.com/1851616111/util/weichat/util/api-token"
+"github.com/1851616111/util/weichat/manager/menu"
+wcpitoken "github.com/1851616111/util/weichat/util/api-token"
 )
 
 func CreateMenu(appid, schema, domain string) error {
-	appoint2 := fmt.Sprintf(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s%%3a%%2f%%2f%s%%2fapi%%2factivity%%2findex&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`,
+	appoint2 := fmt.Sprintf("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s%%3a%%2f%%2f%s%%2fapi%%2factivity%%2findex&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
 		appid, schema, domain)
-	fmt.Println(appoint2)
+
 	bt1 := menu.NewViewButton("母亲节活动", appoint2)
 	//appoint := `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd09c7682905819e6&redirect_uri=http%3a%2f%2fwww.elepick.com%2fapi%2fappoint&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
 	//appoint3 := `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd09c7682905819e6&redirect_uri=http%3a%2f%2fwww.elepick.com%2fapi%2fbranch&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`

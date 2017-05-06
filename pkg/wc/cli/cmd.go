@@ -149,11 +149,15 @@ func startActivityCmd() *cobra.Command {
 	flags.StringVar(&o.DistBasePath, "basepath", "dist", "The activity server static file basepath")
 	flags.StringVar(&o.LocalDistPath, "dist", "./dist/activity", "The file path one application server.")
 
-	flags.StringVar(&o.ListenAddress, "listen", ":9000", "TCP network address to listen on, to serve incomming http request.")
+	flags.StringVar(&o.ListenAddress, "listen", ":9001", "TCP network address to listen on, to serve incomming http request.")
 
 	flags.StringVar(&o.AppSignToken, "token", "bjdaos", "The Weichat Official Accounts app developer api token, must need to set")
+	//flags.StringVar(&o.AppID, "id", "wxd38ad1e4f070b5e6", "The Weichat Official Accounts app id, must need to set")
+	//flags.StringVar(&o.AppSecret, "secret", "628c1bdd5f8b44ebfd9ef2e28afe38ea", "The Weichat Official Accounts app secret, must meed to set")
+	//
 	flags.StringVar(&o.AppID, "id", "wxd09c7682905819e6", "The Weichat Official Accounts app id, must need to set")
 	flags.StringVar(&o.AppSecret, "secret", "b9938ddfec045280eba89fab597a0c41", "The Weichat Official Accounts app secret, must meed to set")
+
 
 	flags.StringVar(&o.User, "user", "postgres", "Database user for the Application.")
 	flags.StringVar(&o.Password, "passwd", "postgres190@", "Database passwd for the Application.")
