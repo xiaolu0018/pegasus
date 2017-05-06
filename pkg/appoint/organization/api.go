@@ -93,7 +93,7 @@ func ListOrganizations(page_index, page_size int) ([]Organization, error) {
 	}
 	defer rows.Close()
 
-	l := []Organization{}
+	list := []Organization{}
 	org := Organization{}
 	bc := Config_Basic{}
 	offDays := pq.StringArray{}
@@ -108,14 +108,26 @@ func ListOrganizations(page_index, page_size int) ([]Organization, error) {
 		bc.AvoidNumbers = ([]int64)(avoidNumbers)
 		org.BasicCon = bc
 
-		l = append(l, org)
+		list = append(list, org)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
+	specialnum, err := GetCountGroupByOrgCodeFromConfig_Special()
+	if err != nil {
+		return nil, err
+	}
+	for k, l := range list {
+		if sn, ok := specialnum[l.Code]; ok {
+			l.BasicCon.SpecialNum = sn
+		} else {
+			l.BasicCon.SpecialNum = 0
+		}
+		list[k] = l
+	}
 
-	return l, nil
+	return list, nil
 }
 
 func ListOrganizationsForWC() ([]Organization, error) {

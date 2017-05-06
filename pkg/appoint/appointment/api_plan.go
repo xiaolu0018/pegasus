@@ -7,6 +7,7 @@ import (
 	"github.com/lib/pq"
 
 	"bjdaos/pegasus/pkg/appoint/db"
+	"bjdaos/pegasus/pkg/common/sdk/pinto"
 )
 
 func GetSaleCodesByplan(tx *sql.Tx, planid string) ([]string, error) {
@@ -53,4 +54,8 @@ func GetPlans() ([]Plan, error) {
 		return nil, rows.Err()
 	}
 	return ps, nil
+}
+
+func GetChecupsBySales(ip string, salecodes []string) ([]string, error) {
+	return pinto.NewPintoSDK().GetCheckupCodesBySaleCodes(salecodes, ip)
 }

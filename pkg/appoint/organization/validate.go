@@ -52,7 +52,7 @@ func (c *Config_Basic) Validate() error {
 }
 
 func (c *Config_Special) Validate() error {
-	if len(strings.TrimSpace(c.Sale_Code)) == 0 {
+	if len(strings.TrimSpace(c.CheckupCode)) == 0 {
 		return ErrSaleCodeNotFound
 	}
 	if c.Capacity < 0 || c.Capacity > 1000 {

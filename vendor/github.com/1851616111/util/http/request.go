@@ -31,7 +31,7 @@ func NewRequest(spec *HttpSpec) (*http.Request, error) {
 	var body io.Reader = nil
 	var err error
 	switch spec.Method {
-	case "POST":
+	case "POST", "GET":
 		if spec.BodyParams != nil && len(*spec.BodyParams) > 0 {
 			switch spec.ContentType {
 			case ContentType_JSON:
@@ -52,7 +52,6 @@ func NewRequest(spec *HttpSpec) (*http.Request, error) {
 				body = ioutil.NopCloser(strings.NewReader(v.Encode()))
 			}
 		}
-	case "GET":
 	}
 
 	urlStr, urlParam := spec.URL, "?"

@@ -78,13 +78,13 @@ type ManagerCapacity struct {
 }
 
 //分院的特殊项目的某天已预约人数
-var TABLE_SaleRecords = "go_appoint_sale_records"
+var TABLE_CheckupRecords = "go_appoint_checkup_records"
 
 type ManagerItem struct {
-	Date     string
-	SaleCode string //todo 这个应该为checkup
-	Used     int
-	OrgCode  string
+	Date    string
+	Checkup string //todo 这个应该为checkup
+	Used    int
+	OrgCode string
 }
 
 //套餐

@@ -24,13 +24,14 @@ type Config_Basic struct {
 	WarnNum      int      `json:"warnnum"`
 	OffDays      []string `json:"offdays"`       //休息日
 	AvoidNumbers []int64  `json:"avoid_numbers"` //不可使用的预约号
+	SpecialNum   int      `json:"special_num"`   //特殊项目数量
 	IpAddress    string   `json:"ip_address"`    //这里用来记录不同的pinto服务
 }
 
 //组织特殊项的容量
 type Config_Special struct {
 	Org_Code  string `json:"org_code"`  //外键
-	Sale_Code string `json:"sale_code"` //外键
+	CheckupCode string `json:"checkup_code"` //外键
 	Capacity  int    `json:"capacity"`
 }
 

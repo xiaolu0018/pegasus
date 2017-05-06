@@ -48,10 +48,11 @@ func TestGetItemByplan(t *testing.T) {
 
 func TestCreatAppoint(t *testing.T) {
 	dbinit()
+	appointtime, _ := time.Parse("2006-01-02", time.Now().Format("2006-01-02"))
 	a := Appointment{
 		ID:              "",
 		Appointor:       "name1",
-		CardNo:          "cardid1",
+		CardNo:          "610481199007072234",
 		CardType:        "身份证",
 		Mobile:          "18799552120",
 		MerryStatus:     "未婚",
@@ -60,11 +61,11 @@ func TestCreatAppoint(t *testing.T) {
 		AppointedNum:    0,
 		Sex:             "男",
 		PlanId:          "1",
-		OrgCode:         "0001002",
-		AppointTime:     time.Now().Unix(),
+		OrgCode:         "0001001",
+		AppointTime:     appointtime.Unix(),
 		OperateTime:     time.Now().Unix(),
-		OrderID:         "order13",
-		Operator:        "operator13",
+		OrderID:         "",
+		Operator:        "",
 	}
 	//
 	err := a.CreateAppointment()
@@ -73,8 +74,8 @@ func TestCreatAppoint(t *testing.T) {
 
 func TestGetCapacityAppointedNum(t *testing.T) {
 	dbinit()
-	sqlstr := fmt.Sprintf("INSERT INTO %s (org_code,date,used,sale_code) VALUES ('%s','%s','%d','%s')",
-		TABLE_SaleRecords, "000101", "2017-04-20", 2, "0002")
+	sqlstr := fmt.Sprintf("INSERT INTO %s (org_code,date,used,checkup_code) VALUES ('%s','%s','%d','%s')",
+		TABLE_CheckupRecords, "000101", "2017-04-20", 2, "0002")
 	result, err := db.GetDB().Exec(sqlstr)
 	fmt.Println("re", result, err)
 }

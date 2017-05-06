@@ -11,7 +11,7 @@ CREATE TABLE go_appoint_appointment  --appoint 服务 预约数据表
   id VARCHAR(30)  primary key,
   appointtime bigint, --预约体检时间
   org_code VARCHAR(30) references go_appoint_organization(org_code),  --分院代码
-  planid VARCHAR(30) references go_appoint_plan(id),  --套餐id
+  planid VARCHAR(30),  --套餐id
   sale_codes VARCHAR(30)[], --销售项目code
   cardtype VARCHAR(10) not null, --证件类型
   cardno VARCHAR(20) not null, --证件号
@@ -72,7 +72,7 @@ CREATE TABLE go_appoint_capacity_records( --分院预约记录表
     used INTEGER DEFAULT 0 --已预约人数
 );
 
-CREATE TABLE go_appoint_sale_records( --特殊项目预约限制记录
+CREATE TABLE go_appoint_checkup_records( --特殊项目预约限制记录
     org_code VARCHAR(30) references go_appoint_organization(org_code),--外键org_code
     checkup_code VARCHAR(30), --特殊项目code
     date VARCHAR(10), --日期

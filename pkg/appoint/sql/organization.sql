@@ -22,7 +22,7 @@ CREATE TABLE go_appoint_organization_basic_con( --分院配置表
 );
 
 CREATE TABLE go_appoint_organization_special_con( --特殊项目限制表
-   ORG_CODE      VARCHAR(30) NOT NULL REFERENCES go_appoint_organization(ORG_CODE), --关联go_appoint_organization org
-   SALE_CODE     VARCHAR(30), --特殊项目的code
-   CAPACITY      INTEGER --容量
+   ORG_CODE         VARCHAR(30) NOT NULL REFERENCES go_appoint_organization(ORG_CODE), --关联go_appoint_organization org
+   checkup_code     VARCHAR(30), --特殊项目的code
+   CAPACITY          INTEGER --容量
 );

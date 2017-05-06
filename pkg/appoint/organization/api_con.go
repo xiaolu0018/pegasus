@@ -17,14 +17,14 @@ func (o *Config_Basic) Create() error {
 }
 
 func GetConfigBasic(orgcode string) (*Config_Basic, error) {
-	sqlStr := fmt.Sprintf(`SELECT org_code,capacity,warnnum,offdays,avoidnumbers FROM %s WHERE org_code = '%s'`, TABLE_ORG_CON_BASIC, orgcode)
+	sqlStr := fmt.Sprintf(`SELECT org_code,capacity,warnnum,offdays,avoidnumbers,ip_address FROM %s WHERE org_code = '%s'`, TABLE_ORG_CON_BASIC, orgcode)
 	var org_code string
 	var capacity, warnnum int
-
+	var ip string
 	offDays := pq.StringArray{}
 	avoidNumbers := pq.Int64Array{}
 	var err error
-	if err = db.GetDB().QueryRow(sqlStr).Scan(&org_code, &capacity, &warnnum, &offDays, &avoidNumbers); err != nil {
+	if err = db.GetDB().QueryRow(sqlStr).Scan(&org_code, &capacity, &warnnum, &offDays, &avoidNumbers, &ip); err != nil {
 		return nil, err
 	}
 
@@ -34,11 +34,12 @@ func GetConfigBasic(orgcode string) (*Config_Basic, error) {
 		WarnNum:      warnnum,
 		OffDays:      []string(offDays),
 		AvoidNumbers: []int64(avoidNumbers),
+		IpAddress:    ip,
 	}, nil
 }
 func (o *Config_Special) Create() error {
-	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, SALE_CODE, CAPACITY) VALUES ($1, $2, $3)`, TABLE_ORG_CON_SPECIAL)
-	_, err := db.GetDB().Exec(sqlStr, o.Org_Code, o.Sale_Code, o.Capacity)
+	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, checkup_code, CAPACITY) VALUES ($1, $2, $3)`, TABLE_ORG_CON_SPECIAL)
+	_, err := db.GetDB().Exec(sqlStr, o.Org_Code, o.CheckupCode, o.Capacity)
 	return err
 }
 
@@ -86,4 +87,26 @@ func deleteOverdueOffdays(offdays []string) []string {
 
 	}
 	return result
+}
+
+func GetCountGroupByOrgCodeFromConfig_Special() (map[string]int, error) {
+	sqlStr := fmt.Sprintf("SELECT org_code,count(*) FROM %s GROUP BY org_code", TABLE_ORG_CON_SPECIAL)
+	rows, err := db.GetDB().Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var org string
+	var num int
+	special_num := make(map[string]int)
+	for rows.Next() {
+		if err = rows.Scan(&org, &num); err != nil {
+			return nil, err
+		}
+		special_num[org] = num
+	}
+	if rows.Err() != nil {
+		return nil, rows.Err()
+	}
+	return special_num, nil
 }
