@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	apparatuscli "bjdaos/pegasus/pkg/apparatus/electrocardiogram/cli"
+	apparatuscli "bjdaos/pegasus/pkg/instrument/heart/cli"
 	appcli "bjdaos/pegasus/pkg/appoint/cli"
 	pintocli "bjdaos/pegasus/pkg/pinto/cli"
 	rptcli "bjdaos/pegasus/pkg/reporter/cli"

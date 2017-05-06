@@ -14,8 +14,8 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/model"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/model"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 	"github.com/golang/glog"
 )
 

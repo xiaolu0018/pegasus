@@ -7,10 +7,10 @@
 package handler
 
 import (
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/api"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/model"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/parsexml"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/api"
+	"bjdaos/pegasus/pkg/instrument/heart/model"
+	"bjdaos/pegasus/pkg/instrument/heart/parsexml"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 	"encoding/json"
 	"github.com/1851616111/util/message"
 	"github.com/golang/glog"

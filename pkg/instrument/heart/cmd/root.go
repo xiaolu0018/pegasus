@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/cli"
+	"bjdaos/pegasus/pkg/instrument/heart/cli"
 	"github.com/spf13/cobra"
 )
 

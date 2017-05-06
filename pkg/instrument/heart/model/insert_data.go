@@ -9,7 +9,7 @@ package model
 import (
 	"fmt"
 
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 )
 
 //将数据插入到表中

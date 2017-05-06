@@ -14,8 +14,8 @@ import (
 
 	"github.com/golang/glog"
 
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/env"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/env"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 )
 
 func WriteLog(logtype, errcontent string) int {

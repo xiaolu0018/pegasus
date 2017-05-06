@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/api"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/api"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 )
 
 func GetHeartData(queryCode string) ([]types.HeartData, error) {

@@ -14,10 +14,10 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/api"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/db"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/handler"
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/model"
+	"bjdaos/pegasus/pkg/instrument/heart/api"
+	"bjdaos/pegasus/pkg/instrument/heart/db"
+	"bjdaos/pegasus/pkg/instrument/heart/handler"
+	"bjdaos/pegasus/pkg/instrument/heart/model"
 )
 
 func NewHeartDataCmd(name string) *cobra.Command {

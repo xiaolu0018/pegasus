@@ -7,7 +7,7 @@
 package parsexml
 
 import (
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 	"encoding/xml"
 	"github.com/golang/glog"
 	"io/ioutil"

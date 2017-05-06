@@ -16,7 +16,7 @@ import (
 	"encoding/json"
 	"github.com/golang/glog"
 
-	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"
+	"bjdaos/pegasus/pkg/instrument/heart/types"
 )
 
 var BaseUrl = ""
