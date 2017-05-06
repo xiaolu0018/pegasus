@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
+	apparatuscli "bjdaos/pegasus/pkg/apparatus/electrocardiogram/cli"
 	appcli "bjdaos/pegasus/pkg/appoint/cli"
 	pintocli "bjdaos/pegasus/pkg/pinto/cli"
 	rptcli "bjdaos/pegasus/pkg/reporter/cli"
@@ -19,6 +20,7 @@ var RootCmd = &cobra.Command{
 		pegasus rpt
 		pegasus app
 		pegasus pinto
+		pegasus apparatus
 	`,
 }
 
@@ -27,4 +29,5 @@ func init() {
 	RootCmd.AddCommand(rptcli.NewReporterCmd("rpt"))
 	RootCmd.AddCommand(appcli.NewAppointManagerCmd("app"))
 	RootCmd.AddCommand(pintocli.NewPintoCmd("pinto"))
+	RootCmd.AddCommand(apparatuscli.NewHeartDataCmd("apparatus"))
 }

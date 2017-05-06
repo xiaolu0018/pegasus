@@ -31,6 +31,7 @@ func CreateBasicHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
+	glog.Errorln("cfg ___,", cfg)
 	cfg.Org_Code = code
 	if err := cfg.Validate(); err != nil {
 		glog.Errorf("orgnization.CreateBasicHandler validate req params err %v\n", err)

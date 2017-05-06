@@ -12,6 +12,7 @@ import (
 	"bjdaos/pegasus/pkg/appoint/model"
 
 	"bjdaos/pegasus/pkg/appoint/appointment"
+	"bjdaos/pegasus/pkg/appoint/organization"
 	org "bjdaos/pegasus/pkg/appoint/pinto"
 )
 
@@ -43,6 +44,7 @@ func startCmd() *cobra.Command {
 			}
 
 			go appointment.StartController()
+			organization.Init()
 			go syncController.Run()
 
 		},

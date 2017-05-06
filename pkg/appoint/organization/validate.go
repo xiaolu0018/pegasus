@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrOffDayInvalid      error = errors.New("offday invalid")
+	ErrOffDayInvalid      error = errors.New("offday too much")
 	ErrAvoidNumberInvalid error = errors.New("avoid number invalid")
 	ErrCapacityInvalid    error = errors.New("param capacity invalid")
 	ErrWarnNumInvalid     error = errors.New("param warnnum invalid")
@@ -25,11 +25,9 @@ func (c *Config_Basic) Validate() error {
 		return ErrWarnNumInvalid
 	}
 
-	//for _, od := range c.OffDays {
-	//	if _, err := time.Parse("2006-01-02", od); err != nil {
-	//		return ErrOffDayInvalid
-	//	}
-	//}
+	if len(c.OffDays) > 50 {
+		return ErrOffDayInvalid
+	}
 
 	sort.Slice(c.AvoidNumbers, func(i, j int) bool {
 		return c.AvoidNumbers[i] < c.AvoidNumbers[j]

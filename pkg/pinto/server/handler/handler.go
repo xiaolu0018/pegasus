@@ -54,6 +54,39 @@ func CreateExamsHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.P
 
 }
 
+func CancelExamHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	result := make(map[string]interface{})
+	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
+		glog.Errorf("pinto.handler CancelExamHandler Decode req params err %v\n", err.Error())
+		httputil.Response(rw, 400, err)
+		return
+	}
+
+	var bookno string
+	var withplan bool
+
+	if bookno_, ok := result["bookno"]; ok {
+		bookno = bookno_.(string)
+	}
+
+	if withplan_, ok := result["withplan"]; ok {
+		withplan = withplan_.(bool)
+	}
+	var err error
+	if withplan && bookno != "" {
+		err = pinto.UpdateBookRecordWithExamToInvalid(db.GetWriteDB(), bookno)
+	} else if !withplan && bookno != "" {
+		err = pinto.UpdateBookRecordToInvalid(db.GetWriteDB(), bookno)
+	}
+	if err != nil {
+		glog.Errorf("pinto.handler CancelExamHandler update err %v\n", err.Error())
+		httputil.Response(rw, 400, err)
+		return
+	}
+	httputil.ResponseJson(rw, 200, nil)
+	return
+}
+
 func GetExamStatusHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	result := make(map[string][]string)
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
