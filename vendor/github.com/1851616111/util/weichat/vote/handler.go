@@ -105,7 +105,6 @@ func VoteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	openid := r.FormValue("openid")
 	voteID := ps.ByName("voterid")
 
-	fmt.Printf("openid:  %s, voterid %s\n", openid, voteID)
 	if len(voteID) == 0 || len(voteID) > 50 {
 		httputil.Response(w, 400, "voterid invalid")
 		return

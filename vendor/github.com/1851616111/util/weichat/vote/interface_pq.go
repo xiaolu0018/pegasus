@@ -101,7 +101,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 		case int:
 			sqlCondition = fmt.Sprintf(`AND voterid = %d`, value)
 		case string:
-			sqlCondition = fmt.Sprintf("AND name like '%s'", value)
+			sqlCondition = fmt.Sprintf(`AND name like '%%%s%%'`, value)
 		}
 	}
 
