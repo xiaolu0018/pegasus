@@ -1,4 +1,5 @@
-var baseUrl="http://www.elepick.com";
+var baseUrl="http://hd1.dahe100.cn";
+var weLink="http://www.baidu.com";
 //提示框显示
 var $toast = $('#toast');
 function showToast(htdata,myclass){
