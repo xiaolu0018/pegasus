@@ -1,5 +1,6 @@
 var baseUrl="http://hd1.dahe100.cn";
-var weLink="http://www.baidu.com";
+var weLink="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzAwNDE4OTgyNw==&scene=110#wechat_redirect";
+var develop=false;
 //提示框显示
 var $toast = $('#toast');
 function showToast(htdata,myclass){
