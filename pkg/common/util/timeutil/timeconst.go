@@ -15,7 +15,7 @@ var daysOfMonth = [...]int{
 	31,
 }
 
-var MonthString = map[string]string{
+var WeekString = map[string]string{
 	"星期日": "Sunday",
 	"星期一": "Monday",
 	"星期二": "Tuesday",

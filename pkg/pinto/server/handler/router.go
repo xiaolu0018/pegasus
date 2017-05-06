@@ -14,6 +14,8 @@ func CreateHttpRouter() http.Handler {
 
 	r.POST("/api/create/examwithplan",CreateExamsHandler)
 
+	r.POST("/api/cancel/exam",CancelExamHandler)
+
 	r.GET("/api/exam/status",GetExamStatusHandler)
 
 	return r

@@ -46,18 +46,18 @@ func Go_Through_HttpWithBody(method, appointServe, url string, userid string, i 
 	var rbuf bytes.Buffer
 	json.NewEncoder(&rbuf).Encode(i)
 	if req, err = http.NewRequest(method, appointServe+url, &rbuf); err != nil {
-		glog.Errorln("newrequest err", err)
+		glog.Errorln("common.Go_Through_HttpWithBody.newrequest err", err)
 		return nil, 400, err
 	}
 	//req.SetBasicAuth(userid, appoint.PASSWORD)
 	if rsp, err = client.Do(req); err != nil {
-		glog.Errorln("client.Do err", err)
+		glog.Errorln("common.Go_Through_HttpWithBody.client.Do err", err)
 		return nil, 400, err
 	}
 
 	buf, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
-		fmt.Println("err", err.Error())
+		glog.Errorln("common.Go_Through_HttpWithBody.ReadAll err", err)
 		return nil, 400, err
 	}
 	defer rsp.Body.Close()

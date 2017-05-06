@@ -124,8 +124,40 @@ func (a *Appointment) CancelAppointment() (err error) {
 		return
 	}
 	err = deleteAppointment(tx, a)
+
+	var errs error
+
+	if errs = sentToPintoForCancel(a); errs != nil {
+		glog.Errorln("appoint.CancelAppointment sentToPintoForCancel err", errs.Error())
+	}
+
 	return
 }
+
+func sentToPintoForCancel(a *Appointment) error {
+	basic, err := organization.GetConfigBasic(a.OrgCode)
+	if err != nil {
+		return err
+	}
+	result := make(map[string]interface{})
+	result["bookno"] = a.BookNo
+	result["withplan"] = false
+	if a.PlanId != "" {
+		result["withplan"] = true
+	}
+
+	if _, statuscode, errs := methods.Go_Through_HttpWithBody("POST", basic.IpAddress, "/api/cancel/exam", "", result); errs == nil && statuscode == 200 {
+		return nil
+	} else {
+		for i := 0; i < 3; i++ {
+			if _, statuscode, errs = methods.Go_Through_HttpWithBody("POST", basic.IpAddress, "/api/cancel/exam", "", result); errs == nil && statuscode == 200 {
+				break
+			}
+		}
+		return errs
+	}
+}
+
 func (a *Appointment) UpdateAppointment() (err error) {
 	tx := &sql.Tx{}
 	if tx, err = db.GetDB().Begin(); err != nil {
@@ -156,15 +188,15 @@ func (a *Appointment) UpdateAppointment() (err error) {
 
 func GetAppointment(appointid string) (*Appointment, error) {
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sales_code FROM %s WHERE id = '%s'`, TABLE_APPOINTMENT, appointid)
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sales_code,bookno FROM %s WHERE id = '%s'`, TABLE_APPOINTMENT, appointid)
 
-	var id, org_code, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid string
+	var id, org_code, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid, bookno string
 	var appointtime, operatetime int64
 	var appointednum int
 	var ifsingle, ifcancel bool
 	var salescode pq.StringArray
 	err := db.GetDB().QueryRow(sqlStr).Scan(&id, &appointtime, &org_code, &planid, &cardtype, &cardno, &mobile, &appointor, &merrystatus, &status, &appoint_channel,
-		&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel, salescode)
+		&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel, salescode, &bookno)
 	if err != nil {
 		return nil, err
 	}
@@ -191,6 +223,7 @@ func GetAppointment(appointid string) (*Appointment, error) {
 		AppointedNum:    appointednum,
 		IfSingle:        ifsingle,
 		IfCancel:        ifcancel,
+		BookNo:          bookno,
 	}
 	return &a, nil
 }

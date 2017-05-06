@@ -95,7 +95,7 @@ func GetDateAfterTimeNow(dates []string) []string {
 func DealOffdays(offdays []string) []string {
 	week := make(map[string]bool)
 	for _, offday := range offdays {
-		if weekstring, ok := timeutil.MonthString[offday]; ok {
+		if weekstring, ok := timeutil.WeekString[offday]; ok {
 			week[weekstring] = true
 		}
 

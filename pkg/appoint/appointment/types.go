@@ -51,9 +51,9 @@ type Appointment struct {
 	AppointedNum      int    `json:"appointednum"` //最后生产的预约号
 
 	ReportId string `json:"reportid"` //用来记录体检报告号
-
-	IfSingle bool `json:"ifsingle"` //是否散客
-	IfCancel bool `json:"ifcancel"` //是否取消预约体检
+	BookNo   string `json:"bookno"`
+	IfSingle bool   `json:"ifsingle"` //是否散客
+	IfCancel bool   `json:"ifcancel"` //是否取消预约体检
 }
 
 var TABLE_Appoint_Comment = "go_appoint_comment"
