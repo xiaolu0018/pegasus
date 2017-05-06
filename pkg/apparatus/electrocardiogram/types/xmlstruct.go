@@ -9,54 +9,54 @@ package types
 import "encoding/xml"
 
 type Value struct {
-	Value_1       string         `xml:"value,attr"`
+	Value_1 string `xml:"value,attr"`
 }
 
 type Code struct {
-	Code_1        string         `xml:"code,attr"`
+	Code_1 string `xml:"code,attr"`
 }
 
-type  Annotation struct {
-	Code           Code          `xml:"code"`
-	Value          Value         `xml:"value"`
+type Annotation struct {
+	Code  Code  `xml:"code"`
+	Value Value `xml:"value"`
 }
 
 type Component_1 struct {
-	Annotation     Annotation    `xml:"annotation"`
+	Annotation Annotation `xml:"annotation"`
 }
 
 type AnnotationSet struct {
-	Component_1    []Component_1  `xml:"component"`
+	Component_1 []Component_1 `xml:"component"`
 }
 
 type SubjectOf struct {
-	AnnotationSet   AnnotationSet  `xml:"annotationSet"`
+	AnnotationSet AnnotationSet `xml:"annotationSet"`
 }
-type  Analysis struct {
-	Gread           string       `xml:"gread"`
-	Digcode         string       `xml:"digcode"`
-	Miscode         string       `xml:"miscode"`
+type Analysis struct {
+	Gread   string `xml:"gread"`
+	Digcode string `xml:"digcode"`
+	Miscode string `xml:"miscode"`
 }
 
 type Series struct {
-	SubjectOf      SubjectOf     `xml:"subjectOf"`
-	Analysis       Analysis      `xml:"analysis"`
+	SubjectOf SubjectOf `xml:"subjectOf"`
+	Analysis  Analysis  `xml:"analysis"`
 }
 
 type Component struct {
-	Series         Series         `xml:"series"`
+	Series Series `xml:"series"`
 }
 
 type Center struct {
-	Value          string          `xml:"value,attr"`
+	Value string `xml:"value,attr"`
 }
 
 type EffectiveTime struct {
-	Center         Center          `xml:"center"`
+	Center Center `xml:"center"`
 }
 
 type Result struct {
-	XMLName        xml.Name
-	Effective      EffectiveTime  `xml:"effectiveTime"`
-	Component      Component      `xml:"component"`
+	XMLName   xml.Name
+	Effective EffectiveTime `xml:"effectiveTime"`
+	Component Component     `xml:"component"`
 }

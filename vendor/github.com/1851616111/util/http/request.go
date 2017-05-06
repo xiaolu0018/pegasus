@@ -88,7 +88,7 @@ func NewRequest(spec *HttpSpec) (*http.Request, error) {
 }
 
 func ReadJsonObj(spec *HttpSpec, obj interface{}) error {
-	req, err  := NewRequest(spec)
+	req, err := NewRequest(spec)
 	if err != nil {
 		return err
 	}

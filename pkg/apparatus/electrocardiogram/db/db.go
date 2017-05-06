@@ -1,10 +1,9 @@
 package db
 
-
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"fmt"
+	_ "github.com/lib/pq"
 )
 
 //"postgres://postgres:postgresql2016@192.168.199.216:5432/pinto?sslmode=disable"
@@ -25,4 +24,3 @@ func Init(user, passwd, ip, port, db string) error {
 func GetDB() *sql.DB {
 	return db
 }
-

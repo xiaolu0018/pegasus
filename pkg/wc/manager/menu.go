@@ -1,10 +1,10 @@
 package manager
 
 import (
-"fmt"
+	"fmt"
 
-"github.com/1851616111/util/weichat/manager/menu"
-wcpitoken "github.com/1851616111/util/weichat/util/api-token"
+	"github.com/1851616111/util/weichat/manager/menu"
+	wcpitoken "github.com/1851616111/util/weichat/util/api-token"
 )
 
 func CreateMenu(appid, schema, domain string) error {

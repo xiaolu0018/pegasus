@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"strings"
-	"github.com/golang/glog"
 	"bjdaos/pegasus/pkg/pinto/server/db"
+	"github.com/golang/glog"
+	"strings"
 )
+
 func GetExaminationStatus(m map[string][]string) map[string]int {
 	booknos, ok := m["booknos"]
 	if !ok {

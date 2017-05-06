@@ -1,16 +1,16 @@
 package handler
 
 import (
-	"github.com/julienschmidt/httprouter"
-	"net/http"
-	httputil "github.com/1851616111/util/http"
 	"bjdaos/pegasus/pkg/common/api/pinto"
 	"bjdaos/pegasus/pkg/reporter/db"
 	"encoding/json"
+	httputil "github.com/1851616111/util/http"
+	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 func GetCheckupCodesBySaleCodesHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	m:= map[string][]string{}
+	m := map[string][]string{}
 	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
 		httputil.Response(w, 400, err)
 		return

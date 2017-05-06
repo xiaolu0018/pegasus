@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 
 	"bjdaos/pegasus/pkg/common/api/pinto"
 	"bjdaos/pegasus/pkg/pinto/server/db"
 
-	"github.com/golang/glog"
 	httputil "github.com/1851616111/util/http"
+	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
 )
 

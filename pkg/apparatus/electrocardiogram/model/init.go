@@ -10,4 +10,3 @@ func Init(db *sql.DB) error {
 	DB = db
 	return nil
 }
-

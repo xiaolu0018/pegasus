@@ -29,8 +29,8 @@ type ActivityConfig struct {
 	LocalDistPath string
 
 	AppSignToken string
-	AppID     string
-	AppSecret string
+	AppID        string
+	AppSecret    string
 }
 
 func (o *ActivityConfig) Start(router *httprouter.Router) error {

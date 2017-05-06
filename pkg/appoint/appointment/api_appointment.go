@@ -345,8 +345,6 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 		return errors.New("plan sales empty")
 	}
 
-
-
 	date := time.Unix(a.AppointTime, 0).Format("2006-01-02")
 	if itemLimits, err = GetLimit(tx, a.OrgCode, sales); err != nil {
 		glog.Errorf("GetLimit err", err.Error())
@@ -472,7 +470,7 @@ func GetLimit(tx *sql.Tx, orgcode string, itemcodes []string) (map[string]int, e
 	sql := fmt.Sprintf("SELECT capacity,sale_code FROM %s  WHERE org_code = '%s' AND sale_code IN (%s)",
 		organization.TABLE_ORG_CON_SPECIAL, orgcode, strings.Join(itmeStr, ","))
 
-	rows, err := tx.Query(sql);
+	rows, err := tx.Query(sql)
 	if err != nil {
 		return nil, err
 	}

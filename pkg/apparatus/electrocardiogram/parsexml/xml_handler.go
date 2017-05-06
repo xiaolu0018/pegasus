@@ -11,8 +11,8 @@ import (
 	"os"
 	"regexp"
 
-	"strings"
 	"io/ioutil"
+	"strings"
 
 	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/model"
 	"bjdaos/pegasus/pkg/apparatus/electrocardiogram/types"

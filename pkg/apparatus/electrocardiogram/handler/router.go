@@ -7,10 +7,9 @@
 
 package handler
 
-
 import (
-	"net/http"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 func CreateHttpRouter() http.Handler {
@@ -23,5 +22,3 @@ func CreateHttpRouter() http.Handler {
 	//r.GET("api/heart/checkupItem", httprouter.Handle(GetPersonCheckUpItem))
 	return r
 }
-
-
