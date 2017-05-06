@@ -43,7 +43,6 @@ function UrlSearch(){
 		    name=arr[i].substring(0,num);
 		    value=arr[i].substr(num+1);
 		    request[name]=value;
-		    showAlert("request."+name+":"+request[name]+";");
-	    } 
+	    }
     }
 }
