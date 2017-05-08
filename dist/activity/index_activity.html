@@ -257,6 +257,18 @@
 	        </div>
 	    </div>
 	</div>
+	<!--dialog-->
+	<div class="weui_dialog_confirm" id="myConfirm" style="display: none;">
+	    <div class="weui_mask"></div>
+		<div class="weui_dialog">
+		    <div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
+		    <div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
+		    <div class="weui_dialog_ft">
+		        <a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
+		        <a href="#" class="weui_btn_dialog primary">确定</a>
+		    </div>
+		</div>
+	</div>
 	</body>
 	<script src="js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/base.js"></script>
@@ -272,7 +284,6 @@
 			var inpKey="";//搜索框val
 			var clientSize=0;//当前页加载数据长度；
 			var telHeight=$(window).height();
-			console.log(telHeight);
 			var telWidth=$(window).width();//屏幕宽度
 			$('header').css("height",telWidth+"px");
 			
@@ -281,6 +292,8 @@
 			$("div.img-box").each(function(){
 				$(this).css("height",imgboxWidth+"px");
 			});
+			
+			$("#myConfirm a.primary").attr('href',weLink);
 			UrlSearch();
 			ajaxPage({"index":"1"});	
 			
@@ -314,6 +327,7 @@
 						$(".main>ul.my-panel").html(fragment);
 						delay();
 						if(MAXPAGE>0){
+							//分页
 							if(MAXPAGE>4){
 								$("#clip").show();
 								$("#fir").show().html("1");
@@ -348,18 +362,17 @@
 			//延迟加载函数
 			function delay(){
 				if(pageNum>clientSize){
-					console.log("调用一次====="+$(this).scrollTop());
 					var cliSize=clientSize;
 					if((pageNum-clientSize)>=6){
 						clientSize+=6;
 					}else{
 						clientSize+=pageNum-clientSize;
 					}
-					var DOMhtml=$(".main>ul.my-panel").html();
+					var DOMhtml="";
 					for(var h=cliSize;h<clientSize;h++){
 						DOMhtml+='<li class="panel-box"><div class="img-box" style="height:'+imgboxWidth+'px;"><img src="'+pageData[h].image+'" class="panel-img"></div><div class="panel-footer"><div class="perleft"><span class="name">'+pageData[h].name+'</span><p><span class="ticNum">'+pageData[h].voteCount+'</span>票</p></div><button class="weui_btn weui_btn_primary">投他一票</button></div><p class="checkbox">编号<span class="checkNum">'+pageData[h].voterid+'</span></p></li>';
 					}
-					$(".main>ul.my-panel").html(DOMhtml);
+					$(".main>ul.my-panel").append(DOMhtml);
 				}else{
 					return 0;
 				}
@@ -367,7 +380,6 @@
 			//滑动事件
 			$("body").on('touchmove',function(e){
 				var lastScrollTop=scrollTop;
-				console.log("last==="+lastScrollTop);
 				clearTimeout(time20);
 				var time20=setTimeout(function(){
 						if(($(this).scrollTop()-lastScrollTop)>telHeight){
@@ -402,7 +414,7 @@
 					});
 				}else{
 					//未关注公众号
-					alert("请关注公众号");
+					$("#myConfirm").show();
 				}
 			});
 			//搜索框
@@ -424,8 +436,10 @@
 			//搜索框搜索
 			$(".main").on('touchstart','#search_cancel',function(e){
 				inpKey=$("#searchinp input[type='search']").val();
-				var param={"key":inpKey};
-				ajaxPage(param);
+				if(inpKey.length>0){
+					var param={"key":inpKey};
+					ajaxPage(param);
+				}
 			});
 			//////////////
 			//上一页，下一页
@@ -492,23 +506,21 @@
 				if(($(e.target).val()>0)&&($(e.target).val()<=MAXPAGE)){
 					//有效页码
 					var mycache=$(e.target).val();
-				var time22=setTimeout(function(){
-						if($(e.target).val()==mycache){
-							page=mycache;
-							if(inpKey.length>0){
-								var para={
-										"key":inpKey,
-										"index":page
-								};
-							}else{
-								var para={"index":page};
-							}
-							ajaxPage(para);
-						};
-					},600);
-					
-					
-				}
+					var time22=setTimeout(function(){
+							if($(e.target).val()==mycache){
+								page=mycache;
+								if(inpKey.length>0){
+									var para={
+											"key":inpKey,
+											"index":page
+									};
+								}else{
+									var para={"index":page};
+								}
+								ajaxPage(para);
+							};
+						},600);	
+					}
 			});
 			
 			//投票按钮
@@ -525,13 +537,16 @@
 							url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
 							data:{},
 							complete:function(xhr){
-								resub=true;
 								if(xhr.status=="200"){
 									var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
 									$this.siblings(".perleft").find('span.ticNum').html(++lastNum);
+									resub=true;
+									showAlert("投票成功，感谢您的投票");
 								}else if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){
-									showAlert("每天最多投三票");
+									resub=true;
+									showAlert("您每天只有三票");
 								}else{
+									resub=true;
 									showAlert("投票失败"+xhr.status+":"+xhr.responseText);
 								}
 								
@@ -540,7 +555,7 @@
 					}else{						
 						resub=true;
 						//没有关注
-						showAlert("没有关注");
+						$("#myConfirm").show();
 					}
 				}
 				

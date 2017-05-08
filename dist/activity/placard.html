@@ -97,12 +97,12 @@
 </head>
 <body>
     <div class="phone">
-        <img id="pictrue" src="img/lyf.jpg" alt="photo" width="100%">
+        <img id="pictrue" src="" alt="photo" width="100%">
         <div class="left-B"></div>
         <div class="right-U"></div>
         <div class="right-B"></div>
         <div class="text">
-            <img src="img/103.png" alt="text" width="100%">
+            <img src="" alt="text" width="100%">
         </div>
         <h1><img src="img/logo.png"/></h1>
     </div>
@@ -114,7 +114,7 @@
         <div class="text-content">
             <img src="img/22.png" alt="QR_Code" class="QR_Code">
             <div class="textbox">
-            	<p>我是<span id="company">迪安健检</span>的<span id="name">陈洁瑾</span></p>
+            	<p>我是<span id="company"></span>的<span id="name"></span></p>
                 <p>我正在参加晒合影赢万元大奖活动</p>
                 <p>请为我投一票</p>
                 <p>希望有机会为父母赢取15800元健康大奖</p>
@@ -123,18 +123,15 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src="js/jweixin-1.0.0.js"></script>
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script>
 	$(function(){
-		if(localStorage.formData==undefined){
-			alert("error");
-		}else{
-			$("#pictrue").attr("src",localStorage.formData.imageData);
-			$("#company").html(localStorage.formData.company);
-			$("#name").html(localStorage.formData.name);
-			$(".text>img").attr("src","img/"+(100+Number(localStorage.formData.declaration))+".png");
-		}		
+		
+			$("#pictrue").attr("src",localStorage.imageData);
+			$("#company").html(localStorage.company);
+			$("#name").html(localStorage.name);
+			$(".text>img").attr("src","img/"+(100+Number(localStorage.declaration))+".png");
+				
 	});
 </script>
 </html>

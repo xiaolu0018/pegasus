@@ -104,6 +104,7 @@ func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 func VoteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	openid := r.FormValue("openid")
 	voteID := ps.ByName("voterid")
+
 	if len(voteID) == 0 || len(voteID) > 50 {
 		httputil.Response(w, 400, "voterid invalid")
 		return

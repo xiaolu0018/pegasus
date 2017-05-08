@@ -117,7 +117,7 @@
         <p>公司/部门</p>
         <input type="text" name="company">
         <p>联系电话</p>
-        <input name="mobile" type="number">
+        <input name="mobile" pattern="[0-9]*" type="number">
         <p>报名宣言（请勾选）</p>
         <ul class="declaration">
             <li>
@@ -165,14 +165,29 @@
 	        </div>
 	    </div>
 	</div>
+	<!--dialog-->
+	<div class="weui_dialog_confirm" id="myConfirm" style="display: none;">
+	    <div class="weui_mask"></div>
+		<div class="weui_dialog">
+		    <div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
+		    <div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
+		    <div class="weui_dialog_ft">
+		        <a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
+		        <a href="#" class="weui_btn_dialog primary">确定</a>
+		    </div>
+		</div>
+	</div>
 </body>
 
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/base.js"></script>
 <script type="text/javascript">
 	$(function(){
+		
 		//获取openid
 		UrlSearch();
+		
+		$("#myConfirm a.primary").attr('href',weLink);
 		//ios和android
 		(function iosAnd(){
 			var u = navigator.userAgent, app = navigator.appVersion;
@@ -185,12 +200,13 @@
 				$("head").append('<script id="ios" type="text\/javascript" src="js\/jweixin-1.2.0.js"><\/script>');
 			};
 		})();
+		//获取wx配置参数
 	   	$.getJSON(baseUrl+'/api/activity/jsconfig',{"openid":request.openid},function(data){
 	   		if (typeof data === 'string') {
 				    data = JSON.parse(data);
 			}
 	   		wx.config({
-					debug:true,
+					debug:develop,
 					appId:data.appid,
 					timestamp:data.timestamp,
 					nonceStr:data.noncestr,
@@ -200,45 +216,46 @@
 	   	});
 		//图片上传
 		var images = {};
-			//图片选取
-			$("#picture").on('touchstart',function(e){
-				if(request=={}){
-					showAlert("请关注公众号");
-				}else{
-					wx.chooseImage({
-					    count: 1, // 默认9
-					    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-					    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-					    success: function (res) {
-					        images.localId = res.localIds.toString(); // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片					    	
-					    	$("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
-					    }
+		//图片选取
+		$("#picture").on('touchstart',function(e){
+			if(request=={}){
+				$("#myConfirm").show();
+			}else{
+				wx.chooseImage({
+				    count: 1, // 默认9
+				    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+				    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+				    success: function (res) {
+				        images.localId = res.localIds[0]; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片					    	
+				    	$("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
+				    }
+				});
+				//ios wkwebview模式
+				if (window.__wxjs_is_wkwebview) {
+					wx.getLocalImgData({
+					localId: localIds[0], // 图片的localID
+					success: function (res) {
+					    var mylocal= res.localData; // localData是图片的base64数据，可以用img标签显示
+					    images.localId= mylocal.replace('jgp', 'jpeg');//iOS 系统里面得到的数据，类型为 image/jgp,因此需要替换一下						  
+					    $("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
+					},
+					fail:function(res){
+						  showToast("图片选取成功，但预览失败");
+						 }
 					});
-					if (window.__wxjs_is_wkwebview) {
-						wx.getLocalImgData({
-						localId: localIds[0], // 图片的localID
-						success: function (res) {
-							  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-							  localData= localData.replace('jgp', 'jpeg');//iOS 系统里面得到的数据，类型为 image/jgp,因此需要替换一下						  
-							 $("#picture").html('<img src="'+localData+'" style="width:100%;height:100%;"/>');
-						},
-						fail:function(res){
-							  showToast("图片选取成功，但预览失败");
-							 }
-						});
-					}
-				 
-				};
-			});//pictrue--upload
+				}
+			 
+			};
+		});//pictrue--chooseimage
 			
 			$(".btn_container").on("touchstart","button",function(e){
 				if(!(images.localId)){
 					showToast("没有选择图片",myinfo);
 				}else{
 					// 上传图片
-				    
+				    showAlert("图片的本地路径:"+images.localId);
 				    wx.uploadImage({
-				        localId: images.localId[0],
+				        localId: images.localId,
 				        isShowProgressTips: 1,
 				        success: function (res) {
 				            var formData={
@@ -279,9 +296,11 @@
 									type:"post",
 									url:baseUrl+"/api/activity/voter",
 									data:JSON.stringify(formData),
-									success:function(data, textStatus, xhr){	
-										localStorage.formData=formData;
-										localStorage.formData.imageData=images.localId[0];
+									success:function(data, textStatus, xhr){
+										$.each(formData,function(ind,val){
+											localStorage.setItem(ind,val);
+										});
+										localStorage.imageData=images.localId;
 										$("#picture").html('+');
 										if(xhr.status=="200"){
 											window.location.href="placard.html";

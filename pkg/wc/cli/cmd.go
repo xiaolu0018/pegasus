@@ -145,24 +145,24 @@ func startActivityCmd() *cobra.Command {
 
 	flags := start.Flags()
 	flags.StringVar(&o.Schema, "schema", "http", "The schema for http server")
-	flags.StringVar(&o.Domain, "domain", "www.elepick.com", "The activity server domain")
+	flags.StringVar(&o.Domain, "domain", "hd1.dahe100.cn", "The activity server domain")
 	flags.StringVar(&o.DistBasePath, "basepath", "dist", "The activity server static file basepath")
 	flags.StringVar(&o.LocalDistPath, "dist", "./dist/activity", "The file path one application server.")
 
-	flags.StringVar(&o.ListenAddress, "listen", ":9001", "TCP network address to listen on, to serve incomming http request.")
+	flags.StringVar(&o.ListenAddress, "listen", ":80", "TCP network address to listen on, to serve incomming http request.")
 
-	flags.StringVar(&o.AppSignToken, "token", "bjdaos", "The Weichat Official Accounts app developer api token, must need to set")
+	flags.StringVar(&o.AppSignToken, "token", "123456", "The Weichat Official Accounts app developer api token, must need to set")
 	//flags.StringVar(&o.AppID, "id", "wxd38ad1e4f070b5e6", "The Weichat Official Accounts app id, must need to set")
 	//flags.StringVar(&o.AppSecret, "secret", "628c1bdd5f8b44ebfd9ef2e28afe38ea", "The Weichat Official Accounts app secret, must meed to set")
 	//
-	flags.StringVar(&o.AppID, "id", "wxd09c7682905819e6", "The Weichat Official Accounts app id, must need to set")
-	flags.StringVar(&o.AppSecret, "secret", "b9938ddfec045280eba89fab597a0c41", "The Weichat Official Accounts app secret, must meed to set")
+	flags.StringVar(&o.AppID, "id", "wxadb8865cdb995ded", "The Weichat Official Accounts app id, must need to set")
+	flags.StringVar(&o.AppSecret, "secret", "2d5ac69b6b76dbde88e71b3663e41ff4", "The Weichat Official Accounts app secret, must meed to set")
 
-	flags.StringVar(&o.User, "user", "postgres", "Database user for the Application.")
-	flags.StringVar(&o.Password, "passwd", "postgres190@", "Database passwd for the Application.")
-	flags.StringVar(&o.Ip, "ip", "10.1.0.190", "Database ip for the Application.")
+	flags.StringVar(&o.User, "user", "wxhd", "Database user for the Application.")
+	flags.StringVar(&o.Password, "passwd", "wXHd2069", "Database passwd for the Application.")
+	flags.StringVar(&o.Ip, "ip", "10.0.108.21", "Database ip for the Application.")
 	flags.StringVar(&o.Port, "port", "5432", "Database port for the Application.")
-	flags.StringVar(&o.Database, "name", "pinto", "Database name for the Application.")
+	flags.StringVar(&o.Database, "name", "wxhd", "Database name for the Application.")
 
 	return start
 }
