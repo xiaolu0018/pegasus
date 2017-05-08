@@ -10,6 +10,8 @@ import (
 	"github.com/1851616111/util/weichat/handler"
 	"github.com/julienschmidt/httprouter"
 
+	"bjdaos/pegasus/pkg/wc/user"
+
 	tk "github.com/1851616111/util/weichat/util/user-token"
 )
 
@@ -64,6 +66,16 @@ func (m *redirectManager) getRedirectHandler(path string) (func(http.ResponseWri
 	}
 
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		if path == "/api/appoint" {
+			if ok, id := user.IDCache.Auth(ps.ByName(m.paramName)); ok {
+				if u, err := user.GetUserByid(id); err == nil {
+					if u.CardNo != "" {
+						resource = "package.html"
+					}
+				}
+			}
+		}
+
 		redirectUrl := fmt.Sprintf("%s/%s?%s=%s", m.baseUrl, resource, m.paramName, ps.ByName(m.paramName))
 
 		http.Redirect(w, r, redirectUrl, 302)

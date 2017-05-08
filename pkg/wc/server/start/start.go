@@ -1,14 +1,16 @@
 package start
 
 import (
-	"fmt"
-	"github.com/julienschmidt/httprouter"
+	"os"
 
-	"bjdaos/pegasus/pkg/common/util/database"
+	"fmt"
+	"path/filepath"
+
 	"bjdaos/pegasus/pkg/wc/handler"
 	"bjdaos/pegasus/pkg/wc/manager"
-	"os"
-	"path/filepath"
+
+	"bjdaos/pegasus/pkg/common/util/database"
+	"github.com/julienschmidt/httprouter"
 )
 
 func NewActivityConfig() *ActivityConfig {
@@ -43,7 +45,7 @@ func (o *ActivityConfig) Start(router *httprouter.Router) error {
 		return err
 	}
 
-	if err := manager.CreateMenu(o.AppID, o.Schema, o.Domain); err != nil {
+	if err := manager.CreateMenuForActivity(o.AppID, o.Schema, o.Domain); err != nil {
 		return err
 
 	}

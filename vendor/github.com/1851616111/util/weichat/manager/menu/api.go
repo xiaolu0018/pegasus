@@ -8,13 +8,13 @@ import (
 
 const NewMenuURL = "https://api.weixin.qq.com/cgi-bin/menu/create"
 
-func CreateMenu(bt *Button, access_token string) error {
+func CreateMenu(access_token string, bts ...*Button) error {
 	req := &http.HttpSpec{
 		URL:         NewMenuURL,
 		Method:      "POST",
 		ContentType: http.ContentType_JSON,
 		URLParams:   http.NewParams().Add("access_token", access_token),
-		BodyParams:  http.NewBody().Add("button", []*Button{bt}),
+		BodyParams:  http.NewBody().Add("button", bts),
 	}
 
 	rsp, err := http.Send(req)

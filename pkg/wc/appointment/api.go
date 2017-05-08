@@ -67,7 +67,7 @@ func Get_Appoint_Appointment(u user.User, a Appointment) (*appointment.Appointme
 		Appointorid:     u.ID,
 		Address:         address,
 		MerryStatus:     u.IsMarry,
-		Status:          "预约",
+		Status:          "预约成功",
 		Appoint_Channel: "微信",
 		Company:         "",
 		Group:           "",
