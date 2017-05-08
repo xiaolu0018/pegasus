@@ -1155,7 +1155,7 @@
       "properties": {
         "jiwangshi": {
           "type": "array",
-          "item":{
+          "checkup":{
             "type": "string"
           },
           "example": [
@@ -1165,7 +1165,7 @@
         },
         "家族病史":{
           "type": "array",
-          "item":{
+          "checkup":{
             "type":"string"
           },
           "example": [

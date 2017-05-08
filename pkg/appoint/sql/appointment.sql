@@ -10,6 +10,7 @@ CREATE TABLE go_appoint_appointment  --appoint 服务 预约数据表
 (
   id VARCHAR(30)  primary key,
   appointtime bigint, --预约体检时间
+  appointdate VARCHAR(10),
   org_code VARCHAR(30) references go_appoint_organization(org_code),  --分院代码
   planid VARCHAR(30),  --套餐id
   sale_codes VARCHAR(30)[], --销售项目code
@@ -33,7 +34,7 @@ CREATE TABLE go_appoint_appointment  --appoint 服务 预约数据表
   reportid VARCHAR(30), --报告id
   bookno VARCHAR(30), --pinto服务中的book_record的对应订阅号
   ifsingle boolean, --是否散客
-  ifcancel boolean --是否取消
+  ifcancel boolean DEFAULT false--是否取消
 );
 
 CREATE TABLE go_appoint_order( --订单表
@@ -66,15 +67,10 @@ CREATE TABLE go_appoint_banner( --微信banner表
     ifshow boolean --是否显示
 );
 
-CREATE TABLE go_appoint_capacity_records( --分院预约记录表
-    org_code VARCHAR(30) references go_appoint_organization(org_code), --外键org_code
-    date VARCHAR(10), --日期
-    used INTEGER DEFAULT 0 --已预约人数
-);
-
-CREATE TABLE go_appoint_checkup_records( --特殊项目预约限制记录
-    org_code VARCHAR(30) references go_appoint_organization(org_code),--外键org_code
+CREATE TABLE IF NOT EXISTS go_appoint_checkup_records( --特殊项目预约限制记录
+    appoint_id VARCHAR(30),
     checkup_code VARCHAR(30), --特殊项目code
+    org_code VARCHAR(30) references go_appoint_organization(org_code),--外键org_code
     date VARCHAR(10), --日期
-    used INTEGER DEFAULT 0 --已预约人数
+    cancel boolean DEFAULT false
 );

@@ -108,7 +108,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
         LEFT JOIN checkup CK ON EX_CK.checkup_code = CK.checkup_code
         LEFT JOIN department DEP ON CK.department_code = DEP.department_code
         LEFT JOIN examination_item EX_I ON EX.examination_no = EX_I.examination_no AND EX_CK.checkup_code = EX_I.checkup_code
-        LEFT JOIN item I ON EX_I.item_code = I.item_code
+        LEFT JOIN checkup I ON EX_I.item_code = I.item_code
         LEFT JOIN manager M ON EX_CK.diagnose_manager_code = M.manager_code
         LEFT JOIN MANAGER mm ON EX_CK.check_manager_code = mm.manager_code
         WHERE EX_CK.checkup_code IS NOT NULL

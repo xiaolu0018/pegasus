@@ -108,7 +108,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
         LEFT JOIN checkup CK ON EX_CK.checkup_code = CK.checkup_code
         LEFT JOIN department DEP ON CK.department_code = DEP.department_code
         LEFT JOIN examination_item EX_I ON EX.examination_no = EX_I.examination_no AND EX_CK.checkup_code = EX_I.checkup_code
-        LEFT JOIN item I ON EX_I.item_code = I.item_code
+        LEFT JOIN checkup I ON EX_I.item_code = I.item_code
         LEFT JOIN manager M ON EX_CK.diagnose_manager_code = M.manager_code
         LEFT JOIN MANAGER mm ON EX_CK.check_manager_code = mm.manager_code
         WHERE EX_CK.checkup_code IS NOT NULL
@@ -123,7 +123,7 @@ CREATE OR REPLACE FUNCTION getCheckAndItems(exam_no varchar) RETURNS text AS $$
 	        OR I.validate_type = 0
         )
         AND EX_CK.department_code NOT IN ('63')
-        ORDER BY DEP.department_code, ck.checkup_code, i.order_position, I.item_code
+        ORDER BY DEP.department_code, ck.checkup_code, num.order_position, I.item_code
         LOOP
             select array_append(tmp, arrayToObjStr(ARRAY[checkNull(data.department_name), checkNull(data.item_name),
             checkNull(data.item_value), checkNull(data.exception_arrow), checkNull(data.reference_description),
@@ -196,9 +196,9 @@ CREATE OR REPLACE FUNCTION getItemStr(exam_no varchar, ck_code varchar) RETURNS 
         tmp text[];
     BEGIN
         FOR data IN
-             SELECT i.item_name, ei.item_value FROM examination_item ei, item i
-             WHERE ei.item_code = i.item_code AND ei.checkup_code = ck_code AND ei.examination_no = exam_no
-             ORDER BY i.order_position
+             SELECT num.item_name, ei.item_value FROM examination_item ei, checkup num
+             WHERE ei.item_code = num.item_code AND ei.checkup_code = ck_code AND ei.examination_no = exam_no
+             ORDER BY num.order_position
              LOOP
                 SELECT array_append(tmp, arrayToObjStr2(ARRAY[data.item_name, data.item_value])) into tmp;
              END LOOP;

@@ -32,7 +32,7 @@ func StartController() {
 
 //改变没有应约的状态
 func breakStatus() (err error) {
-	sqlStr := fmt.Sprintf(`UPDATE %s SET status = '爽约' WHERE status = '%s'`, TABLE_APPOINTMENT, STATUS_SUCCESS)
+	sqlStr := fmt.Sprintf(`UPDATE %s SET status = '爽约' WHERE status = '%s'`, T_APPOINTMENT, STATUS_SUCCESS)
 	_, err = db.GetDB().Exec(sqlStr)
 	return
 }

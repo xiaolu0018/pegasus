@@ -24,6 +24,16 @@ func dbinit() {
 	}
 }
 
+func TestGetCheckupsUsed(t *testing.T) {
+	dbinit()
+
+	tx, _ := db.GetDB().Begin()
+	_, err := GetCheckupsUsed(tx, "0001001", "2017-05-01", []string{"000007", "0000010"})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestGetSaleCodesByplan(t *testing.T) {
 	dbinit()
 	tx, err := db.GetDB().Begin()
@@ -31,7 +41,7 @@ func TestGetSaleCodesByplan(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := GetSaleCodesByplan(tx, "1"); err != nil {
+	if _, err := GetSalesByPlanID(tx, "1"); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -75,7 +85,7 @@ func TestCreatAppoint(t *testing.T) {
 func TestGetCapacityAppointedNum(t *testing.T) {
 	dbinit()
 	sqlstr := fmt.Sprintf("INSERT INTO %s (org_code,date,used,checkup_code) VALUES ('%s','%s','%d','%s')",
-		TABLE_CheckupRecords, "000101", "2017-04-20", 2, "0002")
+		T_CHECKUP_RECORD, "000101", "2017-04-20", 2, "0002")
 	result, err := db.GetDB().Exec(sqlstr)
 	fmt.Println("re", result, err)
 }

@@ -8,17 +8,17 @@ import (
 	"github.com/golang/glog"
 
 	"bjdaos/pegasus/pkg/appoint/db"
-	"bjdaos/pegasus/pkg/appoint/organization"
+	org "bjdaos/pegasus/pkg/appoint/organization"
 	"bjdaos/pegasus/pkg/common/util/timeutil"
 )
 
 func GetOffDay(org_code string) (map[string]interface{}, error) {
-	cb, err := organization.GetConfigBasic(org_code)
+	cb, err := org.GetConfigBasic(org_code)
 	if err != nil {
 		fmt.Println("err", cb)
 		return nil, err
 	}
-	sqlStr := fmt.Sprintf("SELECT date FROM %s WHERE org_code = '%s' AND used = %d", TABLE_CapacityRecords, cb.Org_Code, cb.Capacity)
+	sqlStr := fmt.Sprintf("SELECT date FROM %s WHERE org_code = '%s' AND used = %d", T_CAP_RECORD, cb.Org_Code, cb.Capacity)
 	rows, err := db.GetDB().Query(sqlStr)
 	if err != nil {
 		return nil, err

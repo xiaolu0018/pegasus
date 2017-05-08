@@ -18,12 +18,12 @@ var StatusMappings = map[int]string{
 	1050: "待评价",
 }
 
-type org struct {
+type organization struct {
 	orgCode    string
 	ordAddress string
 }
 
-type OrgToBookOrders map[org][]string
+type OrgToBookOrders map[organization][]string
 
 func getTodayOrgBookOrders() (*OrgToBookOrders, error) {
 	sqlStr := fmt.Sprintf(`SELECT a.bookno, a.org_code, basic.ip_address FROM %s a
@@ -31,7 +31,7 @@ func getTodayOrgBookOrders() (*OrgToBookOrders, error) {
 		ON a.org_code = basic.org_code
 		WHERE a.appointtime BETWEEN %d AND %d
 		AND a.status IN ('%s','%s')`,
-		TABLE_APPOINTMENT, TABLE_ORGANIZATION_CONFIG_BASIC, tm.TodayStartSec(time.Now()), tm.TodayEndSec(time.Now()), STATUS_SUCCESS, STATUS_EXAMING)
+		T_APPOINTMENT, T_ORG_CONFIG_BASIC, tm.TodayStartSec(time.Now()), tm.TodayEndSec(time.Now()), STATUS_SUCCESS, STATUS_EXAMING)
 
 	rows, err := db.GetDB().Query(sqlStr)
 	if err != nil {
@@ -39,7 +39,7 @@ func getTodayOrgBookOrders() (*OrgToBookOrders, error) {
 	}
 
 	ret := OrgToBookOrders{}
-	o := org{}
+	o := organization{}
 	var bookNo string
 	for rows.Next() {
 		if err := rows.Scan(&bookNo, &o.orgCode, &o.ordAddress); err != nil {
@@ -95,9 +95,9 @@ func batchUpdateStatus(bookStatsM map[string]int) error {
 		}
 		status, exist := StatusMappings[statusCode]
 		if exist {
-			sql = fmt.Sprintf("UPDATE %s SET status = '%s' WHERE bookno = '%s' AND status <> '%s'", TABLE_APPOINTMENT, status, bookNo, status)
+			sql = fmt.Sprintf("UPDATE %s SET status = '%s' WHERE bookno = '%s' AND status <> '%s'", T_APPOINTMENT, status, bookNo, status)
 		} else {
-			sql = fmt.Sprintf("UPDATE %s SET status = '%d' WHERE bookno = '%s' AND status <> '%d'", TABLE_APPOINTMENT, statusCode, bookNo, statusCode)
+			sql = fmt.Sprintf("UPDATE %s SET status = '%d' WHERE bookno = '%s' AND status <> '%d'", T_APPOINTMENT, statusCode, bookNo, statusCode)
 		}
 
 		if _, err := db.GetDB().Exec(sql); err != nil {
