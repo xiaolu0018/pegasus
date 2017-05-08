@@ -121,20 +121,24 @@ func (a *Appointment) isAppointTimeValid(config *org.Config_Basic) bool {
 	now, appointTime := time.Now(), time.Unix(a.AppointTime, 0)
 
 	if a.AppointTime <= now.Unix() {
+		fmt.Println("0000001")
 		return false
 	}
 
 	if appointTime.Format("2006-01-02") == now.Format("2006-01-02") {
+		fmt.Println("0000002")
 		return false
 	}
 
 	if appointTime.After(now.AddDate(0, 2, 0)) {
+		fmt.Println("0000003")
 		return false
 	}
 
 	//是否休假
 	for _, v := range config.OffDays {
 		if appointTime.Format("2006-01-02") == v {
+			fmt.Println("0000004")
 			return false
 		}
 	}

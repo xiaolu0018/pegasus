@@ -14,7 +14,7 @@ import (
 )
 
 func GetSalesByPlanID(tx *sql.Tx, planid string) ([]string, error) {
-	sql := fmt.Sprintf("SELECT sale_codes FROM %s WHERE id = '%s'", TABLE_PALN, planid)
+	sql := fmt.Sprintf("SELECT sale_codes FROM %s WHERE id = '%s'", T_PLAN, planid)
 	var itemStr pq.StringArray
 	if err := tx.QueryRow(sql).Scan(&itemStr); err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func GetSalesByPlanID(tx *sql.Tx, planid string) ([]string, error) {
 func GetPlanByID(planid string) (*Plan, error) {
 	pl := Plan{}
 	salecodes := pq.StringArray{}
-	sql := fmt.Sprintf("SELECT id, name, avatar_img, detail_img, sale_codes, ifshow FROM %s WHERE id = '%s'", TABLE_PALN, planid)
+	sql := fmt.Sprintf("SELECT id, name, avatar_img, detail_img, sale_codes, ifshow FROM %s WHERE id = '%s'", T_PLAN, planid)
 	if err := db.GetDB().QueryRow(sql).Scan(&pl.ID, &pl.Name, &pl.AvatarImg, &pl.DetailImg, &salecodes, &pl.IfShow); err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func GetPlanByID(planid string) (*Plan, error) {
 
 func GetPlans() ([]Plan, error) {
 	ps := make([]Plan, 0)
-	sqlStr := fmt.Sprintf("SELECT id,name,avatar_img,detail_img,sale_codes FROM %s", TABLE_PALN)
+	sqlStr := fmt.Sprintf("SELECT id,name,avatar_img,detail_img,sale_codes FROM %s", T_PLAN)
 	rows, err := db.GetDB().Query(sqlStr)
 	if err != nil {
 		return nil, err

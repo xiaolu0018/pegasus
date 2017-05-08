@@ -73,12 +73,12 @@ func MapToBookRecord(result map[string]interface{}) types.BookRecord {
 		br.Sex = SexToCode[sex.(string)]
 	}
 
-	if appointtime, ok := result["appointtime"]; ok {
+	if appointtime, ok := result["appoint_time"]; ok {
 		br.Booktimestamp = time.Unix(int64(appointtime.(float64)), 0).Format("2006-01-02")
 
 	}
 
-	operatetime, ok := result["operatetime"]
+	operatetime, ok := result["operate_time"]
 
 	operTime := time.Unix(int64(operatetime.(float64)), 0)
 	if ok {

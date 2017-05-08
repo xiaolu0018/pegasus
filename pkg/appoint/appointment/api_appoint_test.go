@@ -14,11 +14,12 @@ import (
 	"time"
 
 	"bjdaos/pegasus/pkg/appoint/db"
-	"bjdaos/pegasus/pkg/appoint/organization"
+	org "bjdaos/pegasus/pkg/appoint/organization"
 	tm "bjdaos/pegasus/pkg/common/util/time"
 )
 
 func dbinit() {
+	fmt.Println(time.Now().Add(time.Hour * 72).Unix())
 	if err := db.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto"); err != nil {
 		fmt.Println("dbinit", err)
 	}
@@ -34,7 +35,7 @@ func TestGetCheckupsUsed(t *testing.T) {
 	}
 }
 
-func TestGetSaleCodesByplan(t *testing.T) {
+func TestGetSaleCodesByPlan(t *testing.T) {
 	dbinit()
 	tx, err := db.GetDB().Begin()
 	if err != nil {
@@ -56,9 +57,11 @@ func TestGetItemByplan(t *testing.T) {
 	}
 }
 
-func TestCreatAppoint(t *testing.T) {
+func TestCreateAppoint(t *testing.T) {
 	dbinit()
-	appointtime, _ := time.Parse("2006-01-02", time.Now().Format("2006-01-02"))
+
+	now := time.Now().Unix()
+	date := time.Now().Format("2006-01-02")
 	a := Appointment{
 		ID:              "",
 		Appointor:       "name1",
@@ -72,12 +75,13 @@ func TestCreatAppoint(t *testing.T) {
 		Sex:             "男",
 		PlanId:          "1",
 		OrgCode:         "0001001",
-		AppointTime:     appointtime.Unix(),
+		AppointTime:     now,
+		AppointDate:     date,
 		OperateTime:     time.Now().Unix(),
 		OrderID:         "",
 		Operator:        "",
 	}
-	//
+
 	err := a.CreateAppointment()
 	fmt.Println("err", err)
 }
@@ -201,7 +205,7 @@ func GenRsaKey(bits int) error {
 
 func TestChangeOrg(t *testing.T) {
 	dbinit()
-	sqlstr := fmt.Sprintf("UPDATE %s SET imageurl = '%s',detailsurl = '%s'", organization.TABLE_ORG, "", "")
+	sqlstr := fmt.Sprintf("UPDATE %s SET imageurl = '%s',detailsurl = '%s'", org.TABLE_ORG, "", "")
 	_, err := db.GetDB().Exec(sqlstr)
 	fmt.Println("errr", err)
 }

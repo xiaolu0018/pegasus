@@ -6,6 +6,7 @@ const T_APPOINTMENT = "go_appoint_appointment"
 const T_CHECKUP_RECORD = "go_appoint_checkup_records"
 const T_APPOINT_COMMENT = "go_appoint_comment"
 const T_ORG_CONFIG_BASIC = "go_appoint_organization_basic_con"
+const T_PLAN = "go_appoint_plan"
 
 const VALIDATE_CHANNEL_WC = "微信"
 const VALIDATE_CHANNEL_400 = "400"
@@ -48,7 +49,7 @@ type Appointment struct {
 	Group        string `json:"group"`
 	Remark       string `json:"remark"`
 	Operator     string `json:"operator"`
-	OperateTime  int64  `json:"operate_time"` //创建时间
+	OperateTime  int64  `json:"-"` //创建时间
 	OperateDate  string `json:"operate_date"` //yyyy-MM-dd
 	OrderID      string `json:"orderid"`
 	CommentID    string `json:"commentid"`
@@ -82,9 +83,6 @@ type ManagerItem struct {
 	OrgCode string
 }
 
-//套餐
-var TABLE_PALN = "go_appoint_plan"
-
 type Plan struct {
 	ID        string   `json:"id"`
 	Name      string   `json:"name"`
@@ -103,7 +101,7 @@ type Banner struct {
 }
 
 type App_For_WeChat struct {
-	Appid        string `json:"appid"`
+	AppID        string `json:"appid"`
 	Name         string `json:"name"`
 	PlanId       string `json:"planid"`
 	Org_code     string `json:"org_code"`

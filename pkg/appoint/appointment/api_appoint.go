@@ -59,10 +59,10 @@ func (a *Appointment) CreateAppointment() (err error) {
 }
 
 func sendToPintoWithOutPlan(a *Appointment) error {
-	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/bookrecord", "", a)
+	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/person", "", a)
 	if errs != nil || statuscode != 200 {
 		for i := 0; i < 3; i++ {
-			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/bookrecord", "", a); errs == nil && statuscode == 200 {
+			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/person", "", a); errs == nil && statuscode == 200 {
 				break
 			}
 		}
@@ -79,10 +79,10 @@ func sendToPintoWithOutPlan(a *Appointment) error {
 }
 
 func sendToPintoWithPlan(a *Appointment) error {
-	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/examwithplan", "", a)
+	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/plan", "", a)
 	if errs != nil || statuscode != 200 {
 		for i := 0; i < 3; i++ {
-			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/create/examwithplan", "", a); errs == nil && statuscode == 200 {
+			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/plan", "", a); errs == nil && statuscode == 200 {
 				break
 			}
 		}
@@ -140,11 +140,11 @@ func sentToPintoForCancel(a *Appointment) error {
 		result["withplan"] = true
 	}
 
-	if _, statuscode, errs := methods.Go_Through_HttpWithBody("POST", basic.IpAddress, "/api/cancel/exam", "", result); errs == nil && statuscode == 200 {
+	if _, statuscode, errs := methods.Go_Through_HttpWithBody("POST", basic.IpAddress, "/api/examination/cancel", "", result); errs == nil && statuscode == 200 {
 		return nil
 	} else {
 		for i := 0; i < 3; i++ {
-			if _, statuscode, errs = methods.Go_Through_HttpWithBody("POST", basic.IpAddress, "/api/cancel/exam", "", result); errs == nil && statuscode == 200 {
+			if _, statuscode, errs = methods.Go_Through_HttpWithBody("POST", basic.IpAddress, "/api/examination/cancel", "", result); errs == nil && statuscode == 200 {
 				break
 			}
 		}
@@ -333,6 +333,7 @@ func addAppointment(tx *sql.Tx, app *Appointment) (err error) {
 	app.AppointDate = time.Unix(app.AppointTime, 0).Format("2006-01-02")
 	capUsed, err := getAppDateRecordNum(tx, app.OrgCode, app.AppointDate)
 	if err != nil {
+		fmt.Println("xxxxxxxxxxxxxxxxxxxxxx00002")
 		return err
 	}
 
@@ -344,10 +345,12 @@ func addAppointment(tx *sql.Tx, app *Appointment) (err error) {
 	//通过planid 找到checkupcodes
 	if app.PlanId != "" {
 		if err := appPlan(tx, app, basicCfg); err != nil {
+			fmt.Println("xxxxxxxxxxxxxxxxxxxxxx00003")
 			return err
 		}
 	}
 
+	fmt.Printf("--------------> app %v\n", app.SaleCodes)
 	app.AppointedNum = genAppointNum(capUsed+1, basicCfg.AvoidNumbers)
 
 	return saveAppoint(tx, app)
@@ -430,7 +433,7 @@ func GetCheckupsUsed(tx *sql.Tx, orgCode, date string, checkups []string) (map[s
 	}
 
 	rows, err := tx.Query(`SELECT DISTINCT checkup_code, count(checkup_code) OVER (PARTITION BY checkup_code)
-	 FROM go_appoint_checkup_records where not cancel AND date = $1 AND org_code = $2 checkup_code in ($3)`, date, orgCode, checkupStr)
+	 FROM go_appoint_checkup_records where not cancel AND date = $1 AND org_code = $2 AND checkup_code in ($3)`, date, orgCode, pq.Array(checkups))
 	if err != nil {
 		return nil, err
 	}
@@ -500,7 +503,7 @@ func GetApp_for_wechatsByAppointments(a []Appointment) []App_For_WeChat {
 		if v.IfCancel {
 			afw.Status = "已取消"
 		}
-		afw.Appid = v.ID
+		afw.AppID = v.ID
 		afw.Reportid = v.ReportId
 		afws = append(afws, afw)
 	}
@@ -508,14 +511,14 @@ func GetApp_for_wechatsByAppointments(a []Appointment) []App_For_WeChat {
 }
 
 func saveAppoint(tx *sql.Tx, app *Appointment) (err error) {
-	sql := fmt.Sprintf(`INSERT INTO %s (id, appointtime, appointdate org_code, planid, cardtype, cardno,
+	sql := fmt.Sprintf(`INSERT INTO %s(id, appointtime, appointdate, org_code, planid, cardtype, cardno,
 	mobile, appointor, appointorid, merrystatus, status, appoint_channel, company, "group", remark, operator,
 	operatetime, orderid, commentid, appointednum, reportid, ifsingle, ifcancel, sale_codes)
 	VALUES ('%s', '%d', '%s', '%s', '%s', '%s', '%s',
 	'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
 	'%d', '%s', '%s', '%d', '%s', '%v', '%v' ,$1)
 	ON CONFLICT (id) DO UPDATE SET
-	appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code , planid=EXCLUDED.planid,
+	appointtime=EXCLUDED.appointtime, org_code=EXCLUDED.org_code, planid=EXCLUDED.planid,
 	cardtype=EXCLUDED.cardtype, cardno=EXCLUDED.cardno, mobile=EXCLUDED.mobile, appointor=EXCLUDED.appointor,
 	merrystatus=EXCLUDED.merrystatus, status=EXCLUDED.status, appoint_channel=EXCLUDED.appoint_channel,
 	company=EXCLUDED.company, "group"=EXCLUDED."group", remark=EXCLUDED.remark,
@@ -527,5 +530,6 @@ func saveAppoint(tx *sql.Tx, app *Appointment) (err error) {
 		app.OrderID, app.CommentID, app.AppointedNum, app.ReportId, app.IfSingle, app.IfCancel)
 
 	_, err = tx.Exec(sql, pq.Array(app.SaleCodes))
+	fmt.Println("xxxxxxxxxxxxxxxxxxxxxx00004")
 	return
 }

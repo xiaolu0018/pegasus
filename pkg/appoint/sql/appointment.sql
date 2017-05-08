@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS go_appoint_capacity_records;
 DROP TABLE IF EXISTS go_appoint_sale_records;
 DROP TABLE IF EXISTS go_appoint_banner;
 
-CREATE TABLE go_appoint_appointment  --appoint 服务 预约数据表
+CREATE TABLE IF NOT EXISTS go_appoint_appointment  --appoint 服务 预约数据表
 (
   id VARCHAR(30)  primary key,
   appointtime bigint, --预约体检时间
