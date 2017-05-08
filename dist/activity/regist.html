@@ -150,7 +150,7 @@
     <div id="toast" style="display:none;">
 	    <div class="weui_mask_transparent"></div>
 	    <div class="weui_toast">
-	        <num class="weui_icon_toast"></num>
+	        <i class="weui_icon_toast"></i>
 	        <p class="weui_toast_content">已完成</p>
 	    </div>
 	</div>
@@ -161,7 +161,7 @@
 	        <div class="weui_dialog_hd"><strong style="color:#FAFAFC;visibility: hidden;"  class="weui_dialog_title">我的</strong></div>
 	        <div class="weui_dialog_bd" id="alertCon" style="color:#333;"></div>
 	        <div class="weui_dialog_ft">
-	            <app href="#" class="weui_btn_dialog primary">确定</app>
+	            <a href="#" class="weui_btn_dialog primary">确定</a>
 	        </div>
 	    </div>
 	</div>
@@ -172,8 +172,8 @@
 		    <div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
 		    <div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
 		    <div class="weui_dialog_ft">
-		        <app href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</app>
-		        <app href="#" class="weui_btn_dialog primary">确定</app>
+		        <a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
+		        <a href="#" class="weui_btn_dialog primary">确定</a>
 		    </div>
 		</div>
 	</div>
@@ -187,12 +187,12 @@
 		//获取openid
 		UrlSearch();
 		
-		$("#myConfirm app.primary").attr('href',weLink);
+		$("#myConfirm a.primary").attr('href',weLink);
 		//ios和android
 		(function iosAnd(){
 			var u = navigator.userAgent, app = navigator.appVersion;
 			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
-			var isIOS = !!u.match(/\(num[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
 			if (isAndroid) {
 				$("head").append('<script id="and" type="text\/javascript" src="js\/jweixin-1.0.0.js"><\/script>');
 			};
@@ -274,7 +274,7 @@
 							images.serverId=formData.image;
 							formData.company=$("input[name='company']").val();
 							formData.mobile=$("input[name='mobile']").val();
-							$(".declaration>li").each(function(num,n){
+							$(".declaration>li").each(function(i,n){
 								if($(this).children("input[name='declaration']").prop("checked")){
 									formData.declaration=String($(this).index());
 								}

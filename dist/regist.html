@@ -70,14 +70,14 @@
 		<!--顶部LOGO-->
 		<header class="mui-bar mui-bar-nav">   
 	    	<img style="height:45px;" src="img/jj.png" alt="" />
-	    	<h1>当前位置：完善个人资料<app href="index.html"><span class="mui-icon mui-icon-undo"></span></app></h1>
+	    	<h1>当前位置：完善个人资料<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
 	    	<p>
-		    	<app class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</app>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
 		    </p>
 		</header>
 		<!--底部导航-->
 		<nav id="footer" class="mui-bar mui-bar-tab">
-	        <app>下一步</app>
+	        <a>下一步</a>
 	    </nav>
 		<!--正文-->		
 		<div class="mui-scroll-wrapper">
@@ -122,12 +122,12 @@
 		       				</select>
 		       			</div>
 		       			<div class="mui-table-view-cell mui-collapse mui-active">
-		       				<app href="#">
+		       				<a href="#">
 		       					<div class="mui-checkbox">
 		       						<label for="isdianzireport">仅需电子报告</label>
 		       						<input type='checkbox' id='isdianzireport' name='isdianzireport' value="false">
 		       					</div>
-		       				</app>
+		       				</a>
 		       				<div class="address mui-card-content-inner mui-collapse-content" style="margin-bottom:0;">
 				       			<h3>收件地址</h3>
 				       			<div class="mui-input-row">
@@ -182,7 +182,7 @@
 					if (typeof data === 'string') {
 					    data = JSON.parse(data);
 					}
-					if(data.idcard==""){
+					if(data==null){
 						//数据为空
 					}else{
 //							data={address:{city:"天津市",details:"hghghg",district:"和平区",province:"天津市"},
@@ -364,12 +364,12 @@
 				
 				//form表单序列化为对象
 				$.prototype.serializeObject = function() {  
-				    var app, o, h, num, e;
-				    app = this.serializeArray();
+				    var a, o, h, i, e;  
+				    a = this.serializeArray();  
 				    o = {};  
 				    h = o.hasOwnProperty;  
-				    for (num = 0; num < (app.length); num++) {
-				        e = app[num];
+				    for (i = 0; i < (a.length); i++) {  
+				        e = a[i];  
 				        if (!h.call(o, e.name)) {  
 				            o[e.name] = e.value;  
 				        }  
@@ -377,10 +377,10 @@
 				    return o;  
 				};  
 				var iftap=true;//重复提交判断
-				mui('body').on('tap','app',function(e){
+				mui('body').on('tap','a',function(e){
 					
 	//				e.stopPropagation();
-					if(this==$("#footer>app").get(0)){
+					if(this==$("#footer>a").get(0)){
 						//地址栏验证
 //						if($("#isdianzireport").prop("checked")){
 //							
@@ -451,16 +451,16 @@
 						}
 						
 						
-					}else if(this==$("h1>app").get(0)){
+					}else if(this==$("h1>a").get(0)){
 						window.history.back();
-					}else if(this==$("header p>app#icon-help").get(0)){
+					}else if(this==$("header p>a#icon-help").get(0)){
 						mui.toast("仅需电子报告，地址可以不填");
 					}				
 				});
 			
 			
 				//电子报告复选框
-				$(".mui-table-view-cell.mui-collapse>app").on('tap',function(){
+				$(".mui-table-view-cell.mui-collapse>a").on('tap',function(){
 					if($(this).parent(".mui-collapse").hasClass("mui-active")){
 						$("#isdianzireport").attr("checked","checked");
 						//地址栏清空

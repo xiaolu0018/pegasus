@@ -208,11 +208,11 @@
 			var self = this;
 			if (this._isAnimateNavbarIOS() && this.previousNavElements && this.activeNavElements) {
 				var isBack = this.isBack;
-				$.each(this.previousNavElements, function(num, el) {
+				$.each(this.previousNavElements, function(i, el) {
 					el.classList.remove(CLASS_TRANSITIONING);
 					isBack && self._cleanStyle(el);
 				});
-				$.each(this.activeNavElements, function(num, el) {
+				$.each(this.activeNavElements, function(i, el) {
 					el.classList.remove(CLASS_TRANSITIONING);
 					self._cleanStyle(el);
 				});
@@ -312,8 +312,8 @@
 			if (this._isAnimateNavbarIOS() && this.navbars) {
 				var inners = this.navbars.querySelectorAll(SELECTOR_NAVBAR_INNER);
 				var inner, left, right, center, leftWidth, rightWidth, centerWidth, noLeft, onRight, currLeft, diff, navbarWidth;
-				for (var num = 0, len = inners.length; num < len; num++) {
-					inner = inners[num];
+				for (var i = 0, len = inners.length; i < len; i++) {
+					inner = inners[i];
 					left = inner.querySelector(SELECTOR_LEFT);
 					right = inner.querySelector(SELECTOR_RIGHT);
 					center = inner.querySelector(SELECTOR_CENTER);
@@ -441,11 +441,11 @@
 				this.previousNavbar.classList.add(CLASS_TRANSITIONING);
 				this.activeNavbar.classList.add(CLASS_TRANSITIONING);
 				if (this._isAnimateNavbarIOS() && this.previousNavElements && this.activeNavElements) {
-					$.each(this.previousNavElements, function(num, el) {
+					$.each(this.previousNavElements, function(i, el) {
 						el.classList.add(CLASS_TRANSITIONING);
 						self._cleanStyle(el);
 					});
-					$.each(this.activeNavElements, function(num, el) {
+					$.each(this.activeNavElements, function(i, el) {
 						el.classList.add(CLASS_TRANSITIONING);
 						self._cleanStyle(el);
 					});
@@ -495,9 +495,9 @@
 			}
 		},
 		animateNavbarByIOS: function(percentage) {
-			var num, len, style, el;
-			for (num = 0, len = this.activeNavElements.length; num < len; num++) {
-				el = this.activeNavElements[num];
+			var i, len, style, el;
+			for (i = 0, len = this.activeNavElements.length; i < len; i++) {
+				el = this.activeNavElements[i];
 				style = el.style;
 				style.opacity = (1 - percentage * (el.classList.contains(CLASS_LEFT) ? 3.5 : 1.3));
 				if (!el.classList.contains(CLASS_RIGHT)) {
@@ -508,8 +508,8 @@
 					}
 				}
 			}
-			for (num = 0, len = this.previousNavElements.length; num < len; num++) {
-				el = this.previousNavElements[num];
+			for (i = 0, len = this.previousNavElements.length; i < len; i++) {
+				el = this.previousNavElements[i];
 				style = el.style;
 				style.opacity = percentage * 1.3 - 0.3;
 				if (!el.classList.contains(CLASS_RIGHT)) {

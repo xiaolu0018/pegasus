@@ -16,34 +16,34 @@
     <header class="mui-bar mui-bar-nav">
        
     	<div class="mui-bar mui-bar-tab" >
-    		<app class="mui-tab-checkup" href="regist.html">
+    		<a class="mui-tab-item" href="regist.html">
 				<span class="mui-icon-extra mui-icon-extra-outline"></span>
         		<span class="mui-tab-label">预约体检</span>
-			</app>
-			<app class="mui-tab-checkup" href="myRep.html">
+			</a>
+			<a class="mui-tab-item" href="myRep.html">
 				<span class="mui-icon mui-icon-search"></span>
         		<span class="mui-tab-label">报告查询</span>
-			</app>
-			<app id='service' class="mui-tab-checkup">
+			</a>
+			<a id='service' class="mui-tab-item">
 				<span class="mui-icon-extra mui-icon-extra-custom"></span>
         		<span class="mui-tab-label">联系客服</span>
-			</app>
+			</a>
     	</div>
         
     </header>
     <nav id="footer" class="mui-bar mui-bar-tab">
-        <app class="mui-tab-checkup mui-active" id="index">
+        <a class="mui-tab-item mui-active" id="index">
             <span class="mui-icon-extra mui-icon-extra-heart-filled"></span>
             <span class="mui-tab-label">首页</span>
-        </app>
-        <app class="mui-tab-checkup" href="branch.html" id="branch">
+        </a>
+        <a class="mui-tab-item" href="branch.html" id="branch">
             <span class="mui-icon-extra mui-icon-extra-class"></span>
             <span class="mui-tab-label">分院</span>
-        </app>
-        <app class="mui-tab-checkup" id="myMes" href="myRep.html">
+        </a>
+        <a class="mui-tab-item" id="myMes" href="myRep.html">
             <span class="mui-icon mui-icon-contact"></span>
             <span class="mui-tab-label">我的</span>
-        </app>
+        </a>
     </nav>
     <div class="mui-scroll-wrapper">
 		<div class="mui-scroll">
@@ -72,12 +72,12 @@
     	});   
     	
     	
-    		$('body').on('tap','app',function(e){
+    		$('body').on('tap','a',function(e){
     			console.log($(this).eq(0)[0])
     			console.log($("#service").get(0))
     			console.log($(this).eq(0)[0]==$("#service").get(0))
     			if($(this).eq(0)[0]==$("#service").get(0)){
-    				var btnArray = ['取消', '<app style="display:inline-block;width:100%;height:100%;" href="tel://10086">呼叫</app>'];
+    				var btnArray = ['取消', '<a style="display:inline-block;width:100%;height:100%;" href="tel://10086">呼叫</a>'];
 					mui.confirm('4001234567', '拨打客服:', btnArray, function(e) {
 						if (e.index == 1) {
 							//拨打电话
@@ -93,7 +93,7 @@
     				window.location.href=this.href;
     			}
     		});
-			$("#list").on('tap','app.mui-card-content>img',function(e){
+			$("#list").on('tap','a.mui-card-content>img',function(e){
 				localStorage.indexdet=$(this).attr("href");
 				window.location.href='indexdetail.html';
 				
@@ -127,13 +127,13 @@
 					var fragment = document.createDocumentFragment();
 					var li;
 					
-					for (var num = 0; num < count; num++) {
+					for (var i = 0; i < count; i++) {
 						li = document.createElement('li');
 	                    li.className = 'mui-card';
-	                    if((num<2)||(num==(count-1))){
-	                    	 li.innerHTML = '<app class="mui-card-content"><img href='+imgArr[num].redirectUrl+' src='+imgArr[num].imageUrl+'></app>';
+	                    if((i<2)||(i==(count-1))){
+	                    	 li.innerHTML = '<a class="mui-card-content"><img href='+imgArr[i].redirectUrl+' src='+imgArr[i].imageUrl+'></a>';
 	                    }else{
-	                    	 li.innerHTML = '<app class="mui-card-content"><img href='+imgArr[num].redirectUrl+' data-lazyload='+imgArr[num].imageUrl+'></app>';
+	                    	 li.innerHTML = '<a class="mui-card-content"><img href='+imgArr[i].redirectUrl+' data-lazyload='+imgArr[i].imageUrl+'></a>';
 	                    }
 	                    fragment.appendChild(li);
 					}
@@ -161,11 +161,11 @@
 		//滚动监听
 		document.querySelector(".mui-scroll-wrapper").addEventListener("swipeup",function(){
 			$("header .mui-tab-label").hide();
-			$("header").css("height","50px").find("app.mui-tab-checkup").css("height","37px");
+			$("header").css("height","50px").find("a.mui-tab-item").css("height","37px");
 		})
 		document.querySelector(".mui-scroll-wrapper").addEventListener("swipedown",function(){
 			$("header .mui-tab-label").show(350);
-			$("header").css("height","63px").find("app.mui-tab-checkup").css("height","50px");
+			$("header").css("height","63px").find("a.mui-tab-item").css("height","50px");
 		})
     </script>
 </body>

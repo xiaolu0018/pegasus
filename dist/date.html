@@ -32,14 +32,14 @@
 		<!--顶部LOGO-->
 		<header class="mui-bar mui-bar-nav">   
 		    	<img style="height:45px;" src="img/jj.png" alt="" />
-		    	<h1>当前位置：预约分院<app href="index.html"><span class="mui-icon mui-icon-undo"></span></app></h1>
+		    	<h1>当前位置：预约分院<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
 		    	<p>
-		    		<app class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</app>
+		    		<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
 		    	</p>
 		</header>
 		<!--底部导航-->
 		 <nav id="footer" class="mui-bar mui-bar-tab">
-	        <app>下一步</app>
+	        <a>下一步</a>
 	    </nav>
 		<div class="mui-scroll-wrapper">
 			<div class="mui-scroll">
@@ -54,7 +54,7 @@
 					<div class="myDate">
 						<h3 class="dateTitle">
 							<span class="mui-icon mui-icon-arrowleft mui-pull-left"></span>
-							<app>2017年04月</app>
+							<a>2017年04月</a>
 							<span class="mui-icon mui-icon-arrowright mui-pull-right"></span>
 						</h3>
 						<table>
@@ -174,10 +174,10 @@
 						
 					}else{
 						var leg=data.length;
-						for(var num=0;num<leg;num++){
+						for(var i=0;i<leg;i++){
 							allDep.push({
-										text:data[num].name,
-										value:data[num].org_code
+										text:data[i].name,
+										value:data[i].org_code
 									});
 						};
 					}					
@@ -223,10 +223,10 @@
         		});
         		
 	        	var iftap=true;
-				mui('body').on('tap','app',function(e){
+				mui('body').on('tap','a',function(e){
 					e.stopPropagation();
 					console.log(DataCheck)
-					if(this==$("#footer>app").get(0)){
+					if(this==$("#footer>a").get(0)){
 						if((DEPART.name==0)||(!DataCheck)){
 							mui.toast("请选择分院和日期");
 						}else{
@@ -267,10 +267,10 @@
 	
 							 	});
 						}
-					}else if(this==$("h1>app").get(0)){
+					}else if(this==$("h1>a").get(0)){
 						//返回
 						window.history.back();
-					}else if(this==$("header p>app#icon-help").get(0)){
+					}else if(this==$("header p>a#icon-help").get(0)){
 						mui.toast("请选择预约分院和日期");
 					}				
 				});	

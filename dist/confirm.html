@@ -38,14 +38,14 @@
 		<!--顶部LOGO-->
 		<header class="mui-bar mui-bar-nav">   
 	    	<img style="height:45px;" src="img/jj.png" alt="" />
-	    	<h1>当前位置：确认预约<app href="index.html"><span class="mui-icon mui-icon-undo"></span></app></h1>
+	    	<h1>当前位置：确认预约<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
 	    	<p>
-		    	<app class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</app>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
 		    </p>
 		</header>
 		<!--底部导航-->
 		<nav id="footer" class="mui-bar mui-bar-tab">
-	        <app>确认</app>
+	        <a>确认</a>
 	    </nav>
 		<!--正文-->		
 		
@@ -117,9 +117,9 @@
 						
 					}
 				});	
-				mui('body').on('tap','app',function(e){
+				mui('body').on('tap','a',function(e){
 					//e.stopPropagation();
-					if(this==$("#footer>app").get(0)){
+					if(this==$("#footer>a").get(0)){
 						$.ajax({
 							url:"http://www.elepick.com/api/appointment/"+localStorage.appointid+"/confirm",
 							type:"post",
@@ -142,9 +142,9 @@
 							}
 						});
 						
-					}else if(this==$("h1>app").get(0)){
+					}else if(this==$("h1>a").get(0)){
 						window.history.back();
-					}else if(this==$("header p>app#icon-help").get(0)){
+					}else if(this==$("header p>a#icon-help").get(0)){
 						mui.toast("这是使用帮助");
 					}			
 				});								

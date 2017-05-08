@@ -19,7 +19,7 @@
 				right:0;
 				width:100%;
 			}
-			.mui-slider,.mui-slider-group,.mui-slider-checkup{
+			.mui-slider,.mui-slider-group,.mui-slider-item{
 				height:100%;
 				width:100%;
 			}
@@ -77,31 +77,31 @@
 
 	<body>
 		 <nav id="footer" class="mui-bar mui-bar-tab">
-	        <app class="mui-tab-checkup" id="index" href="index.html">
+	        <a class="mui-tab-item" id="index" href="index.html">
 	            <span class="mui-icon-extra mui-icon-extra-heart-filled"></span>
 	            <span class="mui-tab-label">首页</span>
-	        </app>
-	        <app class="mui-tab-checkup mui-active">
+	        </a>
+	        <a class="mui-tab-item mui-active">
 	            <span class="mui-icon-extra mui-icon-extra-class"></span>
 	            <span class="mui-tab-label">分院</span>
-	        </app>
-	        <app class="mui-tab-checkup" href="myRep.html">
+	        </a>
+	        <a class="mui-tab-item" href="myRep.html">
 	            <span class="mui-icon mui-icon-contact"></span>
 	            <span class="mui-tab-label">我的</span>
-	        </app>
+	        </a>
 	    </nav>
 
 		<div class="mui-content">
 			<div id="slider" class="mui-slider">
 				<div class="mui-slider-group">
-					<div id="item1mobile" class="mui-slider-checkup mui-control-content mui-active">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
 						<div id="scroll1" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<img src="img/branch3.jpg" alt="" />
 							</div>
 						</div>
 					</div>
-					<!--<div id="item2mobile" class="mui-slicheckupitem mui-control-content">
+					<!--<div id="item2mobile" class="mui-slider-item mui-control-content">
 						<div id="scroll2" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<div class="mui-loading">
@@ -112,7 +112,7 @@
 						</div>
 
 					</div>
-					<div id="item3mobile" class="mui-slicheckupitem mui-control-content">
+					<div id="item3mobile" class="mui-slider-item mui-control-content">
 						<div id="scroll3" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<div class="mui-loading">
@@ -187,14 +187,14 @@
 							var piclen=htmls.length;
 							var picranges=$("#slider>.mui-slider-group").html();
 							for(var g=1;g<piclen;g++){
-								picranges+='<div id=checkup"'+(g+1)+'" class="mui-slider-checkup mui-control-content"><div id="scroll'+(g+1)+'" class="mui-scroll-wrapper"><div class="mui-scroll"><div class="mui-loading"><div class="mui-spinner"></div></div></div></div></div>'
+								picranges+='<div id=item"'+(g+1)+'" class="mui-slider-item mui-control-content"><div id="scroll'+(g+1)+'" class="mui-scroll-wrapper"><div class="mui-scroll"><div class="mui-loading"><div class="mui-spinner"></div></div></div></div></div>'
 							}
 							$("#slider>.mui-slider-group").html(picranges);
 							document.getElementById('slider').addEventListener('slide', function(e) {
 								var picNum=e.detail.slideNumber;
-								if ($("#slider>.mui-slider-group>div[id^='checkup']").eq(picNum).find(".mui-loading")) {
+								if ($("#slider>.mui-slider-group>div[id^='item']").eq(picNum).find(".mui-loading")) {
 									setTimeout(function() {
-										$("#slider>.mui-slider-group>div[id^='checkup']").eq(picNum).find('.mui-scroll').html('<img src="'+htmls[picNum].imageUrl+'" alt="'+htmls[picNum].name+' '+htmls[picNum].desc+'" />');
+										$("#slider>.mui-slider-group>div[id^='item']").eq(picNum).find('.mui-scroll').html('<img src="'+htmls[picNum].imageUrl+'" alt="'+htmls[picNum].name+' '+htmls[picNum].desc+'" />');
 									}, 500);
 								}
 								 
@@ -209,7 +209,7 @@
 				document.getElementById("myMask").addEventListener('tap',function(){
 					document.getElementById("myMask").style.display="none";
 				});
-				$('body').on('tap','app',function(e){
+				$('body').on('tap','a',function(e){
 					e.preventDefault();
 					e.stopPropagation();
 					document.location.href=this.href;

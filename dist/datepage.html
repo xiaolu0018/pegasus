@@ -9,14 +9,14 @@
 	    <link rel="stylesheet" href="css/footer.css" />	
 	    <link rel="stylesheet" href="css/datahead.css" />	    
 	    <style>
-	    	header>p>app.mui-pull-right{
+	    	header>p>a.mui-pull-right{
 	    		line-height:43px;
 	    	}
 	    	.mui-content {
 			    padding-top: 140px;
 			    background-color:#fff;
 			}
-	    	#segmentedControls>app{
+	    	#segmentedControls>a{
 	    		width:100%;
 	    	}
 	    	#segmentedControlContents>div[id]{
@@ -33,25 +33,25 @@
 	    		background-color:#42aa85;
 	    	}
 	    	
-	    	#segmentedControls #item4.mui-control-checkup>span{
+	    	#segmentedControls #item4.mui-control-item>span{
 	    		display:inline-block;
 	    		white-space: pre-wrap;
 			    max-height:100%;
 			    line-height:0.8;
 			    vertical-align:-webkit-baseline-middle;
 			}
-			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-checkup, .mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-checkup.mui-active {
+			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item, .mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item.mui-active {
 			   border:none;
 			   border-left:2px solid transparent;
 			   background-color:#efeff4;
 			   height:10%;
 			   vertical-align: middle;
 			}
-			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-checkup span, .mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-checkup.mui-active span {
+			.mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item span, .mui-segmented-control.mui-segmented-control-inverted.mui-segmented-control-vertical .mui-control-item.mui-active span {
 			  
 			   vertical-align: -webkit-baseline-middle;
 			}
-			#segmentedControls.mui-segmented-control.mui-segmented-control-inverted .mui-control-checkup.mui-active {
+			#segmentedControls.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
     			color: #42aa85;
     			border-color:#42aa85;
     			background-color:#fff;
@@ -63,14 +63,14 @@
 		<!--顶部LOGO-->
 		<header class="mui-bar mui-bar-nav">   
 	    	<img style="height:45px;" src="img/jj.png" alt="" />
-	    	<h1>当前位置：完善健康资料<app><span class="mui-icon mui-icon-undo"></span></app></h1>
+	    	<h1>当前位置：完善健康资料<a><span class="mui-icon mui-icon-undo"></span></a></h1>
 	    	<p>
-	    		<app class="mui-pull-right" id="icon-help">点击跳过</app>
+	    		<a class="mui-pull-right" id="icon-help">点击跳过</a>		    	
 	    	</p>
 		</header>
 		<!--底部导航-->
 		<nav id="footer" class="mui-bar mui-bar-tab">
-	        <app>下一步</app>
+	        <a>下一步</a>
 	    </nav>
 		<!--正文-->
 		<div class="mui-scroll-wrapper">
@@ -78,37 +78,37 @@
 				<div class="mui-content mui-row">
 					<div class="mui-col-xs-3" style="height:100%;">
 						<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical" style="height:100%;">
-							<app href="#past_history" class="mui-control-checkup mui-active">
+							<a href="#past_history" class="mui-control-item mui-active">
 								<span>既往史</span>
-							</app>
-							<app href="#family_medical_history" class="mui-control-checkup">
+							</a>
+							<a href="#family_medical_history" class="mui-control-item">
 								<span>家族病史</span>
-							</app>
-							<app href="#exam_frequency" class="mui-control-checkup">
+							</a>
+							<a href="#exam_frequency" class="mui-control-item">
 								<span>体检情况</span>
-							</app>
-							<app id="item4" href="#past_exam_exception" class="mui-control-checkup">
+							</a>
+							<a id="item4" href="#past_exam_exception" class="mui-control-item">
 								<span>既往体检
 									异常情况</span>
-							</app>
-							<app href="#psychological_pressure" class="mui-control-checkup">
+							</a>
+							<a href="#psychological_pressure" class="mui-control-item">
 								<span>心理压力</span>
-							</app>
-							<app href="#food_habits" class="mui-control-checkup">
+							</a>
+							<a href="#food_habits" class="mui-control-item">
 								<span>饮食习惯</span>
-							</app>
-							<app href="#eating_habits" class="mui-control-checkup">
+							</a>
+							<a href="#eating_habits" class="mui-control-item">
 								<span>进食习惯</span>
-							</app>
-							<app href="#drink_habits" class="mui-control-checkup">
+							</a>
+							<a href="#drink_habits" class="mui-control-item">
 								<span>饮酒习惯</span>
-							</app>
-							<app href="#smoke_history" class="mui-control-checkup">
+							</a>
+							<a href="#smoke_history" class="mui-control-item">
 								<span>吸烟史</span>
-							</app>
-							<app href="#sleep_quality" class="mui-control-checkup">
+							</a>
+							<a href="#sleep_quality" class="mui-control-item">
 								<span>睡眠情况</span>
-							</app>
+							</a>
 						</div>
 					</div>
 					<div id="segmentedControlContents" class="mui-col-xs-9">
@@ -266,8 +266,8 @@
 				};			
 			});
 			var iftap=true;//重复提交判断
-			mui('body').on('tap','app',function(e){
-				if(this==$("#footer>app").get(0)){
+			mui('body').on('tap','a',function(e){
+				if(this==$("#footer>a").get(0)){
 					$("")
 					console.log(JSON.stringify(medicdata));
 					//ajax
@@ -296,18 +296,18 @@
 					});
 					
 					
-				}else if(this==$("h1>app").get(0)){
+				}else if(this==$("h1>a").get(0)){
 					window.history.back();
-				}else if(this==$("header p>app#icon-help").get(0)){
+				}else if(this==$("header p>a#icon-help").get(0)){
 					window.location.href="package.html";
 				}				
 			});
-            function changeData(id,checkup){
+            function changeData(id,item){
             	var medarr=medicdata[id];
-            	if(jQuery.inArray(checkup,medarr)>=0){
-            		medarr.splice(jQuery.inArray(checkup,medarr),1);
+            	if(jQuery.inArray(item,medarr)>=0){
+            		medarr.splice(jQuery.inArray(item,medarr),1);
             	}else{
-            		medarr.push(checkup);
+            		medarr.push(item);
             	}
             	console.log(medicdata)
             }

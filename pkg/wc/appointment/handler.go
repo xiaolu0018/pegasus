@@ -100,7 +100,8 @@ func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	rsp, err := SendToAppoint(*a_a)
+	rsp, err := SendToAppoint(*a_a, common.AppointServe)
+	defer rsp.Body.Close()
 	if err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler SendToAppoint", err)
 		httputil.Response(w, 400, "ok")

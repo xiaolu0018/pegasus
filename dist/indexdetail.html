@@ -20,14 +20,14 @@
 		<!--顶部LOGO-->
 		<header class="mui-bar mui-bar-nav">   
 	    	<img style="height:45px;" src="img/jj.png" alt="" />
-	    	<h1>当前位置：首页详情<app href="index.html"><span class="mui-icon mui-icon-undo"></span></app></h1>
+	    	<h1>当前位置：首页详情<a href="index.html"><span class="mui-icon mui-icon-undo"></span></a></h1>
 	    	<p>
-		    	<app class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</app>
+		    	<a class="mui-pull-right" id="icon-help"><span class="mui-icon mui-icon-help"></span>使用帮助</a>		    	
 		    </p>
 		</header>
 		<!--底部导航-->
 		<!--<nav id="footer" class="mui-bar mui-bar-tab">
-	     app  <a>app交</a>
+	        <a>提交</a>
 	    </nav>-->
 		<!--正文-->		
 		<div class="mui-scroll-wrapper">
@@ -66,11 +66,11 @@
 				$("div.mui-content img").attr("src",localStorage.indexdet);
 				
 				var iftap=true;//重复提交判断
-				mui('body').on('tap','app',function(e){
+				mui('body').on('tap','a',function(e){
 	//				e.stopPropagation();
-					if(this==$("h1>app").get(0)){
+					if(this==$("h1>a").get(0)){
 						window.history.back();
-					}else if(this==$("header p>app#icon-help").get(0)){
+					}else if(this==$("header p>a#icon-help").get(0)){
 						mui.toast("帮助中心");
 					}				
 				});

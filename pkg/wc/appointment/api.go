@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"time"
 
-	"bytes"
-	"net/http"
-
-	"encoding/json"
-	"github.com/golang/glog"
+	//"bytes"
+	http "net/http"
+	//
+	//"encoding/json"
+	//"github.com/golang/glog"
 
 	"bjdaos/pegasus/pkg/appoint/appointment"
 	"bjdaos/pegasus/pkg/wc/user"
+	http185 "github.com/1851616111/util/http"
 )
 
 func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {
@@ -25,25 +26,31 @@ func CreatAppoint_User(a Appointment, u user.User) (*Appoint_User, error) {
 	return &au, nil
 }
 
-func SendToAppoint(a appointment.Appointment) (*http.Response, error) {
-	client := &http.Client{nil, nil, nil, time.Second * 10}
-	var req *http.Request
-	var rsp *http.Response
+func SendToAppoint(a appointment.Appointment, ip string) (*http.Response, error) {
+	//client := &http.Client{nil, nil, nil, time.Second * 10}
+	//var req *http.Request
+	//var rsp *http.Response
+	//
+	//var err error
+	//var buf bytes.Buffer
+	//json.NewEncoder(&buf).Encode(a)
+	//if req, err = http.NewRequest("POST", "http://192.168.199.198:9200/api/appointment", &buf); err != nil {
+	//	glog.Errorln("newrequest err", err)
+	//	return nil, err
+	//}
+	//
+	//if rsp, err = client.Do(req); err != nil {
+	//	glog.Errorln("newrequest err", err)
+	//	return nil, err
+	//}
 
-	var err error
-	var buf bytes.Buffer
-	json.NewEncoder(&buf).Encode(a)
-	if req, err = http.NewRequest("POST", "http://192.168.199.198:9200/api/appointment", &buf); err != nil {
-		glog.Errorln("newrequest err", err)
-		return nil, err
-	}
+	return http185.Send(&http185.HttpSpec{
+		URL:         ip + "/api/sales/checkups",
+		Method:      "GET",
+		ContentType: http185.ContentType_JSON,
+		BodyParams:  http185.NewBody().Add("salecodes", &a),
+	})
 
-	if rsp, err = client.Do(req); err != nil {
-		glog.Errorln("newrequest err", err)
-		return nil, err
-	}
-	defer rsp.Body.Close()
-	return rsp, nil
 }
 
 func Get_Appoint_Appointment(u user.User, a Appointment) (*appointment.Appointment, error) {
