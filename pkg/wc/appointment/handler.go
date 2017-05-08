@@ -117,7 +117,7 @@ func CancelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 func ListAppointmentHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	userid := ps.ByName("userid")
+	userid := ps.ByName(common.AuthHeaderKey)
 	rwbyte, statuscode, err := common.Go_Through_Http("GET", "/api/appointmentlist/wc", userid)
 	if err != nil {
 		glog.Errorln("appointment ListAppointmentHandler Go_Through_Http, err : ", err.Error())

@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"bjdaos/pegasus/pkg/appoint"
 	"bjdaos/pegasus/pkg/appoint/appointment"
 	"bjdaos/pegasus/pkg/appoint/login"
 	"github.com/julienschmidt/httprouter"
@@ -31,7 +32,7 @@ func CreateHttpRouter() http.Handler {
 	r.PUT("/api/appointment", appointment.UpdateAppointmentHandler)
 	r.GET("/api/appointment/:appointid", appointment.GetAppointmentHandler)
 	r.GET("/api/appointmentlist", appointment.ListAppointmentsHandler)
-	r.GET("/api/appointmentlist/wc", appointment.ListAppointmentsForWeChatHandler)
+	r.GET("/api/appointmentlist/wc", appoint.AuthUser(appointment.ListAppointmentsForWeChatHandler))
 	r.GET("/api/pinto/checkups", ListCheckupHandler)
 	return r
 }
