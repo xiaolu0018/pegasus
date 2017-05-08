@@ -9,7 +9,7 @@ import (
 //imageUrl VARCHAR(30),
 //redirectUrl VARCHAR(30),
 func GetBanners() ([]Banner, error) {
-	sqlStr := fmt.Sprintf("SELECT pos,imageUrl,redirectUrl FROM %s", TABLE_BANNER)
+	sqlStr := fmt.Sprintf("SELECT pos,imageUrl,redirectUrl FROM %s", T_BANNER)
 	bs := make([]Banner, 0)
 	rows, err := db.GetDB().Query(sqlStr)
 	if err != nil {

@@ -89,5 +89,5 @@ func (o *ActivityConfig) GetVoteCachedImagePath() (string, error) {
 		return "", err
 	}
 
-	return absPath, nil
+	return target, nil
 }

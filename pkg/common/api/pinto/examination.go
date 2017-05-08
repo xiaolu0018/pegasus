@@ -64,13 +64,11 @@ func InsertExam_Sale(db *sql.DB, exam_sale types.ExaminationSale) error {
 func MapToExams(result map[string]interface{}) (exam types.Examination, exam_checkups []types.ExaminationCheckUp, exam_sales []types.ExaminationSale, br types.BookRecord, person types.Person) {
 
 	br = MapToBookRecord(result)
-	operatetime, ok := result["operatetime"]
 
-	operTime := time.Unix(int64(operatetime.(float64)), 0)
-	if ok {
-		br.CreateTime = operTime.Format("2006-01-02")
-	}
-	br.BookNo = operTime.Format("20060102150405")
+	operateTime := time.Now()
+	br.CreateTime = operateTime.Format("2006-01-02")
+
+	br.BookNo = operateTime.Format("20060102150405")
 
 	//person
 	person.HosCode = br.BookorgCode
@@ -82,11 +80,11 @@ func MapToExams(result map[string]interface{}) (exam types.Examination, exam_che
 		person.IsMarry = MarryToCode[marry.(string)]
 	}
 	person.CardNo = br.Bookid
-	person.CreateTime = operTime.Format("2006-01-02 15:04:05")
-	person.PersonCode = operTime.Format("20060102150405")
+	person.CreateTime = operateTime.Format("2006-01-02 15:04:05")
+	person.PersonCode = operateTime.Format("20060102150405")
 
 	//examination
-	exam.CreateTime = operTime.Format("2006-01-02 15:04:05")
+	exam.CreateTime = operateTime.Format("2006-01-02 15:04:05")
 	exam.HosCode = br.BookorgCode
 	exam.Status = "1005"
 	exam.GuidePaperState = "0"

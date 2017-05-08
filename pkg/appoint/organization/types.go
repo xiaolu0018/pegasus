@@ -30,9 +30,9 @@ type Config_Basic struct {
 
 //组织特殊项的容量
 type Config_Special struct {
-	Org_Code  string `json:"org_code"`  //外键
+	Org_Code    string `json:"org_code"`     //外键
 	CheckupCode string `json:"checkup_code"` //外键
-	Capacity  int    `json:"capacity"`
+	Capacity    int    `json:"capacity"`
 }
 
 type Org_WC struct {

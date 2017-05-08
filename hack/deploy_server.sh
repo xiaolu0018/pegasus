@@ -56,7 +56,7 @@ function deployDist() {
 
 
 startTarget wc start
-startTarget wc start-activity
+#startTarget wc start-activity
 startTarget rpt start
 startTarget app start
 startTarget pinto start

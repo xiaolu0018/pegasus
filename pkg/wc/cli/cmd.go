@@ -26,7 +26,7 @@ func NewWeiChatCmd(name string) *cobra.Command {
 	}
 
 	wc.AddCommand(startCmd())
-	//wc.AddCommand(startActivityCmd())
+	wc.AddCommand(startActivityCmd())
 	return wc
 }
 

@@ -14,24 +14,35 @@ import (
 	"time"
 
 	"bjdaos/pegasus/pkg/appoint/db"
-	"bjdaos/pegasus/pkg/appoint/organization"
+	org "bjdaos/pegasus/pkg/appoint/organization"
 	tm "bjdaos/pegasus/pkg/common/util/time"
 )
 
 func dbinit() {
+	fmt.Println(time.Now().Add(time.Hour * 72).Unix())
 	if err := db.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto"); err != nil {
 		fmt.Println("dbinit", err)
 	}
 }
 
-func TestGetSaleCodesByplan(t *testing.T) {
+func TestGetCheckupsUsed(t *testing.T) {
+	dbinit()
+
+	tx, _ := db.GetDB().Begin()
+	_, err := GetCheckupsUsed(tx, "0001001", "2017-05-01", []string{"000007", "0000010"})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestGetSaleCodesByPlan(t *testing.T) {
 	dbinit()
 	tx, err := db.GetDB().Begin()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if _, err := GetSaleCodesByplan(tx, "1"); err != nil {
+	if _, err := GetSalesByPlanID(tx, "1"); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -46,9 +57,11 @@ func TestGetItemByplan(t *testing.T) {
 	}
 }
 
-func TestCreatAppoint(t *testing.T) {
+func TestCreateAppoint(t *testing.T) {
 	dbinit()
-	appointtime, _ := time.Parse("2006-01-02", time.Now().Format("2006-01-02"))
+
+	now := time.Now().Unix()
+	date := time.Now().Format("2006-01-02")
 	a := Appointment{
 		ID:              "",
 		Appointor:       "name1",
@@ -62,12 +75,13 @@ func TestCreatAppoint(t *testing.T) {
 		Sex:             "男",
 		PlanId:          "1",
 		OrgCode:         "0001001",
-		AppointTime:     appointtime.Unix(),
+		AppointTime:     now,
+		AppointDate:     date,
 		OperateTime:     time.Now().Unix(),
 		OrderID:         "",
 		Operator:        "",
 	}
-	//
+
 	err := a.CreateAppointment()
 	fmt.Println("err", err)
 }
@@ -75,7 +89,7 @@ func TestCreatAppoint(t *testing.T) {
 func TestGetCapacityAppointedNum(t *testing.T) {
 	dbinit()
 	sqlstr := fmt.Sprintf("INSERT INTO %s (org_code,date,used,checkup_code) VALUES ('%s','%s','%d','%s')",
-		TABLE_CheckupRecords, "000101", "2017-04-20", 2, "0002")
+		T_CHECKUP_RECORD, "000101", "2017-04-20", 2, "0002")
 	result, err := db.GetDB().Exec(sqlstr)
 	fmt.Println("re", result, err)
 }
@@ -191,7 +205,7 @@ func GenRsaKey(bits int) error {
 
 func TestChangeOrg(t *testing.T) {
 	dbinit()
-	sqlstr := fmt.Sprintf("UPDATE %s SET imageurl = '%s',detailsurl = '%s'", organization.TABLE_ORG, "", "")
+	sqlstr := fmt.Sprintf("UPDATE %s SET imageurl = '%s',detailsurl = '%s'", org.TABLE_ORG, "", "")
 	_, err := db.GetDB().Exec(sqlstr)
 	fmt.Println("errr", err)
 }

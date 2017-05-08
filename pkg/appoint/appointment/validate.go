@@ -8,7 +8,7 @@ import (
 	id "github.com/1851616111/util/validator/identity"
 	"github.com/1851616111/util/validator/mobile"
 
-	"bjdaos/pegasus/pkg/appoint/organization"
+	org "bjdaos/pegasus/pkg/appoint/organization"
 	"database/sql"
 	"github.com/golang/glog"
 	"time"
@@ -48,7 +48,7 @@ func (a *Appointment) validateOrg() error {
 		return FieldEmpty("org_code")
 	}
 
-	_, err := organization.GetOrgByCode(a.OrgCode)
+	_, err := org.GetOrgByCode(a.OrgCode)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return fmt.Errorf("organization code=%s not found", a.OrgCode)
@@ -117,24 +117,28 @@ func (a *Appointment) validatePersonInfo() error {
 	return nil
 }
 
-func (a *Appointment) isAppointTimeValid(config *organization.Config_Basic) bool {
+func (a *Appointment) isAppointTimeValid(config *org.Config_Basic) bool {
 	now, appointTime := time.Now(), time.Unix(a.AppointTime, 0)
 
 	if a.AppointTime <= now.Unix() {
+		fmt.Println("0000001")
 		return false
 	}
 
 	if appointTime.Format("2006-01-02") == now.Format("2006-01-02") {
+		fmt.Println("0000002")
 		return false
 	}
 
 	if appointTime.After(now.AddDate(0, 2, 0)) {
+		fmt.Println("0000003")
 		return false
 	}
 
 	//是否休假
 	for _, v := range config.OffDays {
 		if appointTime.Format("2006-01-02") == v {
+			fmt.Println("0000004")
 			return false
 		}
 	}
@@ -152,9 +156,9 @@ func (a *Appointment) validateAppointInfo() error {
 		return ErrAppointChannelInvalid
 	}
 
-	orgbasic := &organization.Config_Basic{}
+	orgbasic := &org.Config_Basic{}
 	var err error
-	if orgbasic, err = organization.GetConfigBasic(a.OrgCode); err != nil {
+	if orgbasic, err = org.GetConfigBasic(a.OrgCode); err != nil {
 		if err == sql.ErrNoRows {
 			return errors.New("organization basic config empty")
 		}

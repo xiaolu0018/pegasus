@@ -1,8 +1,12 @@
 package appointment
 
-const TABLE_APPOINTMENT = "go_appoint_appointment"
-const TABLE_ORGANIZATION_CONFIG_BASIC = "go_appoint_organization_basic_con"
-const TABLE_BANNER = "go_appoint_banner"
+const T_BANNER = "go_appoint_banner"
+const T_CAP_RECORD = "go_appoint_capacity_records"
+const T_APPOINTMENT = "go_appoint_appointment"
+const T_CHECKUP_RECORD = "go_appoint_checkup_records"
+const T_APPOINT_COMMENT = "go_appoint_comment"
+const T_ORG_CONFIG_BASIC = "go_appoint_organization_basic_con"
+const T_PLAN = "go_appoint_plan"
 
 const VALIDATE_CHANNEL_WC = "微信"
 const VALIDATE_CHANNEL_400 = "400"
@@ -23,12 +27,12 @@ const (
 var ErrAppointmentString = "Can't make an appointment"
 
 type Appointment struct {
-	ID                string   `json:"id"`
-	PlanId            string   `json:"planid"` //套餐
-	SaleCodes         []string `json:"sale_codes"`
-	AppointTime       int64    `json:"appointtime"`
-	AppointTimeString string   `json:"appoint_time_string"`
-	OrgCode           string   `json:"org_code"` //分院
+	ID          string   `json:"id"`
+	PlanId      string   `json:"planid"` //套餐
+	SaleCodes   []string `json:"sale_codes"`
+	AppointTime int64    `json:"appoint_time"` //预约时间的int
+	AppointDate string   `json:"appoint_date"` //预约时间的日期 yyyy-MM-dd
+	OrgCode     string   `json:"org_code"`     //分院
 
 	CardNo          string `json:"cardno"`
 	CardType        string `json:"cardtype"`
@@ -40,24 +44,22 @@ type Appointment struct {
 	Appoint_Channel string `json:"appoint_channel"` //预约渠道
 	Appointorid     string `json:"appointorid"`     //预约人id
 
-	Sex               string `json:"sex"`
-	Company           string `json:"company"`
-	Group             string `json:"group"`
-	Remark            string `json:"remark"`
-	Operator          string `json:"operator"`
-	OperateTime       int64  `json:"operatetime"` //创建时间
-	OperateTimeString string `json:"operate_time_string"`
-	OrderID           string `json:"orderid"`
-	CommentID         string `json:"commentid"`
-	AppointedNum      int    `json:"appointednum"` //最后生产的预约号
+	Sex          string `json:"sex"`
+	Company      string `json:"company"`
+	Group        string `json:"group"`
+	Remark       string `json:"remark"`
+	Operator     string `json:"operator"`
+	OperateTime  int64  `json:"-"` //创建时间
+	OperateDate  string `json:"operate_date"` //yyyy-MM-dd
+	OrderID      string `json:"orderid"`
+	CommentID    string `json:"commentid"`
+	AppointedNum int    `json:"appointednum"` //最后生产的预约号
 
 	ReportId string `json:"reportid"` //用来记录体检报告号
 	BookNo   string `json:"bookno"`
 	IfSingle bool   `json:"ifsingle"` //是否散客
 	IfCancel bool   `json:"ifcancel"` //是否取消预约体检
 }
-
-var TABLE_Appoint_Comment = "go_appoint_comment"
 
 type Comment struct { //预约评价
 	ID          string
@@ -68,17 +70,11 @@ type Comment struct { //预约评价
 	Conclusion  string
 }
 
-//分院的某天已预约人数
-var TABLE_CapacityRecords = "go_appoint_capacity_records"
-
 type ManagerCapacity struct {
 	Date    string
 	OrgCode string
 	Used    int
 }
-
-//分院的特殊项目的某天已预约人数
-var TABLE_CheckupRecords = "go_appoint_checkup_records"
 
 type ManagerItem struct {
 	Date    string
@@ -86,9 +82,6 @@ type ManagerItem struct {
 	Used    int
 	OrgCode string
 }
-
-//套餐
-var TABLE_PALN = "go_appoint_plan"
 
 type Plan struct {
 	ID        string   `json:"id"`
@@ -108,7 +101,7 @@ type Banner struct {
 }
 
 type App_For_WeChat struct {
-	Appid        string `json:"appid"`
+	AppID        string `json:"appid"`
 	Name         string `json:"name"`
 	PlanId       string `json:"planid"`
 	Org_code     string `json:"org_code"`

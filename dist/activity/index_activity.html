@@ -30,7 +30,7 @@
 				background-size:contain;
 				position:relative;
 			}
-			header>a#mylink{
+			header>app#mylink{
 				color:#fff;
 				text-align: center;
 				text-decoration: none;
@@ -48,7 +48,7 @@
 				bottom:40%;
 				box-shadow: 2px 2px 2px  #5D5257;
 			}
-			header>a#mylink:active{
+			header>app#mylink:active{
 				color:#F7926F;
 				box-shadow: none;
 			}
@@ -193,25 +193,25 @@
 	<body ontouchstart="">
 		<div class="scroll-box">
 			<header>
-				<a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
+				<app id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</app>
 			</header>
 			<div class='btnbox'>
-				<a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
+				<app id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</app>
 			</div>
 			<div class="main">
 				<div class="weui_search_bar" id="searchinp">
 			        <form class="weui_search_outer">
 			            <div class="weui_search_inner">
-			                <i class="weui_icon_search"></i>
+			                <num class="weui_icon_search"></num>
 			                <input type="search" class="weui_search_input" id="search_input" placeholder="请输入姓名或编号">
-			                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+			                <app href="javascript:" class="weui_icon_clear" id="search_clear"></app>
 			            </div>
 			            <label for="search_input" class="weui_search_text" id="search_text" style="display: none;">
-			                <i class="weui_icon_search"></i>
+			                <num class="weui_icon_search"></num>
 			                <span>搜索</span>
 			            </label>
 			        </form>
-			        <a href="javascript:" class="weui_search_cancel" id="search_cancel">确认</a>
+			        <app href="javascript:" class="weui_search_cancel" id="search_cancel">确认</app>
 			    </div>
 				<ul class="my-panel">
 					
@@ -242,7 +242,7 @@
     <div id="toast" style="display:none;">
 	    <div class="weui_mask_transparent"></div>
 	    <div class="weui_toast">
-	        <i class="weui_icon_toast"></i>
+	        <num class="weui_icon_toast"></num>
 	        <p class="weui_toast_content">已完成</p>
 	    </div>
 	</div>
@@ -253,7 +253,7 @@
 	        <div class="weui_dialog_hd"><strong style="color:#FAFAFC;visibility: hidden;"  class="weui_dialog_title">我的</strong></div>
 	        <div class="weui_dialog_bd" id="alertCon" style="color:#333;"></div>
 	        <div class="weui_dialog_ft">
-	            <a href="#" class="weui_btn_dialog primary">确定</a>
+	            <app href="#" class="weui_btn_dialog primary">确定</app>
 	        </div>
 	    </div>
 	</div>
@@ -264,8 +264,8 @@
 		    <div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
 		    <div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
 		    <div class="weui_dialog_ft">
-		        <a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
-		        <a href="#" class="weui_btn_dialog primary">确定</a>
+		        <app href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</app>
+		        <app href="#" class="weui_btn_dialog primary">确定</app>
 		    </div>
 		</div>
 	</div>
@@ -293,7 +293,7 @@
 				$(this).css("height",imgboxWidth+"px");
 			});
 			
-			$("#myConfirm a.primary").attr('href',weLink);
+			$("#myConfirm app.primary").attr('href',weLink);
 			UrlSearch();
 			ajaxPage({"index":"1"});	
 			

@@ -12,7 +12,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func CreateBookRecordHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func BookPersonHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	result := make(map[string]interface{})
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		glog.Errorf("pinto.handler CreateBookRecord Decode req params err %v\n", err.Error())
@@ -33,7 +33,7 @@ func CreateBookRecordHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 	httputil.ResponseJson(rw, 200, data)
 }
 
-func CreateExamsHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func BookPlanHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	result := make(map[string]interface{})
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		glog.Errorf("pinto.handler CreateExamsHandler Decode req params err %v\n", err.Error())
