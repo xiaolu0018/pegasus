@@ -47,7 +47,7 @@ func AddRouter(r *httprouter.Router, dist string) {
 		panic(err)
 	}
 
-	iosImagePath = fmt.Sprintf("%s/ios", dist)
+	iosImagePath = fmt.Sprintf("%s/voterimages/ios", dist)
 
 	r.ServeFiles("/dist/activity/*filepath", http.Dir(dist))
 }

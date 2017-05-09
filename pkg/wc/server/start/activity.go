@@ -16,8 +16,10 @@ func (o *ActivityConfig) StartActivity(r *httprouter.Router) error {
 		return err
 	}
 
+
 	vote.SetDB(dbI)
-	vote.AddRouter(r, o.LocalDistPath+ "/"+ "voterimages")
+
+	vote.AddRouter(r, o.LocalDistPath)
 	vote.APPID = o.AppID
 	vote.URL_REGISTER_HTML = fmt.Sprintf("%s://%s/dist/activity/regist.html", o.Schema, o.Domain)
 	vote.CH_CACHE_IMAGES = make(chan string, 20)
