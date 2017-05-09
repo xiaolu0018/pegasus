@@ -10,19 +10,21 @@ import (
 	httputil "github.com/1851616111/util/http"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
+	"time"
 )
 
 func BookPersonHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	result := make(map[string]interface{})
+	result := pinto.Appointment{}
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		glog.Errorf("pinto.handler CreateBookRecord Decode req params err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
 		return
 	}
+	result.TimeNow = time.Now()
 
-	bookRecord := pinto.MapToBookRecord(result)
+	bookRecord := pinto.FilterBookRecordByAppoint(&result)
 
-	err := pinto.InsertBookRecord(db.GetWriteDB(), &bookRecord)
+	err := pinto.InsertBookRecord(db.GetWriteDB(), bookRecord)
 	if err != nil {
 		glog.Errorf("pinto.handler CreateBookRecord InsertBookRecord params err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
@@ -34,22 +36,27 @@ func BookPersonHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Pa
 }
 
 func BookPlanHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	result := make(map[string]interface{})
+	result := pinto.Appointment{}
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		glog.Errorf("pinto.handler CreateExamsHandler Decode req params err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
 		return
 	}
-
-	exam, exam_checkups, exam_sales, br, person := pinto.MapToExams(result)
-	err := pinto.SaveExaminations(db.GetWriteDB(), exam, exam_checkups, exam_sales, br, person)
+	result.TimeNow = time.Now()
+	e_all, err := pinto.FilterExamsAll(&result)
+	if err != nil {
+		glog.Errorf("pinto.handler FilterExamsAll err %v\n", err.Error())
+		httputil.Response(rw, 400, err)
+		return
+	}
+	err = pinto.SaveExaminations(db.GetWriteDB(), e_all)
 	if err != nil {
 		glog.Errorf("pinto.handler CreateExamsHandler SaveExaminations  err %v\n", err.Error())
 		httputil.Response(rw, 400, err)
 		return
 	}
 	data := map[string]string{}
-	data["bookno"] = br.BookNo
+	data["bookno"] = e_all.B.BookNo
 	httputil.ResponseJson(rw, 200, data)
 
 }

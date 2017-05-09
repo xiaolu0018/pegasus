@@ -10,6 +10,7 @@ import (
 	"github.com/golang/glog"
 
 	"bjdaos/pegasus/pkg/common/types"
+	"bjdaos/pegasus/pkg/common/util/timeutil"
 	"bjdaos/pegasus/pkg/pinto/server/db"
 )
 
@@ -61,87 +62,83 @@ func InsertExam_Sale(db *sql.DB, exam_sale types.ExaminationSale) error {
 	return err
 }
 
-func MapToExams(result map[string]interface{}) (exam types.Examination, exam_checkups []types.ExaminationCheckUp, exam_sales []types.ExaminationSale, br types.BookRecord, person types.Person) {
-
-	br = MapToBookRecord(result)
-
-	operateTime := time.Now()
-	br.CreateTime = operateTime.Format("2006-01-02")
-
-	br.BookNo = operateTime.Format("20060102150405")
-
-	//person
-	person.HosCode = br.BookorgCode
-	person.Name = br.Truename
-	person.CellPhone = br.Telphone
-	person.IdcardTypeCode = br.Bookidtype
-	person.Sex = br.Sex
-	if marry, ok := result["merrystatus"]; ok {
-		person.IsMarry = MarryToCode[marry.(string)]
-	}
-	person.CardNo = br.Bookid
-	person.CreateTime = operateTime.Format("2006-01-02 15:04:05")
-	person.PersonCode = operateTime.Format("20060102150405")
-
-	//examination
-	exam.CreateTime = operateTime.Format("2006-01-02 15:04:05")
-	exam.HosCode = br.BookorgCode
-	exam.Status = "1005"
-	exam.GuidePaperState = "0"
-	exam.CheckupHoscode = br.BookorgCode
-	exam.CheckupDate = br.Booktimestamp
-	exam.ExaminationNo = GetExaminationNo(db.GetReadDB(), exam)
-	exam.PersonCode = person.PersonCode
-
-	br.ExaminationNo = exam.ExaminationNo
-
-	//examinationCheckup
+func FilterExamCheckups(a *Appointment, exam_no string) ([]types.ExaminationCheckUp, error) {
+	var exam_checkups []types.ExaminationCheckUp
 	var exam_checkup types.ExaminationCheckUp
-	var exam_sale types.ExaminationSale
-	if sale_codes, ok := result["sale_codes"]; ok {
-		fmt.Println("sale_code ok ", sale_codes)
 
-		sale_codesstrings := make([]string, 0, len(sale_codes.([]interface{})))
-
-		for _, sale := range sale_codes.([]interface{}) {
-			sale_codesstrings = append(sale_codesstrings, sale.(string))
+	if checkups, err := GetCheckupCodesBySaleCodes(db.GetReadDB(), a.SaleCodes); err == nil {
+		exam_checkup.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
+		exam_checkup.HosCode = a.OrgCode
+		for _, checkup := range checkups {
+			exam_checkup.CheckupCode = checkup
 		}
-
-		if checkups, err := GetCheckupCodesBySaleCodes(db.GetReadDB(), sale_codesstrings); err == nil {
-			exam_checkup.CreateTime = br.CreateTime
-			exam_checkup.HosCode = br.BookorgCode
-			for _, checkup := range checkups {
-				exam_checkup.CheckupCode = checkup
-			}
-			exam_checkup.ExaminationNo = exam.ExaminationNo
-			exam_checkup.CheckupStatus = 0
-
-			exam_checkups = append(exam_checkups, exam_checkup)
-		} else {
-			glog.Warning("pinto.MapToExams checkups err ", err)
-		}
-
-		if sales, err := GetSalesBySaleCodes(db.GetReadDB(), sale_codesstrings); err == nil {
-			exam_sale.ExaminationNo = exam.ExaminationNo
-			exam_sale.HosCode = br.BookorgCode
-			exam_sale.SaleStatus = "1020"
-			for _, sale := range sales {
-				exam_sale.SaleCode = sale.Sale_Code
-				exam_sale.Discount = sale.Sale_Discount
-				exam_sale.SaleSellprice = sale.Sale_SellPrice
-				exam_sale.Curprice = exam_sale.Discount * exam_sale.SaleSellprice / 100
-			}
-			exam_sales = append(exam_sales, exam_sale)
-		} else {
-			glog.Warning("pinto.MapToExams exam_sale err ", err)
-		}
-
+		exam_checkup.ExaminationNo = exam_no
+		exam_checkup.CheckupStatus = 0
+		exam_checkups = append(exam_checkups, exam_checkup)
+	} else {
+		glog.Warning("pinto.MapToExams checkups err ", err)
+		return nil, err
 	}
-
-	return
+	return exam_checkups, nil
 }
 
-func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.ExaminationCheckUp, exam_sales []types.ExaminationSale, b types.BookRecord, person types.Person) (err error) {
+func FilterExamSales(a *Appointment, exam_no string) ([]types.ExaminationSale, error) {
+
+	var exam_sales []types.ExaminationSale
+	var exam_sale types.ExaminationSale
+
+	if sales, err := GetSalesBySaleCodes(db.GetReadDB(), a.SaleCodes); err == nil {
+		exam_sale.ExaminationNo = exam_no
+		exam_sale.HosCode = a.OrgCode
+		exam_sale.SaleStatus = "1020"
+		for _, sale := range sales {
+			exam_sale.SaleCode = sale.Sale_Code
+			exam_sale.Discount = sale.Sale_Discount
+			exam_sale.SaleSellprice = sale.Sale_SellPrice
+			exam_sale.Curprice = exam_sale.Discount * exam_sale.SaleSellprice / 100
+		}
+		exam_sales = append(exam_sales, exam_sale)
+	} else {
+		glog.Warning("pinto.MapToExams exam_sale err ", err)
+		return nil, err
+	}
+	return exam_sales, nil
+}
+
+func FilterExam(a *Appointment, p_code string) (*types.Examination, error) {
+	var exam types.Examination
+	exam.HosCode = a.OrgCode
+	exam.PersonCode = p_code
+	exam.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
+	exam.CheckupDate = a.AppointDate
+	exam.GuidePaperState = "0"
+	exam.Status = "1020"
+	exam.ReportGrantType = "0"
+	exam.ExaminationNo = GetExaminationNo(db.GetReadDB(), exam)
+	return &exam,nil
+}
+
+func FilterExamsAll(a *Appointment) (*ExamsAll, error) {
+	var examAll ExamsAll
+	examAll.B = FilterBookRecordByAppoint(a)
+	examAll.P = FilterPersonByAppoint(a)
+	var err error
+	if examAll.E, err = FilterExam(a, examAll.P.PersonCode); err != nil {
+		return nil, err
+	}
+
+	if examAll.Checkups, err = FilterExamCheckups(a, examAll.E.ExaminationNo); err != nil {
+		return nil, err
+	}
+
+	if examAll.Sales, err = FilterExamSales(a, examAll.E.ExaminationNo); err != nil {
+		return nil, err
+	}
+	return &examAll, err
+
+}
+
+func SaveExaminations(db *sql.DB, e *ExamsAll) (err error) {
 	var tx *sql.Tx
 	tx, err = db.Begin()
 	if err != nil {
@@ -155,6 +152,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		err = tx.Commit()
 	}()
 
+	person := *e.P
 	sqlStr := fmt.Sprint("INSERT INTO person(sex,card_no,is_marry,name,cellphone,createtime,person_code,idcard_type_code,hos_code)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)")
 	_, err = tx.Exec(sqlStr, person.Sex, person.CardNo, person.IsMarry, person.Name, person.CellPhone, person.CreateTime, person.PersonCode, person.IdcardTypeCode, person.HosCode)
 	if err != nil {
@@ -162,6 +160,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		return
 	}
 
+	exam := *e.E
 	sqlStr = fmt.Sprint("INSERT INTO examination (examination_no,createtime,updatetime,status,person_code,org_code,hos_code,checkupdate,checkup_hoscode,guide_paper_state,report_grant_type)" +
 		" VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT(examination_no) DO UPDATE SET updatetime=EXCLUDED.updatetime,status=EXCLUDED.status,person_code=EXCLUDED.person_code,org_code=EXCLUDED.org_code," +
 		"hos_code=EXCLUDED.hos_code,checkupdate=EXCLUDED.checkupdate,checkup_hoscode=EXCLUDED.checkup_hoscode,guide_paper_state=EXCLUDED.guide_paper_state,report_grant_type=EXCLUDED.report_grant_type; ")
@@ -170,6 +169,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		return
 	}
 
+	exam_checkups := e.Checkups
 	for _, exam_checkup := range exam_checkups {
 		sqlStr = fmt.Sprint("INSERT INTO examination_checkup(examination_no,checkup_code,checkup_status,createtime,hos_code) VALUES($1,$2,$3,$4,$5)")
 		if _, err = tx.Exec(sqlStr, exam_checkup.ExaminationNo, exam_checkup.CheckupCode, exam_checkup.CheckupStatus, exam_checkup.CreateTime, exam_checkup.HosCode); err != nil {
@@ -178,6 +178,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		}
 	}
 
+	exam_sales := e.Sales
 	for _, exam_sale := range exam_sales {
 		sqlStr = fmt.Sprint("INSERT INTO examination_sale(examination_no,sale_code,sale_status,hos_code,sale_sellprice,discount,curprice) VALUES($1,$2,$3,$4,$5,$6,$7)")
 		if _, err = tx.Exec(sqlStr, exam_sale.ExaminationNo, exam_sale.SaleCode, exam_sale.SaleStatus, exam_sale.HosCode, exam_sale.SaleSellprice, exam_sale.Discount, exam_sale.Curprice); err != nil {
@@ -186,6 +187,7 @@ func SaveExaminations(db *sql.DB, exam types.Examination, exam_checkups []types.
 		}
 	}
 
+	b := *e.B
 	sqlStr = fmt.Sprint("INSERT INTO book_record(bookno,examination_no,truename,sex,bookid,bookidtype,booktimestamp,birthday,bookorg_code,createtime,telphone,book_code)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)")
 	if _, err = tx.Exec(sqlStr, b.BookNo, b.ExaminationNo, b.Truename, b.Sex, b.Bookid, b.Bookidtype, b.Booktimestamp, b.BirthDay, b.BookorgCode, b.CreateTime, b.Telphone, b.BookCode); err != nil {
 		glog.Error("pinto.SaveExaminations book_record err ", err)

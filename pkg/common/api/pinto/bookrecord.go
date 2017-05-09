@@ -8,6 +8,7 @@ import (
 
 	"bjdaos/pegasus/pkg/common/types"
 	"strconv"
+	"bjdaos/pegasus/pkg/common/util/timeutil"
 )
 
 func GetBookRecordByBookNO(db *sql.DB, bookno string) (*types.BookRecord, error) {
@@ -57,45 +58,18 @@ func UpdateBookRecordWithExamToInvalid(db *sql.DB, bookno string) (err error) {
 	return
 }
 
-func MapToBookRecord(result map[string]interface{}) types.BookRecord {
-	br := types.BookRecord{}
-	if cartno, ok := result["cardno"]; ok {
-		br.Bookid = cartno.(string)
-	}
-	if cardtype, ok := result["cardtype"]; ok {
-		br.Bookidtype = IdCardToCode[cardtype.(string)]
-	}
-
-	if appointor, ok := result["appointor"]; ok {
-		br.Truename = appointor.(string)
-	}
-	if sex, ok := result["sex"]; ok {
-		br.Sex = SexToCode[sex.(string)]
-	}
-
-	if appointtime, ok := result["appoint_time"]; ok {
-		br.Booktimestamp = time.Unix(int64(appointtime.(float64)), 0).Format("2006-01-02")
-
-	}
-	operTime := time.Now()
-	br.CreateTime = operTime.Format("2006-01-02")
-
-	if org_code, ok := result["org_code"]; ok {
-		br.BookorgCode = org_code.(string)
-	}
-
-	if mobile, ok := result["mobile"]; ok {
-		br.Telphone = mobile.(string)
-	}
-
-	if AppointedNum, ok := result["appointednum"]; ok {
-		br.BookCode = strconv.FormatInt(int64(AppointedNum.(float64)), 10)
-	}
-
-	if appoint_channel, ok := result["appoint_channel"]; ok {
-		br.AppointChannel = appoint_channel.(string)
-	}
-
-	br.BookNo = operTime.Format("20060102150405")
-	return br
+func FilterBookRecordByAppoint(a *Appointment)*types.BookRecord{
+	var b types.BookRecord
+	b.AppointChannel = a.Appoint_Channel
+	b.BookCode = strconv.Itoa(a.AppointedNum)
+	b.Bookid = a.CardNo
+	b.Bookidtype = IdCardToCode[a.CardType]
+	b.Sex = SexToCode[a.Sex]
+	b.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
+	b.BookNo = a.TimeNow.Format(timeutil.FROMAT_SECOND)
+	b.Truename = a.Appointor
+	b.Booktimestamp = a.AppointDate
+	b.Telphone = a.Mobile
+	return &b
 }
+

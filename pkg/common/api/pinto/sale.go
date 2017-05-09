@@ -7,17 +7,6 @@ import (
 	"strings"
 )
 
-//Sale_Code string
-//Sale_OrgPrice float64
-//Sale_SellPrice float64
-//Sale_Discount float64
-//LimitSex int
-//Sale_Name string
-//Brief_Name string
-//Order_Position int
-//IsValid int
-//MnemSymbol string
-
 func ListSales(db *sql.DB) ([]types.Sale, error) {
 	rows, err := db.Query(`SELECT sale_code, sale_orgprice, sale_sellprice, sale_discount,
 	  limit_sex, sale_name, brief_name, order_position, mnemsymbol, note

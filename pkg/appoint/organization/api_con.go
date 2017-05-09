@@ -7,6 +7,7 @@ import (
 
 	"bjdaos/pegasus/pkg/appoint/db"
 	"bjdaos/pegasus/pkg/common/util/timeutil"
+	"strings"
 	"time"
 )
 
@@ -40,6 +41,20 @@ func GetConfigBasic(orgcode string) (*Config_Basic, error) {
 func (o *Config_Special) Create() error {
 	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, checkup_code, CAPACITY) VALUES ($1, $2, $3)`, TABLE_ORG_CON_SPECIAL)
 	_, err := db.GetDB().Exec(sqlStr, o.Org_Code, o.CheckupCode, o.Capacity)
+	return err
+}
+
+func BulkInsertSpecial(specails []Config_Special) error {
+	sqlStr := fmt.Sprintf(`INSERT INTO %s (ORG_CODE, checkup_code, CAPACITY) VALUES `, TABLE_ORG_CON_SPECIAL)
+	var values_specails []string
+	for _, specail := range specails {
+		values_specails = append(values_specails, fmt.Sprintf("('%s','%s',%d)", specail.Org_Code, specail.CheckupCode, specail.Capacity))
+	}
+
+	values := strings.Join(values_specails, ",")
+
+	sqlStr += values
+	_, err := db.GetDB().Exec(sqlStr)
 	return err
 }
 

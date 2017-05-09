@@ -12,7 +12,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
 
-	tm "bjdaos/pegasus/pkg/common/util/time"
+	tm "bjdaos/pegasus/pkg/common/util/timeutil"
 )
 
 func CreateAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Params) {

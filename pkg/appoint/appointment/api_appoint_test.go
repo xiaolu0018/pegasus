@@ -15,7 +15,7 @@ import (
 
 	"bjdaos/pegasus/pkg/appoint/db"
 	org "bjdaos/pegasus/pkg/appoint/organization"
-	tm "bjdaos/pegasus/pkg/common/util/time"
+	tm "bjdaos/pegasus/pkg/common/util/timeutil"
 )
 
 func dbinit() {
@@ -64,7 +64,7 @@ func TestCreateAppoint(t *testing.T) {
 	date := time.Now().Format("2006-01-02")
 	a := Appointment{
 		ID:              "",
-		Appointor:       "name1",
+		Appointor:       "kang",
 		CardNo:          "610481199007072234",
 		CardType:        "身份证",
 		Mobile:          "18799552120",
@@ -74,7 +74,7 @@ func TestCreateAppoint(t *testing.T) {
 		AppointedNum:    0,
 		Sex:             "男",
 		PlanId:          "1",
-		OrgCode:         "0001001",
+		OrgCode:         "0001002",
 		AppointTime:     now,
 		AppointDate:     date,
 		OperateTime:     time.Now().Unix(),

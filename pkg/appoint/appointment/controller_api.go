@@ -2,7 +2,7 @@ package appointment
 
 import (
 	"bjdaos/pegasus/pkg/appoint/db"
-	tm "bjdaos/pegasus/pkg/common/util/time"
+	tm "bjdaos/pegasus/pkg/common/util/timeutil"
 	"encoding/json"
 	"fmt"
 	"github.com/1851616111/util/http"

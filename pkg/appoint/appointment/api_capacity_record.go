@@ -10,6 +10,7 @@ import (
 	"bjdaos/pegasus/pkg/appoint/db"
 	org "bjdaos/pegasus/pkg/appoint/organization"
 	"bjdaos/pegasus/pkg/common/util/timeutil"
+	"strings"
 )
 
 func GetOffDay(org_code string) (map[string]interface{}, error) {
@@ -131,4 +132,96 @@ func DealOffdays(offdays []string) []string {
 	}
 
 	return resultOffday
+}
+
+type DateNum struct {
+	Date string
+	Num  int
+}
+
+func GetAppointedCount(orgcode string) (map[string]int, error) {
+	timeStart := timeutil.TodayStartSec(time.Now())
+	//todo 这里暂时用appointtime 作为group by ，后面在数据库更改成功后应变为appoint_date
+	sqlStr := fmt.Sprintf("SELECT appointtime,count(*) FROM %s WHERE org_code = '%s' AND appointtime > %d AND ifcancel = false GROUP BY appointtime ", T_APPOINTMENT, orgcode, timeStart)
+	rows, err := db.GetDB().Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var app_date string
+	var date_count int
+	result := make(map[string]int)
+	for rows.Next() {
+		if err = rows.Scan(&app_date, &date_count); err != nil {
+			return nil, err
+		}
+		result[app_date] = date_count
+	}
+	if rows.Err() != nil {
+		return nil, rows.Err()
+	}
+
+	return result, nil
+}
+
+func GetCheckupsAppintedCount(orgcode org.Config_Basic, planid string) (map[string]map[string]int, error) {
+	todayString := time.Now().Format("2006-01-02")
+	tx, err := db.GetDB().Begin()
+	if err != nil {
+		fmt.Println("begin", err)
+		return nil, err
+	}
+	sales, err := GetSalesByPlanID(tx, planid)
+	if err != nil {
+
+		fmt.Println("sales err", err)
+		tx.Rollback()
+		return nil, err
+	}
+	tx.Commit()
+
+	checkups, err := getCheckupsBySales(orgcode.IpAddress, sales)
+	if err != nil {
+		fmt.Println("checkup err", err)
+		return nil, err
+	}
+	itmeStr := make([]string, len(checkups))
+	for k, checkupcode := range checkups {
+		itmeStr[k] = fmt.Sprintf(`'%s'`, checkupcode)
+	}
+	sqlStr := fmt.Sprintf(`SELECT
+					checkup_code,date,count(*)
+				      FROM %s
+				      WHERE
+					org_code = '%s' AND date > '%s' AND cancel = false AND checkup_code IN(%s)
+				      GROUP BY
+				        date,checkup_code `,
+		T_CHECKUP_RECORD, orgcode.Org_Code, todayString, strings.Join(itmeStr, ","))
+	rows, err := db.GetDB().Query(sqlStr)
+	if err != nil {
+		fmt.Println("query,err ", err)
+		return nil, err
+	}
+	defer rows.Close()
+	var checkup_code, date string
+	var dateCount int
+	result := make(map[string]map[string]int)
+	for rows.Next() {
+
+		if err = rows.Scan(&checkup_code, &date, &dateCount); err != nil {
+			return nil, err
+		}
+		if res, ok := result[checkup_code]; ok {
+			res[date] = dateCount
+			result[checkup_code] = res
+		} else {
+			r := make(map[string]int)
+			r[date] = dateCount
+			result[checkup_code] = r
+		}
+	}
+	if rows.Err() != nil {
+		return nil, rows.Err()
+	}
+	return result, nil
 }

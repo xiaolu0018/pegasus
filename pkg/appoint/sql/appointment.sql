@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS go_appoint_appointment  --appoint 服务 预约数据
   reportid VARCHAR(30), --报告id
   bookno VARCHAR(30), --pinto服务中的book_record的对应订阅号
   ifsingle boolean, --是否散客
-  ifcancel boolean DEFAULT false--是否取消
+  ifcancel boolean DEFAULT false,--是否取消
+  sendpinto boolean DEFAULT false
 );
 
 CREATE TABLE go_appoint_order( --订单表

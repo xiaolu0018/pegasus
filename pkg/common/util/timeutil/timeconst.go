@@ -24,3 +24,8 @@ var WeekString = map[string]string{
 	"星期五": "Friday",
 	"星期六": "Saturday",
 }
+
+const (
+	FROMAT_DAY  = "2006-01-02"
+	FROMAT_SECOND = "20060102150405"
+)

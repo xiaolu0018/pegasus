@@ -1,6 +1,7 @@
 package appointment
 
 import (
+	org "bjdaos/pegasus/pkg/appoint/organization"
 	"fmt"
 	"testing"
 )
@@ -18,8 +19,34 @@ func TestDealOffdays(t *testing.T) {
 }
 func TestGetBanners(t *testing.T) {
 	dbinit()
-	_,err := GetBanners()
-	if err != nil{
+	_, err := GetBanners()
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestGetAppointedCountAfterTodayByOrgCode(t *testing.T) {
+	dbinit()
+	result, err := GetAppointedCount("0001001")
+	if len(result) == 0 {
+		t.Fatalf("result should not equit 0 ,%v", err)
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestGetCheckupsAppintedCount(t *testing.T) {
+	dbinit()
+	config, err := org.GetConfigBasic("0001002")
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := GetCheckupsAppintedCount(*config, "1")
+	if len(result) == 0 {
+		t.Fatalf("result should not equit 0 ,%v", err)
+	}
+	if err != nil {
 		t.Fatal(err)
 	}
 }

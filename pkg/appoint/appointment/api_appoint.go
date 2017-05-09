@@ -15,6 +15,7 @@ import (
 	"bjdaos/pegasus/pkg/appoint/db"
 	org "bjdaos/pegasus/pkg/appoint/organization"
 	"bjdaos/pegasus/pkg/common/util/methods"
+	"bjdaos/pegasus/pkg/common/util/timeutil"
 )
 
 /*
@@ -51,47 +52,47 @@ func (a *Appointment) CreateAppointment() (err error) {
 		return
 	}
 
+	basicCfg, err := org.GetConfigBasic(a.OrgCode)
+	if err != nil {
+		glog.Errorf("appoint.addAppointment GetConfigBasic err ", err.Error())
+		return
+	}
+
 	if a.PlanId != "" {
-		return sendToPintoWithPlan(a)
+		return sendToPintoWithPlan(a, basicCfg.IpAddress)
 	} else {
-		return sendToPintoWithOutPlan(a)
+		return sendToPintoWithOutPlan(a, basicCfg.IpAddress)
 	}
 }
 
-func sendToPintoWithOutPlan(a *Appointment) error {
-	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/person", "", a)
+func sendToPintoWithOutPlan(a *Appointment, ip string) error {
+	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", ip, "/api/appointment/person", "", a)
+	sendPinto := true
 	if errs != nil || statuscode != 200 {
-		for i := 0; i < 3; i++ {
-			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/person", "", a); errs == nil && statuscode == 200 {
-				break
-			}
-		}
+		sendPinto = false
 	}
 	resultmap := map[string]string{}
 
 	json.Unmarshal(result, &resultmap)
 
-	sqlStr := fmt.Sprintf("UPDATE %s SET bookno = '%s' WHERE id = '%s'", T_APPOINTMENT, resultmap["bookno"], a.ID)
+	sqlStr := fmt.Sprintf("UPDATE %s SET bookno = '%s',sendpinto = '%v' WHERE id = '%s'", T_APPOINTMENT, resultmap["bookno"], sendPinto, a.ID)
 	if _, errs := db.GetDB().Exec(sqlStr); errs != nil {
 		return errs
 	}
 	return nil
 }
 
-func sendToPintoWithPlan(a *Appointment) error {
-	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/plan", "", a)
+func sendToPintoWithPlan(a *Appointment, ip string) error {
+	result, statuscode, errs := methods.Go_Through_HttpWithBody("POST", ip, "/api/appointment/plan", "", a)
+	sendPinto := true
 	if errs != nil || statuscode != 200 {
-		for i := 0; i < 3; i++ {
-			if result, statuscode, errs = methods.Go_Through_HttpWithBody("POST", "http://192.168.199.198:9300", "/api/appointment/plan", "", a); errs == nil && statuscode == 200 {
-				break
-			}
-		}
+		sendPinto = false
 	}
 	resultmap := map[string]string{}
 
 	json.Unmarshal(result, &resultmap)
 
-	sqlStr := fmt.Sprintf("UPDATE %s SET bookno = '%s' WHERE id = '%s'", T_APPOINTMENT, resultmap["bookno"], a.ID)
+	sqlStr := fmt.Sprintf("UPDATE %s SET bookno = '%s',sendpinto = '%v' WHERE id = '%s'", T_APPOINTMENT, resultmap["bookno"], sendPinto, a.ID)
 	if _, errs := db.GetDB().Exec(sqlStr); errs != nil {
 		return errs
 	}
@@ -182,7 +183,7 @@ func (a *Appointment) UpdateAppointment() (err error) {
 
 func GetAppointment(appointid string) (*Appointment, error) {
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sales_code,bookno FROM %s WHERE id = '%s'`, T_APPOINTMENT, appointid)
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sale_codes,bookno FROM %s WHERE id = '%s'`, T_APPOINTMENT, appointid)
 
 	var id, org_code, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid, bookno string
 	var appointtime, operatetime int64
@@ -190,7 +191,7 @@ func GetAppointment(appointid string) (*Appointment, error) {
 	var ifsingle, ifcancel bool
 	var salescode pq.StringArray
 	err := db.GetDB().QueryRow(sqlStr).Scan(&id, &appointtime, &org_code, &planid, &cardtype, &cardno, &mobile, &appointor, &merrystatus, &status, &appoint_channel,
-		&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel, salescode, &bookno)
+		&company, &group, &remark, &operator, &operatetime, &orderid, &commentid, &appointednum, &ifsingle, &ifcancel, &salescode, &bookno)
 	if err != nil {
 		return nil, err
 	}
@@ -330,7 +331,7 @@ func addAppointment(tx *sql.Tx, app *Appointment) (err error) {
 		return
 	}
 
-	app.AppointDate = time.Unix(app.AppointTime, 0).Format("2006-01-02")
+	app.AppointDate = time.Unix(app.AppointTime, 0).Format(timeutil.FROMAT_DAY)
 	capUsed, err := getAppDateRecordNum(tx, app.OrgCode, app.AppointDate)
 	if err != nil {
 		fmt.Println("xxxxxxxxxxxxxxxxxxxxxx00002")
