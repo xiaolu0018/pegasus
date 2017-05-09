@@ -3,17 +3,14 @@ package handler
 import (
 	"net/http"
 
-	"github.com/golang/glog"
-	"github.com/julienschmidt/httprouter"
-
 	"bjdaos/pegasus/pkg/wc/common"
 	"bjdaos/pegasus/pkg/wc/user"
 	"bjdaos/pegasus/pkg/wc/util"
+	"github.com/julienschmidt/httprouter"
 )
 
 func authUser(handler func(http.ResponseWriter, *http.Request, httprouter.Params)) func(http.ResponseWriter, *http.Request, httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		glog.Errorln("authuser", isTokenInValid(r))
 		if isTokenInValid(r) {
 			unauthorizedHandler(w, r)
 			return

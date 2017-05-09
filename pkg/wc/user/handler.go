@@ -29,7 +29,6 @@ func UpsertInfoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 	u.ID = ps.ByName(common.AuthHeaderKey)
-	glog.Errorln("upsert u,id", ps.ByName(common.AuthHeaderKey))
 	if err := u.Upsert(); err != nil {
 		glog.Errorf("user.UpsertInfoHandler: user(%v) err %v\n", u, err)
 		httputil.ResponseJson(w, 400, err)

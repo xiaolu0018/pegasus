@@ -27,7 +27,6 @@ func (u *User) Upsert() error {
 func GetUsersByOpenids(openids []string) ([]User, error) {
 
 	sqlStr := fmt.Sprintf("SELECT id,openid FROM %s WHERE openid IN(%s)", TABLE_USER, forSqlIn(openids))
-	glog.Errorln("user.GetUsersByOpenids sqlStr", sqlStr)
 	rows, err := db.GetDB().Query(sqlStr)
 	if err != nil {
 		glog.Errorln("user.GetUsersByOpenids Query err", err.Error())
@@ -54,7 +53,6 @@ func GetUserByid(id string) (*User, error) {
 	sqlStr := fmt.Sprintf("SELECT openid,cardtype,cardno,mobile,name,sex,merrystatus,address_province,address_city,address_district,address_details,wc_nickname,wc_headimgurl,ifonlyneed_electronic_report FROM %s WHERE id = '%s'", TABLE_USER, id)
 	var openid, cardtype, cardno, mobile, name, sex, merrystatus, address_province, address_city, address_district, address_details, wc_nickname, wc_headimgurl string
 	var ifonlyneed_electronic_report bool
-	glog.Errorln("GetUserByid sqlstr", sqlStr)
 	err := db.GetDB().QueryRow(sqlStr).Scan(&openid, &cardtype, &cardno, &mobile, &name, &sex, &merrystatus, &address_province, &address_city, &address_district, &address_details, &wc_nickname, &wc_headimgurl, &ifonlyneed_electronic_report)
 	if err != nil {
 		glog.Errorln("user.GetUserByid rows.Scan err", err.Error())

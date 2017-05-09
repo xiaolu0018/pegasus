@@ -15,9 +15,7 @@ func TestGetBookRecordByBookNO(t *testing.T) {
 }
 
 func TestInsertBookRecord(t *testing.T) {
-	fmt.Println("enter")
 	db, err := database.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto")
-	fmt.Println("err__", err, db)
 	b := types.BookRecord{
 		BookCode:       "3",
 		BookorgCode:    "0001001",

@@ -213,9 +213,9 @@ func (c *cache) cleanByToken(token string) {
 }
 
 func (c *cache) Check() {
-	glog.Errorf("cache reporter: openID -- bsonID: %d\n", len(c.oIDToDbID))
-	glog.Errorf("cache reporter: openID -- sync: %d\n", len(c.toSyncOIDs))
-	glog.Errorf("cache reporter: openID -- token: %d\n", len(c.oIDToToken))
-	glog.Errorf("cache reporter: token -- openID: %d\n", len(c.tokenToOID))
-	glog.Errorf("cache reporter: token -- sec: %d\n", len(c.tokenToSecs))
+	//glog.Errorf("cache reporter: openID -- bsonID: %d\n", len(c.oIDToDbID))
+	//glog.Errorf("cache reporter: openID -- sync: %d\n", len(c.toSyncOIDs))
+	//glog.Errorf("cache reporter: openID -- token: %d\n", len(c.oIDToToken))
+	//glog.Errorf("cache reporter: token -- openID: %d\n", len(c.tokenToOID))
+	//glog.Errorf("cache reporter: token -- sec: %d\n", len(c.tokenToSecs))
 }

@@ -1,26 +1,19 @@
 package appointment
 
 import (
-	"time"
-
-	"net/http"
-
-	"encoding/json"
-
-	"github.com/golang/glog"
-	"gopkg.in/mgo.v2/bson"
-
-	httputil "github.com/1851616111/util/http"
-	"github.com/1851616111/util/message"
-	"github.com/julienschmidt/httprouter"
-
+	"bjdaos/pegasus/pkg/appoint/appointment"
 	"bjdaos/pegasus/pkg/appoint/cache"
 	"bjdaos/pegasus/pkg/wc/common"
 	"bjdaos/pegasus/pkg/wc/user"
-
-	appoint_Appointment "bjdaos/pegasus/pkg/appoint/appointment"
+	"encoding/json"
 	"fmt"
+	httputil "github.com/1851616111/util/http"
+	"github.com/1851616111/util/message"
+	"github.com/golang/glog"
+	"github.com/julienschmidt/httprouter"
+	"gopkg.in/mgo.v2/bson"
 	"math/rand"
+	"net/http"
 	"strconv"
 )
 
@@ -32,7 +25,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		return
 	}
 	if cm.ID == "" {
-		cm.ID = bson.NewObjectIdWithTime(time.Now()).Hex()
+		cm.ID = bson.NewObjectId().Hex()
 	}
 
 	cm.UserID = ps.ByName(common.AuthHeaderKey)
@@ -93,21 +86,20 @@ func ConfirmCreatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		httputil.Response(w, 400, err)
 		return
 	}
-	var a_a *appoint_Appointment.Appointment
+	var a_a *appointment.Appointment
 	if a_a, err = Get_Appoint_Appointment(*u, app); err != nil {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler Get_Appoint_Appointment err", err.Error())
 		httputil.Response(w, 400, err)
 		return
 	}
 
-	rsp, err := SendToAppoint(*a_a, common.AppointServe)
-	defer rsp.Body.Close()
-	if err != nil {
+	rspbyte, code, err := common.Go_Through_HttpWithBody("POST", "/api/appointment", u.ID, a_a)
+	if err != nil || code != 200 {
 		glog.Errorln("Appointment GetAppointmentConfirmHandler SendToAppoint", err)
-		httputil.Response(w, 400, "ok")
+		httputil.Response(w, 400, err)
 	}
-
-	httputil.Response(w, rsp.StatusCode, "ok")
+	w.Write(rspbyte)
+	httputil.Response(w, code, "ok")
 }
 
 func CancelHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

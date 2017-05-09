@@ -16,3 +16,10 @@ func TestDealOffdays(t *testing.T) {
 	days := DealOffdays(offday)
 	fmt.Println("days ,,,", days)
 }
+func TestGetBanners(t *testing.T) {
+	dbinit()
+	_,err := GetBanners()
+	if err != nil{
+		t.Fatal(err)
+	}
+}

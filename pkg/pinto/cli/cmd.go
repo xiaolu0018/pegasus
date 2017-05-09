@@ -39,6 +39,7 @@ func startCmd() *cobra.Command {
 		},
 
 		Run: func(cmd *cobra.Command, args []string) {
+			glog.Warningln("pinto Start")
 			router := handler.CreateHttpRouter()
 			if err := http.ListenAndServe(addr, router); err != nil {
 				glog.Errorf("pinto start err %v\n", err)

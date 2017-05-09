@@ -26,7 +26,7 @@ func CreateHttpRouter() http.Handler {
 	r.GET("/api/banners", GetBannersHandler)
 	r.GET("/api/offday/:code", GetOffDayHandler)
 
-	r.POST("/api/appointment", appointment.CreateAppointmentHandler)
+	r.POST("/api/appointment", appoint.AuthUser(appointment.CreateAppointmentHandler))
 	r.POST("/api/appointment/:appointid/cancel", appointment.CancelAppointmentHandler)
 	r.POST("/api/appointment/:appointid/comment", appointment.CreateCommentHandler)
 	r.PUT("/api/appointment", appointment.UpdateAppointmentHandler)

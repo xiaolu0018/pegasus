@@ -5,9 +5,6 @@ import (
 	"fmt"
 )
 
-//pos INTEGER,
-//imageUrl VARCHAR(30),
-//redirectUrl VARCHAR(30),
 func GetBanners() ([]Banner, error) {
 	sqlStr := fmt.Sprintf("SELECT pos,imageUrl,redirectUrl FROM %s", T_BANNER)
 	bs := make([]Banner, 0)
@@ -18,7 +15,7 @@ func GetBanners() ([]Banner, error) {
 	defer rows.Close()
 	b := Banner{}
 	for rows.Next() {
-		if err = rows.Scan(b.Pos, b.IfShow, b.RedirectUrl); err != nil {
+		if err = rows.Scan(&b.Pos, &b.ImageUrl, &b.RedirectUrl); err != nil {
 			return nil, err
 		}
 		bs = append(bs, b)

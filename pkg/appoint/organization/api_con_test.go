@@ -22,17 +22,10 @@ func TestConfig_Basic_Create(t *testing.T) {
 		AvoidNumbers: []int64{13, 3, 4, 14},
 	}
 
-	//err := org.Validate()
-
 	err := org.Create()
-	fmt.Println("125464_____", err)
 	if err == nil {
 		t.Fatal(err)
 	}
-
-	//if !error.ForeignKeyConstraint(err) {
-	//	t.Fatal(err)
-	//}
 }
 
 func TestConfig_Special_Create(t *testing.T) {
@@ -42,7 +35,7 @@ func TestConfig_Special_Create(t *testing.T) {
 
 	org := &Config_Special{
 		Org_Code:  time.Now().String()[:30],
-		Sale_Code: time.Now().String()[:30],
+		CheckupCode: time.Now().String()[:30],
 		Capacity:  100,
 	}
 
@@ -60,5 +53,4 @@ func TestORg(t *testing.T) {
 	if err := db.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto"); err != nil {
 		t.Fatal(err)
 	}
-
 }

@@ -77,13 +77,8 @@ func MapToBookRecord(result map[string]interface{}) types.BookRecord {
 		br.Booktimestamp = time.Unix(int64(appointtime.(float64)), 0).Format("2006-01-02")
 
 	}
-
-	operatetime, ok := result["operate_time"]
-
-	operTime := time.Unix(int64(operatetime.(float64)), 0)
-	if ok {
-		br.CreateTime = operTime.Format("2006-01-02")
-	}
+	operTime := time.Now()
+	br.CreateTime = operTime.Format("2006-01-02")
 
 	if org_code, ok := result["org_code"]; ok {
 		br.BookorgCode = org_code.(string)

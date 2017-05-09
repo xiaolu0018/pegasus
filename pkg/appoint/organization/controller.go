@@ -11,7 +11,6 @@ import (
 func AutoDeleteOverdueOffdays() {
 	for {
 		if time.Now().Hour() == 23 {
-
 			basics, err := GetAllGetConfigBasics()
 			if err != nil {
 				glog.Errorln("appointmen.changeAppointmentStatus err ", err.Error())

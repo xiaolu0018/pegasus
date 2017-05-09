@@ -43,10 +43,6 @@ type Health struct {
 	Smoke_history          []string `json:"smoke_history"`          //吸烟史
 }
 
-////在更新label时的操作
-//type UserLabel struct {
-//	labelmap map[string][]string
-//}
 
 func (u *User) IsAdmin() bool {
 	return u.Role == role_admin

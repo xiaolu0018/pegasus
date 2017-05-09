@@ -17,15 +17,8 @@ type Appointment struct {
 	AppointmentStatus string    ``                     //预约状态， 如 预约，已体检，爽约
 	Form              string    `json:"form"`          //预约来源
 	Oid               string    `bson:"oid,omitempty"` //是用来修改预约的，如没点最后的确认则会将这个删
-	Appraise
 	Status bool //是否已经确认预约   指的是在创建预约是是否点击过最后一步确认按钮
 	Canel  bool //是否取消预约体检
-}
-
-type Appraise struct { //预约评价
-	Type1 string
-	Type2 string
-	Type3 string
 }
 
 //为了预约确认时的展示

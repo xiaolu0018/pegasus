@@ -31,7 +31,7 @@ func CreateAppointmentHandler(rw http.ResponseWriter, r *http.Request, ps httpro
 
 	if err := a.CreateAppointment(); err != nil {
 		if err.Error() == ErrAppointmentString {
-			httputil.Response(rw, 200, "ErrAppointmentString")
+			httputil.Response(rw, 200, ErrAppointmentString)
 			return
 		}
 		glog.Errorf("orgnization.CreateHandle Create err %v\n", err.Error())
@@ -134,7 +134,6 @@ func ListAppointmentsHandler(rw http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 	result := make(map[string]interface{})
-	glog.Errorln("apps__", len(apps))
 	result["total"] = total
 	result["data"] = apps
 

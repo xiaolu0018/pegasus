@@ -2,10 +2,8 @@ package organization
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 	"strings"
-	//"time"
 )
 
 var (
@@ -32,7 +30,6 @@ func (c *Config_Basic) Validate() error {
 	sort.Slice(c.AvoidNumbers, func(i, j int) bool {
 		return c.AvoidNumbers[i] < c.AvoidNumbers[j]
 	})
-	fmt.Println("sort__slice", c.AvoidNumbers)
 	if len(c.AvoidNumbers) > 0 {
 		if c.AvoidNumbers[len(c.AvoidNumbers)-1] > 1000 || c.AvoidNumbers[0] < 0 {
 			return ErrAvoidNumberInvalid
