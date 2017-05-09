@@ -1,7 +1,6 @@
 package vote
 
 import (
-	"os"
 	"fmt"
 	"time"
 	"net/http"
@@ -19,6 +18,7 @@ import (
 	"github.com/1851616111/util/weichat/util/sign"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
+	"github.com/1851616111/util/image"
 )
 
 var dbI DBInterface
@@ -47,32 +47,29 @@ func AddRouter(r *httprouter.Router, dist string) {
 		panic(err)
 	}
 
-	iosImagePath = fmt.Sprintf("%s/voterimages/ios", dist)
+	iosImagePath = fmt.Sprintf("%s/voterimages", dist)
 
 	r.ServeFiles("/dist/activity/*filepath", http.Dir(dist))
 }
 
 func RegisterImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	image := r.FormValue("image")
-	if len(image) == 0 {
+	imageName := r.FormValue("image")
+	if len(imageName) == 0 {
 		httputil.Response(w, 400, "param image not found")
 		return
 	}
 
-	image = iosImagePath + "/" + image
+	target := fmt.Sprintf("%s/%s.jpg", iosImagePath, imageName)
 	data := r.FormValue("data")
 
-	target, err := os.Create(image)
-	if err != nil {
-		httputil.Response(w, 400, err)
-		return
-	}
-	defer target.Close()
+	idx := strings.Index(data, ",")
+	data = data[idx+1:]
 
-	if _, err := target.Write([]byte(data)); err != nil {
+	if err := image.GenImageFromBase64([]byte(data), target); err != nil {
 		httputil.Response(w, 400, err)
 		return
 	}
+
 	httputil.Response(w, 200, "ok")
 	return
 }
