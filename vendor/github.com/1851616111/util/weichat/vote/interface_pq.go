@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS  GO_WEICHAT_ACTIVITY_VOTER (
    imageCached	BOOLEAN DEFAULT FALSE
 );
 
-CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_image VARCHAR, p_company VARCHAR, p_mobile VARCHAR, p_declaration varchar, p_imageCached varchar) RETURNS VARCHAR AS $$
+CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_image VARCHAR, p_company VARCHAR, p_mobile VARCHAR, p_declaration varchar, p_imageCached boolean) RETURNS VARCHAR AS $$
   DECLARE
     registedCount INTEGER;
     unregistedCount INTEGER;
@@ -91,7 +91,7 @@ func (d DB) Init(access_token string) error {
 
 func (d DB) Register(v *Voter) error {
 	var result string
-	var sql string = fmt.Sprintf(`SELECT wc_Regist_Voter('%s', '%s', '%s', '%s', '%s', '%s', '%s')`,
+	var sql string = fmt.Sprintf(`SELECT wc_Regist_Voter('%s', '%s', '%s', '%s', '%s', '%s', %s)`,
 		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration, v.imageCached)
 	if err := d.QueryRow(sql).Scan(&result); err != nil {
 		fmt.Println(err)
