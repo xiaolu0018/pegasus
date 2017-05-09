@@ -1,13 +1,15 @@
 package vote
 
 import (
-	"database/sql"
-	"errors"
 	"fmt"
-	"github.com/golang/glog"
-	"github.com/lib/pq"
 	"sort"
 	"time"
+	"errors"
+
+	"database/sql"
+	"github.com/golang/glog"
+	"github.com/lib/pq"
+	"github.com/1851616111/util/weichat/manager/user"
 )
 
 var TABLE_VOTER string = "GO_WEICHAT_ACTIVITY_VOTER"
@@ -15,6 +17,7 @@ var SQL_TABLE = `
 CREATE TABLE IF NOT EXISTS  GO_WEICHAT_ACTIVITY_VOTER (
    openid varchar(50) PRIMARY KEY,
    voterid SERIAL,
+   registed BOOLEAN DEFAULT FALSE,
    name varchar(15),
    image varchar(300),
    company varchar(100),
@@ -22,9 +25,28 @@ CREATE TABLE IF NOT EXISTS  GO_WEICHAT_ACTIVITY_VOTER (
    declaration varchar(50),
    votedcount integer DEFAULT 0,
    voteRecords integer[],
-   imageCached	boolean DEFAULT false
+   imageCached	BOOLEAN DEFAULT FALSE
 );
-`
+
+CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_image VARCHAR, p_company VARCHAR, p_mobile VARCHAR, p_declaration varchar) RETURNS VARCHAR AS $$
+  DECLARE
+    registedCount INTEGER;
+    unregistedCount INTEGER;
+  BEGIN
+    SELECT count(*) from go_weichat_activity_voter where openid = p_openid AND registed into registedCount;
+    IF  registedCount = 1 THEN
+     RETURN 'exist';
+    ELSE
+        SELECT count(*) from go_weichat_activity_voter where openid = p_openid into unregistedCount;
+        IF unregistedCount = 1 THEN
+          UPDATE go_weichat_activity_voter SET name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed = TRUE WHERE openid = p_openid;
+        ELSE
+          INSERT INTO go_weichat_activity_voter(openid, name, image, company, mobile, declaration, registed) VALUES (p_openid, p_name, p_image, p_company, p_mobile, p_declaration, TRUE);
+        END IF;
+      RETURN 'ok';
+    END IF;
+  END;
+$$ LANGUAGE plpgsql;`
 
 func NewDBInterface(ip, port, user, passwd, database string) (DBInterface, error) {
 	addr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
@@ -42,15 +64,47 @@ type DB struct {
 	*sql.DB
 }
 
-func (d DB) Init() (err error) {
-	_, err = d.Exec(SQL_TABLE)
-	return
+func (d DB) Init(access_token string) error {
+	if _, err := d.Exec(SQL_TABLE); err != nil {
+		return err
+	}
+
+	users, err := user.ListUserIDs(access_token)
+	if err != nil {
+		return err
+	}
+
+	var cuccessCount int
+	for id := range users {
+		if _, err:= d.Exec(`INSERT INTO ` +TABLE_VOTER+ `(openid) VALUES($1) ON CONFLICT(openid)
+		DO UPDATE SET openid = EXCLUDED.openid `, users[id]); err != nil {
+			glog.Errorf("weichat init vote user err %v\n", err)
+		} else {
+			cuccessCount ++
+		}
+	}
+
+	glog.Errorf("weichat activity init followers: %d \n", len(users))
+	glog.Errorf("weichat activity init db user: %d \n", cuccessCount )
+	return nil
 }
 
 func (d DB) Register(v *Voter) error {
-	_, err := d.Exec(`INSERT INTO `+TABLE_VOTER+` (openid, name, image, company, mobile, declaration)
-	VALUES($1,$2,$3,$4,$5,$6)`, v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration)
-	return err
+	var result string
+	var sql string = fmt.Sprintf(`SELECT wc_Regist_Voter('%s', '%s', '%s', '%s', '%s', '%s')`,
+		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration)
+	if err := d.QueryRow(sql).Scan(&result); err != nil {
+		fmt.Println(err)
+	}
+	switch result {
+	case "exist":
+		return errors.New("user exists")
+
+	case "ok":
+		return nil
+	default:
+		return fmt.Errorf("unknown err %s\n", result)
+	}
 }
 
 func (d DB) Vote(openID, votedID string) (err error) {
@@ -91,8 +145,8 @@ func (d DB) Vote(openID, votedID string) (err error) {
 }
 
 func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
-	var sql string = `SELECT voterid, COALESCE(name, ''), COALESCE(image, ''), votedcount FROM ` + TABLE_VOTER + ` WHERE imagecached %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
-	var countSQL string = `SELECT count(*) FROM ` + TABLE_VOTER + ` WHERE imagecached %s`
+	var sql string = `SELECT voterid, COALESCE(name, ''), COALESCE(image, ''), votedcount FROM ` + TABLE_VOTER + ` WHERE imagecached AND registed %s ORDER BY votedcount DESC LIMIT %d OFFSET %d`
+	var countSQL string = `SELECT count(*) FROM ` + TABLE_VOTER + ` WHERE imagecached AND registed %s`
 	var sqlCondition string
 	if key == nil {
 		sqlCondition = ""
@@ -138,7 +192,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 
 func (d DB) GetVoter(openid string) (*Voter, error) {
 	v := Voter{}
-	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM `+TABLE_VOTER+` WHERE openid = $1`, openid).
+	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM `+TABLE_VOTER+` WHERE registed AND openid = $1 AND `, openid).
 		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount); err != nil {
 		return nil, err
 	}
@@ -151,7 +205,7 @@ func (d DB) updateVoterImageStatus(image string) (err error) {
 }
 
 func hasVoteRight(records []int64) bool {
-	if len(records) >= 3 {
+	if len(records) >= 100 {
 		sort.Sort(Int64Slice(records))
 		return time.Now().Unix()-records[2] >= 3600*24
 	} else {
