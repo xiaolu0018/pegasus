@@ -132,7 +132,11 @@ func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 	v.Complete()
 
 	if CH_CACHE_IMAGES != nil {
-		CH_CACHE_IMAGES <- v.Image
+		if len(v.Image) != 28 {
+			CH_CACHE_IMAGES <- v.Image
+		} else {
+			v.imageCached = true
+		}
 	}
 
 	if err := dbI.Register(v); err != nil {

@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS  GO_WEICHAT_ACTIVITY_VOTER (
    imageCached	BOOLEAN DEFAULT FALSE
 );
 
-CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_image VARCHAR, p_company VARCHAR, p_mobile VARCHAR, p_declaration varchar) RETURNS VARCHAR AS $$
+CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_image VARCHAR, p_company VARCHAR, p_mobile VARCHAR, p_declaration varchar, p_imageCached varchar) RETURNS VARCHAR AS $$
   DECLARE
     registedCount INTEGER;
     unregistedCount INTEGER;
@@ -39,9 +39,9 @@ CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_i
     ELSE
         SELECT count(*) from go_weichat_activity_voter where openid = p_openid into unregistedCount;
         IF unregistedCount = 1 THEN
-          UPDATE go_weichat_activity_voter SET name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed = TRUE WHERE openid = p_openid;
+          UPDATE go_weichat_activity_voter SET name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed = TRUE, imageCached = p_imageCached WHERE openid = p_openid;
         ELSE
-          INSERT INTO go_weichat_activity_voter(openid, name, image, company, mobile, declaration, registed) VALUES (p_openid, p_name, p_image, p_company, p_mobile, p_declaration, TRUE);
+          INSERT INTO go_weichat_activity_voter(openid, name, image, company, mobile, declaration, registed, imageCached) VALUES (p_openid, p_name, p_image, p_company, p_mobile, p_declaration, TRUE, p_imageCached);
         END IF;
       RETURN 'ok';
     END IF;
@@ -91,8 +91,8 @@ func (d DB) Init(access_token string) error {
 
 func (d DB) Register(v *Voter) error {
 	var result string
-	var sql string = fmt.Sprintf(`SELECT wc_Regist_Voter('%s', '%s', '%s', '%s', '%s', '%s')`,
-		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration)
+	var sql string = fmt.Sprintf(`SELECT wc_Regist_Voter('%s', '%s', '%s', '%s', '%s', '%s', '%s')`,
+		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration, v.imageCached)
 	if err := d.QueryRow(sql).Scan(&result); err != nil {
 		fmt.Println(err)
 	}
