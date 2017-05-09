@@ -192,7 +192,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 
 func (d DB) GetVoter(openid string) (*Voter, error) {
 	v := Voter{}
-	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM `+TABLE_VOTER+` WHERE registed AND openid = $1 AND `, openid).
+	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount FROM `+TABLE_VOTER+` WHERE registed AND openid = $1`, openid).
 		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount); err != nil {
 		return nil, err
 	}
