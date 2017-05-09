@@ -90,9 +90,13 @@ func (d DB) Init(access_token string) error {
 }
 
 func (d DB) Register(v *Voter) error {
+	imageCached := "false"
+	if v.imageCached {
+		imageCached = "true"
+	}
 	var result string
 	var sql string = fmt.Sprintf(`SELECT wc_Regist_Voter('%s', '%s', '%s', '%s', '%s', '%s', %s)`,
-		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration, v.imageCached)
+		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration, imageCached)
 	if err := d.QueryRow(sql).Scan(&result); err != nil {
 		fmt.Println(err)
 	}
