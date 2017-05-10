@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 	"io/ioutil"
-	"database/sql"
 	"encoding/json"
 	"path/filepath"
 
@@ -21,7 +20,7 @@ import (
 	"github.com/1851616111/util/image"
 )
 
-var dbI DBInterface
+var DBI DBInterface
 var URL_REGISTER_HTML string
 var APPID string
 var iosImagePath string
@@ -133,7 +132,7 @@ func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 		}
 	}
 
-	if err := dbI.Register(v); err != nil {
+	if err := DBI.Register(v); err != nil {
 		glog.Errorf("register voter, database operate err %v\n", err)
 		httputil.Response(w, 400, err)
 		return
@@ -151,7 +150,7 @@ func VoteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	if err := dbI.Vote(openid, voteID); err != nil {
+	if err := DBI.Vote(openid, voteID); err != nil {
 		httputil.Response(w, 400, err)
 		return
 	}
@@ -196,7 +195,7 @@ func ListVotersHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		}
 	}
 
-	l, err := dbI.ListVoters(searchKey, index, size)
+	l, err := DBI.ListVoters(searchKey, index, size)
 	if err != nil {
 		httputil.Response(w, 400, err)
 		return
@@ -213,13 +212,16 @@ func GetVoterByOpenIDHandler(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	v, err := dbI.GetVoter(openid)
+	v, err := DBI.GetVoter(openid)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			httputil.Response(w, 404, "not found")
-			return
+		switch err {
+		case ERR_NOT_FOLLOW:
+			httputil.Response(w, 404, err)
+		case ERR_NOT_REGISTER:
+			httputil.Response(w, 404, err)
+		default:
+			httputil.Response(w, 400, err)
 		}
-		httputil.Response(w, 400, err)
 		return
 	}
 
@@ -228,5 +230,5 @@ func GetVoterByOpenIDHandler(w http.ResponseWriter, r *http.Request, ps httprout
 }
 
 func SetDB(i DBInterface) {
-	dbI = i
+	DBI = i
 }

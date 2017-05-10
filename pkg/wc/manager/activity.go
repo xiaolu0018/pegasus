@@ -3,6 +3,8 @@ package manager
 import (
 	"github.com/1851616111/util/weichat/event"
 	"github.com/1851616111/util/weichat/handler"
+
+	"github.com/1851616111/util/weichat/vote"
 )
 
 func WatchEvent(appid, schema, domain string) error {
@@ -10,7 +12,9 @@ func WatchEvent(appid, schema, domain string) error {
 
 	imgUrl := "http://hd1.dahe100.cn/dist/activity/img/head.png"
 	article := event.NewArticleAction("跟衰老 Say Bye Bye", "晒合影, 喊好友来助力！！！", imgUrl, url)
-	handler.EventManager.Registe(event.E_Subscribe, article)
-	handler.EventManager.Registe(event.E_UnSubscribe, article)
+	handler.EventManager.RegistAction(event.E_Subscribe, article)
+	handler.EventManager.RegistAction(event.E_UnSubscribe, article)
+	handler.EventManager.RegistEventCallBack(event.E_Subscribe, vote.DBI.Follow)
+	handler.EventManager.RegistEventCallBack(event.E_UnSubscribe, vote.DBI.UnFollow)
 	return nil
 }

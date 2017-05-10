@@ -27,7 +27,7 @@ func StartImageCachedController(cachePath string) {
 				continue
 			}
 
-			if err := dbI.updateVoterImageStatus(imageID); err != nil {
+			if err := DBI.updateVoterImageStatus(imageID); err != nil {
 				glog.Errorf("weichat vote image controller update image status err %v\n", err)
 				continue
 			}

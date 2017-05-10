@@ -8,21 +8,26 @@ import (
 var ErrEventNotFound error = errors.New("event not found")
 var ErrEventExist error = errors.New("event already exist")
 var ErrEventActionNotFount error = errors.New("event action not found")
-
+var ErrEventCBNotFount error = errors.New("event action not found")
 func NewEventManager() *EventManager {
 	return &EventManager{
-		eventNum:       0,
-		eventToActionM: make(map[string]*Action),
+		eventActionNum:    0,
+		eventToActionM:    make(map[string]*Action),
+		eventCallBackNum : 0,
+		eventToCallBackM:  make(map[string]func(*Event) error),
 	}
 }
 
 //reference https://mp.weixin.qq.com/wiki/2/5baf56ce4947d35003b86a9805634b1e.html
 type EventManager struct {
-	eventNum       int
-	eventToActionM map[string]*Action
+	eventActionNum  int
+	eventToActionM  map[string]*Action
+
+	eventCallBackNum int
+	eventToCallBackM map[string] func(*Event) error
 }
 
-func (m *EventManager) Registe(tp string, act *Action) error {
+func (m *EventManager) RegistAction(tp string, act *Action) error {
 	if tp != E_News && tp != E_Subscribe && tp != E_UnSubscribe {
 		return ErrEventNotFound
 	}
@@ -36,13 +41,31 @@ func (m *EventManager) Registe(tp string, act *Action) error {
 	}
 
 	m.eventToActionM[tp] = act
-	m.eventNum++
+	m.eventActionNum++
 
 	return nil
 }
 
+func (m *EventManager) RegistEventCallBack(tp string, cb func(*Event) error ) error {
+	if tp != E_News && tp != E_Subscribe && tp != E_UnSubscribe {
+		return ErrEventNotFound
+	}
+
+	if cb == nil {
+		return ErrEventCBNotFount
+	}
+
+	if _, exist := m.eventToActionM[tp]; exist {
+		return ErrEventExist
+	}
+
+	m.eventToCallBackM[tp] = cb
+	m.eventCallBackNum ++
+	return nil
+}
+
 func (m *EventManager) Handle(e *Event) *Action {
-	if m.eventNum == 0 {
+	if m.eventActionNum == 0 {
 		return nil
 	}
 
@@ -61,4 +84,17 @@ func (m *EventManager) Handle(e *Event) *Action {
 	retAct.From, act.To = e.To, e.From
 
 	return &retAct
+}
+
+func (m *EventManager) CallBack(e *Event) error {
+	if m.eventCallBackNum == 0 {
+		return nil
+	}
+
+	cb, exist := m.eventToCallBackM[string(e.E)]
+	if !exist {
+		return nil
+	}
+
+	return cb(e)
 }

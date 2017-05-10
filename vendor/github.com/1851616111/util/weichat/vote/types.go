@@ -23,6 +23,8 @@ type Voter struct {
 	Mobile      string `json:"mobile,omitempty"`
 	Declaration string `json:"declaration,omitempty"`
 	VotedCount  int    `json:"voteCount"`
+	followed bool
+	registed bool
 	imageCached bool
 }
 

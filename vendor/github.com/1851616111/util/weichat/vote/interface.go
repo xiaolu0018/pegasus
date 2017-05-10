@@ -1,5 +1,7 @@
 package vote
 
+import "github.com/1851616111/util/weichat/event"
+
 type DBInterface interface {
 	Init(access_token string) error //初始化已关注用户
 	Register(voter *Voter) error
@@ -7,4 +9,7 @@ type DBInterface interface {
 	GetVoter(openid string) (*Voter, error)
 	ListVoters(key interface{}, index, size int) (*VoterList, error)
 	updateVoterImageStatus(image string) error
+
+	Follow(*event.Event) error
+	UnFollow(*event.Event) error
 }

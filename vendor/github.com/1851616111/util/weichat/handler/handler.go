@@ -55,6 +55,10 @@ func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
+	if err := EventManager.CallBack(&e); err != nil {
+		glog.Errorf("weichat event callback　event(%v) \n", e)
+	}
+
 	if act := EventManager.Handle(&e); act != nil {
 		b, err := xml.Marshal(act)
 		if err != nil {
