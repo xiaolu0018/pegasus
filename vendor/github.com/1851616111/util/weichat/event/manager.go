@@ -56,7 +56,7 @@ func (m *EventManager) RegistEventCallBack(tp string, cb func(*Event) error ) er
 		return ErrEventCBNotFount
 	}
 
-	if _, exist := m.eventToActionM[tp]; exist {
+	if _, exist := m.eventToCallBackM[tp]; exist {
 		return ErrEventExist
 	}
 
