@@ -35,3 +35,16 @@ func TestCreateUpdate(t *testing.T) {
 	}
 
 }
+
+func TestGetExaminationNo(t *testing.T) {
+	db, _ := database.Init("postgres", "postgres190@", "10.1.0.190", "5432", "pinto")
+	sqlStr := fmt.Sprintf("SELECT seq_number FROM serial_number WHERE hos_code='%s' AND code = '%s'", "0001002", "001")
+	sql_number := 0
+	if err := db.QueryRow(sqlStr).Scan(&sql_number); err != nil {
+		t.Fatal(err)
+	}
+	if sql_number != 0 {
+		t.Fatal("sql_number __", sql_number)
+	}
+
+}

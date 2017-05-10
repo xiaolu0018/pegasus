@@ -3,7 +3,6 @@ package pinto
 import (
 	"bjdaos/pegasus/pkg/common/types"
 	"bjdaos/pegasus/pkg/common/util/database"
-	"fmt"
 	"testing"
 )
 
@@ -19,7 +18,7 @@ func TestInsertBookRecord(t *testing.T) {
 	b := types.BookRecord{
 		BookCode:       "3",
 		BookorgCode:    "0001001",
-		BookNo:         "201704291818",
+		BookNo:         "20170509193904",
 		Truename:       "kang",
 		Telphone:       "19865441259",
 		Sex:            1,

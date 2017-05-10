@@ -1,13 +1,15 @@
 package cli
 
 import (
-	"net/http"
 	"os"
+
+	"net/http"
+
+	"github.com/golang/glog"
+	"github.com/spf13/cobra"
 
 	"bjdaos/pegasus/pkg/pinto/server/db"
 	"bjdaos/pegasus/pkg/pinto/server/handler"
-	"github.com/golang/glog"
-	"github.com/spf13/cobra"
 )
 
 func NewPintoCmd(name string) *cobra.Command {

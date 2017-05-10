@@ -32,3 +32,22 @@ func GetCheckupCodesBySaleCodesHandler(w http.ResponseWriter, r *http.Request, p
 	httputil.ResponseJson(w, 200, map[string][]string{"checkupcodes": cks})
 	return
 }
+
+type ForStatistics struct {
+	HosCode   string
+	OrgCode   string
+	StartDate string
+	EndDate   string
+	Checkups  []string
+}
+
+func AppointStatisticsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var forStatistics ForStatistics
+	if err := json.NewDecoder(r.Body).Decode(&forStatistics); err != nil {
+		httputil.ResponseJson(w, 400, map[string]interface{}{"err___": err})
+		return
+	}
+
+
+
+}

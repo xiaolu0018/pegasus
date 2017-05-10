@@ -2,12 +2,11 @@ package pinto
 
 import (
 	"fmt"
-	"time"
+	"strconv"
 
 	"database/sql"
 
 	"bjdaos/pegasus/pkg/common/types"
-	"strconv"
 	"bjdaos/pegasus/pkg/common/util/timeutil"
 )
 
@@ -22,7 +21,8 @@ func GetBookRecordByBookNO(db *sql.DB, bookno string) (*types.BookRecord, error)
 }
 
 func InsertBookRecord(db *sql.DB, b *types.BookRecord) error {
-	sqlStr := fmt.Sprint("INSERT INTO book_record(bookno,examination_no,truename,sex,bookid,bookidtype,booktimestamp,birthday,bookorg_code,createtime,telphone,book_code,is_valid)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1)")
+	sqlStr := fmt.Sprint(`INSERT INTO book_record(bookno,examination_no,truename,sex,bookid,bookidtype,booktimestamp,birthday,bookorg_code,createtime,telphone,book_code,is_valid)
+		VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,1)ON CONFLICT(bookno)DO UPDATE SET booktimestamp=EXCLUDED.booktimestamp`)
 	_, err := db.Exec(sqlStr, b.BookNo, b.ExaminationNo, b.Truename, b.Sex, b.Bookid, b.Bookidtype, b.Booktimestamp, b.BirthDay, b.BookorgCode, b.CreateTime, b.Telphone, b.BookCode)
 	return err
 
@@ -58,7 +58,7 @@ func UpdateBookRecordWithExamToInvalid(db *sql.DB, bookno string) (err error) {
 	return
 }
 
-func FilterBookRecordByAppoint(a *Appointment)*types.BookRecord{
+func FilterBookRecordByAppoint(a *Appointment) *types.BookRecord {
 	var b types.BookRecord
 	b.AppointChannel = a.Appoint_Channel
 	b.BookCode = strconv.Itoa(a.AppointedNum)
@@ -66,10 +66,9 @@ func FilterBookRecordByAppoint(a *Appointment)*types.BookRecord{
 	b.Bookidtype = IdCardToCode[a.CardType]
 	b.Sex = SexToCode[a.Sex]
 	b.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
-	b.BookNo = a.TimeNow.Format(timeutil.FROMAT_SECOND)
+	b.BookNo = a.TimeNow.Format(timeutil.FROMAT_YYMMDDHHMMSS)
 	b.Truename = a.Appointor
 	b.Booktimestamp = a.AppointDate
 	b.Telphone = a.Mobile
 	return &b
 }
-

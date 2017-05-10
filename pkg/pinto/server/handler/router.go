@@ -15,5 +15,7 @@ func CreateHttpRouter() http.Handler {
 	r.POST("/api/examination/cancel", CancelExamHandler)
 	r.GET("/api/sales/checkups", GetCheckupCodesBySaleCodesHandler)
 
+	r.GET("/api/appoint/statistics",AppointStatisticsHandler)
+
 	return r
 }

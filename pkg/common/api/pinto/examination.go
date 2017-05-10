@@ -2,7 +2,6 @@ package pinto
 
 import (
 	"fmt"
-	"time"
 
 	"strconv"
 
@@ -11,7 +10,6 @@ import (
 
 	"bjdaos/pegasus/pkg/common/types"
 	"bjdaos/pegasus/pkg/common/util/timeutil"
-	"bjdaos/pegasus/pkg/pinto/server/db"
 )
 
 func GetExam(db *sql.DB, exam_no string) (*types.Examination, error) {
@@ -41,6 +39,8 @@ func GetExaminationNo(db *sql.DB, exam types.Examination) string {
 		fmt.Println("get exam no ", err)
 		return ""
 	}
+
+	glog.Errorln("sql_number", sql_number)
 	sql_numberstr := strconv.Itoa(sql_number)
 	var numberinit = "0000000"
 	if len(sql_numberstr) < 7 {
@@ -62,11 +62,11 @@ func InsertExam_Sale(db *sql.DB, exam_sale types.ExaminationSale) error {
 	return err
 }
 
-func FilterExamCheckups(a *Appointment, exam_no string) ([]types.ExaminationCheckUp, error) {
+func FilterExamCheckups(db *sql.DB, a *Appointment, exam_no string) ([]types.ExaminationCheckUp, error) {
 	var exam_checkups []types.ExaminationCheckUp
 	var exam_checkup types.ExaminationCheckUp
 
-	if checkups, err := GetCheckupCodesBySaleCodes(db.GetReadDB(), a.SaleCodes); err == nil {
+	if checkups, err := GetCheckupCodesBySaleCodes(db, a.SaleCodes); err == nil {
 		exam_checkup.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
 		exam_checkup.HosCode = a.OrgCode
 		for _, checkup := range checkups {
@@ -82,12 +82,12 @@ func FilterExamCheckups(a *Appointment, exam_no string) ([]types.ExaminationChec
 	return exam_checkups, nil
 }
 
-func FilterExamSales(a *Appointment, exam_no string) ([]types.ExaminationSale, error) {
+func FilterExamSales(db *sql.DB, a *Appointment, exam_no string) ([]types.ExaminationSale, error) {
 
 	var exam_sales []types.ExaminationSale
 	var exam_sale types.ExaminationSale
 
-	if sales, err := GetSalesBySaleCodes(db.GetReadDB(), a.SaleCodes); err == nil {
+	if sales, err := GetSalesBySaleCodes(db, a.SaleCodes); err == nil {
 		exam_sale.ExaminationNo = exam_no
 		exam_sale.HosCode = a.OrgCode
 		exam_sale.SaleStatus = "1020"
@@ -105,7 +105,7 @@ func FilterExamSales(a *Appointment, exam_no string) ([]types.ExaminationSale, e
 	return exam_sales, nil
 }
 
-func FilterExam(a *Appointment, p_code string) (*types.Examination, error) {
+func FilterExam(db *sql.DB, a *Appointment, p_code string) (*types.Examination, error) {
 	var exam types.Examination
 	exam.HosCode = a.OrgCode
 	exam.PersonCode = p_code
@@ -114,24 +114,24 @@ func FilterExam(a *Appointment, p_code string) (*types.Examination, error) {
 	exam.GuidePaperState = "0"
 	exam.Status = "1020"
 	exam.ReportGrantType = "0"
-	exam.ExaminationNo = GetExaminationNo(db.GetReadDB(), exam)
-	return &exam,nil
+	exam.ExaminationNo = GetExaminationNo(db, exam)
+	return &exam, nil
 }
 
-func FilterExamsAll(a *Appointment) (*ExamsAll, error) {
+func FilterExamsAll(db *sql.DB, a *Appointment) (*ExamsAll, error) {
 	var examAll ExamsAll
 	examAll.B = FilterBookRecordByAppoint(a)
 	examAll.P = FilterPersonByAppoint(a)
 	var err error
-	if examAll.E, err = FilterExam(a, examAll.P.PersonCode); err != nil {
+	if examAll.E, err = FilterExam(db, a, examAll.P.PersonCode); err != nil {
 		return nil, err
 	}
 
-	if examAll.Checkups, err = FilterExamCheckups(a, examAll.E.ExaminationNo); err != nil {
+	if examAll.Checkups, err = FilterExamCheckups(db, a, examAll.E.ExaminationNo); err != nil {
 		return nil, err
 	}
 
-	if examAll.Sales, err = FilterExamSales(a, examAll.E.ExaminationNo); err != nil {
+	if examAll.Sales, err = FilterExamSales(db, a, examAll.E.ExaminationNo); err != nil {
 		return nil, err
 	}
 	return &examAll, err

@@ -49,3 +49,11 @@ type ExamsAll struct {
 	B *types.BookRecord
 }
 
+type ForStatistics struct {
+	HosCode   []string
+	OrgCode   []string //暂时不用，因为通过预约的是不分科室的
+	StartDate string
+	EndDate   string
+	Checkups  []string
+}
+

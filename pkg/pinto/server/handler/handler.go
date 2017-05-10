@@ -43,7 +43,7 @@ func BookPlanHandler(rw http.ResponseWriter, r *http.Request, ps httprouter.Para
 		return
 	}
 	result.TimeNow = time.Now()
-	e_all, err := pinto.FilterExamsAll(&result)
+	e_all, err := pinto.FilterExamsAll(db.GetWriteDB(), &result)
 	if err != nil {
 		glog.Errorf("pinto.handler FilterExamsAll err %v\n", err.Error())
 		httputil.Response(rw, 400, err)

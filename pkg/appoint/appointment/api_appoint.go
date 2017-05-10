@@ -118,8 +118,10 @@ func (a *Appointment) CancelAppointment() (err error) {
 		glog.Errorln("CancelAppointment update appointment err", err.Error())
 		return
 	}
-	err = deleteAppointment(tx, a)
-
+	if err = cancelCheckupRecordsByAppointid(tx, a.ID); err != nil {
+		glog.Errorln("CancelAppointment.cancelCheckupRecordsByAppointid appointment err", err.Error())
+		return
+	}
 	var errs error
 
 	if errs = sentToPintoForCancel(a); errs != nil {
@@ -166,12 +168,7 @@ func (a *Appointment) UpdateAppointment() (err error) {
 		err = tx.Commit()
 	}()
 
-	oldAppointment := &Appointment{}
-	if oldAppointment, err = GetAppointment(a.ID); err != nil {
-		return
-	}
-
-	if err = deleteAppointment(tx, oldAppointment); err != nil {
+	if err = cancelCheckupRecordsByAppointid(tx, a.ID); err != nil {
 		return
 	}
 	if err = addAppointment(tx, a); err != nil {
@@ -183,7 +180,7 @@ func (a *Appointment) UpdateAppointment() (err error) {
 
 func GetAppointment(appointid string) (*Appointment, error) {
 	sqlStr := fmt.Sprintf("SELECT id,appointtime,org_code,planid,cardtype,cardno,mobile,appointor,merrystatus,status,appoint_channel,"+
-		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sale_codes,bookno FROM %s WHERE id = '%s'`, T_APPOINTMENT, appointid)
+		`company,"group",remark,operator,operatetime,orderid,commentid,appointednum,ifsingle,ifcancel,sale_codes, COALESCE(bookno,'') FROM %s WHERE id = '%s'`, T_APPOINTMENT, appointid)
 
 	var id, org_code, planid, cardtype, cardno, mobile, appointor, merrystatus, status, appoint_channel, company, group, remark, operator, orderid, commentid, bookno string
 	var appointtime, operatetime int64
@@ -389,12 +386,13 @@ func deleteAppointment(tx *sql.Tx, a *Appointment) (err error) {
 		}
 	}
 
-	//capUserd, err := getAppDateRecordNum(tx, a.OrgCode, appointdatestring)
-	//if err != nil {
-	//	return
-	//}
-
 	return
+}
+
+func cancelCheckupRecordsByAppointid(tx *sql.Tx, appid string) error {
+	sqlStr := fmt.Sprintf("UPDATE %s SET cancel = true WHERE appoint_id = '%s'", T_CHECKUP_RECORD, appid)
+	_, err := tx.Exec(sqlStr)
+	return err
 }
 
 //根据organization code , checkup code 获取分院特殊项目的限制

@@ -64,12 +64,12 @@ func TestCreateAppoint(t *testing.T) {
 	date := time.Now().Format("2006-01-02")
 	a := Appointment{
 		ID:              "",
-		Appointor:       "kang",
-		CardNo:          "610481199007072234",
-		CardType:        "身份证",
+		Appointor:       "ffee",
+		CardNo:          "610481189007081234",
+		CardType:        VALIDATE_CARD_TYPE_ID,
 		Mobile:          "18799552120",
-		MerryStatus:     "未婚",
-		Status:          "预约",
+		MerryStatus:     VALIDATE_MERRY_NO,
+		Status:          STATUS_SUCCESS,
 		Appoint_Channel: "微信",
 		AppointedNum:    0,
 		Sex:             "男",
@@ -84,6 +84,19 @@ func TestCreateAppoint(t *testing.T) {
 
 	err := a.CreateAppointment()
 	fmt.Println("err", err)
+}
+
+func TestAppointment_UpdateAppointment(t *testing.T) {
+	dbinit()
+	a, err := GetAppointment("20170509192143999")
+	if err != nil {
+		t.Fatal(err)
+	}
+	a.AppointTime = time.Now().Add(time.Duration(24) * time.Hour).Unix()
+	err = a.UpdateAppointment()
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestGetCapacityAppointedNum(t *testing.T) {
@@ -208,4 +221,14 @@ func TestChangeOrg(t *testing.T) {
 	sqlstr := fmt.Sprintf("UPDATE %s SET imageurl = '%s',detailsurl = '%s'", org.TABLE_ORG, "", "")
 	_, err := db.GetDB().Exec(sqlstr)
 	fmt.Println("errr", err)
+}
+
+func TestApp(t *testing.T) {
+	dbinit()
+
+	sqlStr := fmt.Sprintf("INSERT INTO go_weichat_activity_voter(openid)values('11122')ON CONFLICT(openid) DO NOTHING")
+	_, err := db.GetDB().Exec(sqlStr)
+	if err != nil {
+		t.Fatal(err)
+	}
 }
