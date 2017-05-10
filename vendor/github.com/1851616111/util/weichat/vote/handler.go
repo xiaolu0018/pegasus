@@ -81,9 +81,8 @@ func GetImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		return
 	}
 
-	image = iosImagePath + "/" + image
-
-	data, err := ioutil.ReadFile(image)
+	target := fmt.Sprintf("%s/%s.jpg", iosImagePath, image)
+	data, err := ioutil.ReadFile(target)
 	if err != nil {
 		httputil.Response(w, 400, err)
 		return
@@ -140,11 +139,6 @@ func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 	}
 
 	if err := dbI.Register(v); err != nil {
-		if strings.Contains(err.Error(), "duplicate key value violates unique constraint ") {
-			glog.Errorf("weichat regist voter err %v\n", err)
-			httputil.Response(w, 409, "user duplicate")
-			return
-		}
 		glog.Errorf("register voter, database operate err %v\n", err)
 		httputil.Response(w, 400, err)
 		return
