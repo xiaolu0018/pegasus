@@ -216,9 +216,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 func (d DB) GetVoter(openid string) (*Voter, error) {
 	v := Voter{}
 
-	if err := d.QueryRow(`SELECT voterid, COALESCE(name, ''), COALESCE(image, ''),
-		COALESCE(company, ''), COALESCE(mobile, ''), COALESCE(votedcount, 0),　
-		followed, registed, imageCached FROM `+TABLE_VOTER+` WHERE openid = $1`, openid).
+	if err := d.QueryRow(`SELECT voterid,COALESCE(name, '')me,COALESCE(image, ''),COALESCE(company, ''),COALESCE(mobile, ''), COALESCE(votedcount, 0),followed, registed, imageCached FROM GO_WEICHAT_ACTIVITY_VOTER WHERE openid = $1`, openid).
 		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount,
 			&v.followed, &v.registed, &v.imageCached); err != nil {
 		if err == sql.ErrNoRows {
