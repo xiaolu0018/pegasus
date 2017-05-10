@@ -1,463 +1,946 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>晒合影活动</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<link rel="stylesheet" href="css/weui.min.css" />
-		<style>
-			*{
-				padding:0;
-				margin:0;
-			}
-			html,body{
-				width:100%;
-				height:100%;
-				 -webkit-overflow-scrolling:touch;				
-			}
-			ul,li{
-				list-style: none;
-			}
-			.scroll-box{
-				width:100%;
-				background:url(img/bg.png) repeat-y;
-				background-size:100% auto;
-			}
-			header{
-				width:100%;
-				background:url(img/head.png) no-repeat;
-				background-size:contain;
-				position:relative;
-			}
-			header>a#mylink{
-				color:#fff;
-				text-align: center;
-				text-decoration: none;
-				display:block;
-				line-height:1;
-				font-size:12px;
-				font-weight:300;
-				background:#B3D465;
-				border:none;
-				padding:0.5em 1em;
-				border-radius:6px;
-				position:absolute;
-				left:2%;
-				font-size:10px;
-				bottom:40%;
-				box-shadow: 2px 2px 2px  #5D5257;
-			}
-			header>a#mylink:active{
-				color:#F7926F;
-				box-shadow: none;
-			}
-			.btnbox{
-				overflow: hidden;
-			}
-			.regist-btn{
-				background-color:#B3D465;
-				width:35%;
-				margin:15px auto 18px;
-				box-shadow: 1px 2px 2px #1A3440;
-			}
-			.main{
-				padding:5px 5px 10px;
-			}
-			.weui_search_bar {
-			    background-color: #fff;
-			}
-			.weui_search_outer:after{
-				background:#efeff4;
-				border-color:#ddd;
-				
-			}
-			.main ul.my-panel{
-				overflow: hidden;
-			}
-			.main .my-panel>.panel-box{
-				box-sizing: border-box;
-				width:49.5%;
-				float:left;
-				padding:1em 5px 0.5em;
-				margin-top:1%;
-				background:#fff;
-				position:relative;
-				color:#fff;
-			}
-			.main .my-panel>.panel-box:nth-of-type(even){
-				margin-right:0;
-				float:right;				
-			}
-			.img-box{
-				width:100%;
-				overflow: hidden;
-				margin-bottom:8px;
-			}
-			.img-box>img{
-				width:100%;
-				height:100%;
-			}
-			.panel-box>.panel-footer{
-				overflow: hidden;
-			}
-			.panel-footer .perleft{
-				float:left;
-				width:40%;
-				color:#B3D465;
-				line-height:1.2;
-				white-space: nowrap;
-				
-			}
-			.panel-footer .perleft>p{
-				text-overflow: clip;				
-			}
-			.panel-footer button{
-				float:right;
-				width:55%;
-				background:#B3D465;
-				white-space: nowrap;
-				text-overflow: clip;
-				padding-left:0;
-				padding-right:0;
-			}
-			.panel-box>p.checkbox{
-				position:absolute;
-				padding:0 3px;
-				top:1em;
-				right:1em;
-				background:url(img/4.png) no-repeat;
-				background-size:cover;
-			}
-			.panel-box>p.checkbox:after{
-				content:"";
-				display:block;
-				height:3px;
-				width:100%;				
-			}
-			.main .my-paging{
-				color:#333;
-				overflow: hidden;
-				text-align: center;
-				box-sizing: border-box;
-				padding:1em 0;
-			}
-			.my-paging ul{
-				overflow:hidden;
-				
-			}
-			.my-paging ul>li{
-				float:left;
-				padding:0 0.5em 0 0;
-			}
-			.my-paging .sigpage input{
-				width:2em;
-				background:rgba(255,255,255,0.3);
-				border:none;
-				border-radius:4px;
-				outline: none;
-				padding:3px 1em;
-				text-align: center;
-				color:#333;
-			}
-			.pagelist>span:active{
-				color:#fff;
-			}
-			#sec,#clip,#negfir,#negsec{
-				display:none;
-			}
-			#toast [class*=" weui_icon_"]:before,#toast [class^=weui_icon_]:before{
-	        	font-size:3em;
-	        }
-	        #toast [class*=" weui_icon_"],#toast [class^=weui_icon_]{
-	        	margin: 22px 0 0;
-	    		display: block;
-	        }
-	        #goTop{
-	        	position:fixed;
-	        	bottom:3em;
-	        	left:0;
-	        	background: rgba(40,40,40,.6);
-	        	border:none;
-	        	border-radius:6px;
-	        	color:#fff;
-	        	text-align: center;
-	        	padding:0.5em 1em;
-	        	display:none;
-	        }
-	        #goTop:active{
-	        	background:rgba(40,40,40,1);
-	        }
-		</style>
-	</head>
-	<body ontouchstart="">
-		<div class="scroll-box">
-			<header>
-				<a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
-			</header>
-			<div class='btnbox'>
-				<a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
-			</div>
-			<div class="main">
-				<div class="weui_search_bar" id="searchinp">
-			        <form action="#" class="weui_search_outer">
-			            <div class="weui_search_inner">
-			                <i class="weui_icon_search"></i>
-			                <input type="search" class="weui_search_input" id="search_input" placeholder="请输入姓名或编号">
-			                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
-			            </div>
-			            <label for="search_input" class="weui_search_text" id="search_text" style="display: none;">
-			                <i class="weui_icon_search"></i>
-			                <span>搜索</span>
-			            </label>
-			        </form>
-			        <a href="javascript:" class="weui_search_cancel" id="search_cancel">搜索</a>
-			    </div>
-				<ul class="my-panel">
-					
-				</ul>
-			</div>
+<head>
+	<meta charset="UTF-8">
+	<title>晒合影活动</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link rel="stylesheet" href="css/weui.min.css" />
+	<style>
+		*{
+			padding:0;
+			margin:0;
+		}
+		html,body{
+			width:100%;
+			height:100%;
+			-webkit-overflow-scrolling:touch;
+		}
+		ul,li{
+			list-style: none;
+		}
+		.scroll-box{
+			width:100%;
+			background:url(img/bg.png) repeat-y;
+			background-size:100% auto;
+		}
+		header{
+			width:100%;
+			background:url(img/head.png) no-repeat;
+			background-size:contain;
+			position:relative;
+		}
+		header>a#mylink{
+			color:#fff;
+			text-align: center;
+			text-decoration: none;
+			display:block;
+			line-height:1;
+			font-size:12px;
+			font-weight:300;
+			background:#B3D465;
+			border:none;
+			padding:0.5em 1em;
+			border-radius:6px;
+			position:absolute;
+			left:2%;
+			font-size:10px;
+			bottom:40%;
+			box-shadow: 2px 2px 2px  #5D5257;
+		}
+		header>a#mylink:active{
+			color:#F7926F;
+			box-shadow: none;
+		}
+		.btnbox{
+			overflow: hidden;
+		}
+		.regist-btn{
+			background-color:#B3D465;
+			width:35%;
+			margin:15px auto 18px;
+			box-shadow: 1px 2px 2px #1A3440;
+		}
+		.main{
+			padding:5px 5px 10px;
+		}
+		.weui_search_bar {
+			background-color: #fff;
+		}
+		.weui_search_outer:after{
+			background:#efeff4;
+			border-color:#ddd;
+
+		}
+		.main ul.my-panel{
+			overflow: hidden;
+		}
+		.main .my-panel>.panel-box{
+			box-sizing: border-box;
+			width:49.5%;
+			float:left;
+			padding:1em 5px 0.5em;
+			margin-top:1%;
+			background:#fff;
+			position:relative;
+			color:#fff;
+		}
+		.main .my-panel>.panel-box:nth-of-type(even){
+			margin-right:0;
+			float:right;
+		}
+		.img-box{
+			width:100%;
+			overflow: hidden;
+			margin-bottom:8px;
+		}
+		.img-box>img{
+			width:100%;
+			height:100%;
+		}
+		.panel-box>.panel-footer{
+			overflow: hidden;
+		}
+		.panel-footer .perleft{
+			float:left;
+			width:40%;
+			color:#B3D465;
+			line-height:1.2;
+			white-space: nowrap;
+
+		}
+		.panel-footer .perleft>p{
+			text-overflow: clip;
+		}
+		.panel-footer button{
+			float:right;
+			width:55%;
+			background:#B3D465;
+			white-space: nowrap;
+			text-overflow: clip;
+			padding-left:0;
+			padding-right:0;
+		}
+		.panel-footer .active{
+			color: hsla(0,0%,100%,.4);
+			background-color: #039702;
+		}
+		.panel-box>p.checkbox{
+			position:absolute;
+			padding:0 3px;
+			top:1em;
+			right:1em;
+			background:url(img/4.png) no-repeat;
+			background-size:cover;
+		}
+		.panel-box>p.checkbox:after{
+			content:"";
+			display:block;
+			height:3px;
+			width:100%;
+		}
+		.main .my-paging{
+			color:#333;
+			overflow: hidden;
+			text-align: center;
+			box-sizing: border-box;
+			padding:1em 0;
+		}
+		.my-paging ul{
+			overflow:hidden;
+
+		}
+		.my-paging ul>li{
+			float:left;
+			padding:0 0.5em 0 0;
+		}
+		.my-paging .sigpage input{
+			width:2em;
+			background:rgba(255,255,255,0.3);
+			border:none;
+			border-radius:4px;
+			outline: none;
+			padding:3px 1em;
+			text-align: center;
+			color:#333;
+		}
+		.pagelist>span:active{
+			color:#fff;
+		}
+		#sec,#clip,#negfir,#negsec{
+			display:none;
+		}
+		#toast [class*=" weui_icon_"]:before,#toast [class^=weui_icon_]:before{
+			font-size:3em;
+		}
+		#toast [class*=" weui_icon_"],#toast [class^=weui_icon_]{
+			margin: 22px 0 0;
+			display: block;
+		}
+		#goTop{
+			position:fixed;
+			bottom:3em;
+			left:0;
+			background: rgba(40,40,40,.6);
+			border:none;
+			border-radius:6px;
+			color:#fff;
+			text-align: center;
+			padding:0.5em 1em;
+			display:none;
+		}
+		#goTop:active{
+			background:rgba(40,40,40,1);
+		}
+	</style>
+</head>
+<body ontouchstart="">
+<div class="scroll-box">
+	<header>
+		<a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
+	</header>
+	<div class='btnbox'>
+		<a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
+	</div>
+	<div class="main">
+		<div class="weui_search_bar" id="searchinp">
+			<form action="#" class="weui_search_outer">
+				<div class="weui_search_inner">
+					<i class="weui_icon_search"></i>
+					<input type="search" class="weui_search_input" id="search_input" placeholder="请输入姓名或编号">
+					<a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+				</div>
+				<label for="search_input" class="weui_search_text" id="search_text" style="display: none;">
+					<i class="weui_icon_search"></i>
+					<span>搜索</span>
+				</label>
+			</form>
+			<a href="javascript:" class="weui_search_cancel" id="search_cancel">搜索</a>
 		</div>
-		<!--回到顶部-->
-		<p id="goTop">TOP</p>
-		<!--提示消息-->
-    <div id="toast" style="display:none;">
-	    <div class="weui_mask_transparent"></div>
-	    <div class="weui_toast">
-	        <i class="weui_icon_toast"></i>
-	        <p class="weui_toast_content">已完成</p>
-	    </div>
+		<ul class="my-panel">
+
+		</ul>
 	</div>
-	<!--alert框-->
-	<div class="weui_dialog_alert" id="myAlert" style="display:none;">
-	    <div class="weui_mask"></div>
-	    <div class="weui_dialog">
-	        <div class="weui_dialog_hd"><strong style="color:#FAFAFC;visibility: hidden;"  class="weui_dialog_title">我的</strong></div>
-	        <div class="weui_dialog_bd" id="alertCon" style="color:#333;"></div>
-	        <div class="weui_dialog_ft">
-	            <a href="#" class="weui_btn_dialog primary">确定</a>
-	        </div>
-	    </div>
+</div>
+<!--回到顶部-->
+<p id="goTop">TOP</p>
+<!--提示消息-->
+<div id="toast" style="display:none;">
+	<div class="weui_mask_transparent"></div>
+	<div class="weui_toast">
+		<i class="weui_icon_toast"></i>
+		<p class="weui_toast_content">已完成</p>
 	</div>
-	<!--dialog-->
-	<div class="weui_dialog_confirm" id="myConfirm" style="display: none;">
-	    <div class="weui_mask"></div>
-		<div class="weui_dialog">
-		    <div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
-		    <div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
-		    <div class="weui_dialog_ft">
-		        <a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
-		        <a href="#" class="weui_btn_dialog primary">确定</a>
-		    </div>
+</div>
+<!--alert框-->
+<div class="weui_dialog_alert" id="myAlert" style="display:none;">
+	<div class="weui_mask"></div>
+	<div class="weui_dialog">
+		<div class="weui_dialog_hd"><strong style="color:#FAFAFC;visibility: hidden;"  class="weui_dialog_title">我的</strong></div>
+		<div class="weui_dialog_bd" id="alertCon" style="color:#333;"></div>
+		<div class="weui_dialog_ft">
+			<a href="#" class="weui_btn_dialog primary">确定</a>
 		</div>
 	</div>
-	</body>
-	<script src="js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="js/base.js"></script>
-	<script>
-		$(function(){
-			var pageData=[];//页面数据
-			var scrollTop=0;//页面滚动
-			var page=1;//当前页码
-			var pageNum=0;//当前页ajax.data.length
-			var pageSize=16;//每次请求的数据size
-			var MAXPAGE=0;//数据长度
-			var openid="";
-			var inpKey="";//搜索框val
-			var clientSize=0;//当前页加载数据长度；
-			var telHeight=$(window).height();
-			var telWidth=$(window).width();//屏幕宽度
-			var touchY=0;//touchstart位置
-			var newY=0;
-			$('header').css("height",telWidth+"px");
-			
-			//图片宽高自适应设置；
-			var imgboxWidth=((telWidth-10)*49.5/100)-10;
-			$("div.img-box").each(function(){
-				$(this).css("height",imgboxWidth+"px");
-			});
-			
-			$("#myConfirm a.primary").attr('href',weLink);
-			UrlSearch();
-			var parameter={"index":page,"size":pageSize};
-			$(".main>ul.my-panel").html("");
-			ajaxPage(parameter);	
-			
-			//页码变化时的ajax,并解析渲染
-			function ajaxPage(parameter){
-				
-				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
+</div>
+<!--dialog-->
+<div class="weui_dialog_confirm" id="myConfirm" style="display: none;">
+	<div class="weui_mask"></div>
+	<div class="weui_dialog">
+		<div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
+		<div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
+		<div class="weui_dialog_ft">
+			<a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
+			<a href="#" class="weui_btn_dialog primary">确定</a>
+		</div>
+	</div>
+</div>
+</body>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script>
+    $(function(){
+        var pageData=[];//页面数据
+        var scrollTop=0;//页面滚动
+        var page=1;//当前页码
+        var pageNum=0;//当前页ajax.data.length
+        var pageSize=16;//每次请求的数据size
+        var MAXPAGE=0;//数据长度
+        var openid="";
+        var inpKey="";//搜索框val
+        var clientSize=0;//当前页加载数据长度；
+        var telHeight=$(window).height();
+        var telWidth=$(window).width();//屏幕宽度
+        var touchY=0;//touchstart位置
+        var newY=0;
+        $('header').css("height",telWidth+"px");
+
+        //图片宽高自适应设置；
+        var imgboxWidth=((telWidth-10)*49.5/100)-10;
+        $("div.img-box").each(function(){
+            $(this).css("height",imgboxWidth+"px");
+        });
+
+        $("#myConfirm a.primary").attr('href',weLink);
+        UrlSearch();
+        var parameter={"index":page,"size":pageSize};
+        $(".main>ul.my-panel").html("");
+        ajaxPage(parameter);
+
+        //页码变化时的ajax,并解析渲染
+        function ajaxPage(parameter){
+
+            $.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
 //				$.getJSON("data/img.json",parameter,function(data){
-					if(typeof data === 'string'){
-					    data = JSON.parse(data);
-					}
-					if(data==null){
-					}else{
-						//数据解析
-						page=Number(data.index);
-						$(".sigpage>input").val(page);
-						pageSize=Number(data.size);
-						MAXPAGE=Number(data.total_pages);
-						pageNum=data.page_data.length;
-						pageData=data.page_data;
-						var fragment="";
-						if(pageNum>0){
-							for(var g=0;g<pageNum;g++){
-								fragment+='<li class="panel-box"><div class="img-box" style="height:'+imgboxWidth+'px;"><img src="voterimages/'+pageData[g].image+'" class="panel-img"></div><div class="panel-footer"><div class="perleft"><span class="name">'+pageData[g].name+'</span><p><span class="ticNum">'+pageData[g].voteCount+'</span>票</p></div><button class="weui_btn weui_btn_primary">投他一票</button></div><p class="checkbox">编号<span class="checkNum">'+pageData[g].voterid+'</span></p></li>';
-							};
-							$(".main>ul.my-panel").append(fragment);
-						}
-					}
-				});//ajax-end
-			};//ajaxPage-function-end
-				
-			
-			//滑动事件
-			$("body").on('touchstart',function(e){
-				var touch = event.targetTouches[0];
-				touchY=touch.pageY;
-				newY=touchY;
-			});
-			$("body").on('touchmove',function(e){
-				 var touch = event.targetTouches[0];
-				 newY=touch.pageY;
-            	if(newY>telHeight*page){
-            		if(page<MAXPAGE){
-            			page++;
-            			parameter.index=page;
-            			if(inpKey.length<=0){
-            				delete parameter.key;
-            				ajaxPage(parameter);
-            			}else{
-            				parameter.key=inpKey;
-            				ajaxPage(parameter);
-            			}
-					 	
-            		}
-            	}else{
-            	}
-            	if($("body").scrollTop()>telHeight){
-            		$("#goTop").show();
-            	}else{
-            		$("#goTop").hide();
-            	}
-			});
-			$("#goTop").on('touchstart',function(){
-				$("body").scrollTop(0);
-				$("#goTop").hide();
-			});
-			//我要报名
-			$("#goRegist").on('touchstart',function(e){
-				if(request.openid){
-					$.ajax({
-						url:baseUrl+"/api/activity/voter?openid="+request.openid,
-						type:"get",
-						complete:function(xhr){
-							if(xhr.status=="200"){
-								showAlert("已经报名过了");
-							}else if((xhr.status=="404")&&(xhr.responseText=="not found")){
-								window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
-							}else{
-								showAlert("失败"+xhr.status+":"+xhr.responseText);
-							}
-						}
-					});
-				}else{
-					//未关注公众号
-					$("#myConfirm").show();
-				}
-			});
-			//搜索框焦点事件
-			$("#searchinp input[type='search']").focus(function(){
-				$("#search_cancel").show(0);
-			});
-			$("#searchinp input[type='search']").blur(function(){
-				if($("#searchinp input[type='search']").val()==""){
-					$("#search_cancel").hide(0);
-				}else{
-					$("#search_cancel").show(0);
-				}
-			});
-			
-			
-			//搜索框清除点击事件
-			$("#searchinp").on('touchstart','#search_clear',function(){
-				$("#searchinp input[type='search']").val("");
-				inpKey="";
-				$("#search_cancel").hide(0);
-				delete parameter.key;
-				page=1;
-				parameter.index=page;
-				$(".main>ul.my-panel").html("");
-            	ajaxPage(parameter);
-			});
-			//搜索框搜索点击
-			$(".main").on('touchstart','#search_cancel',function(e){
-				inpKey=$("#searchinp input[type='search']").val();
-				if(inpKey.length>0){
-					parameter.key=inpKey;
-				}else{
-					delete parameter.key;
-				}
-				page=1;
-				parameter.index=page;
-				$(".main>ul.my-panel").html("");
-            	ajaxPage(parameter);
-			});
-			//
-			$("form.weui_search_outer").on('submit',function(e){
-				e.preventDefault();
-				inpKey=$("#searchinp input[type='search']").val();
-				if(inpKey.length>0){
-					param.key=inpKey;
-					page=1;
-					parameter.index=page;
-					$(".main>ul.my-panel").html("");
-					ajaxPage(param);
-				}
-			});
-			//投票按钮
-			//重复提交变量
-			var resub=true;
-			$(".main>ul.my-panel").on('touchend','li.panel-box button',function(e){
-				newY=Math.abs(newY-touchY);
-				if(newY<10){
-					var $this=$(e.target);
-					var voterid=$this.parent(".panel-footer").siblings("p.checkbox").children("span.checkNum").html();
-					if(resub){
-						resub=false;
-						if(request.openid){
-							$.ajax({
-								type:"post",
-								url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
-								data:{},
-								complete:function(xhr){
-									if(xhr.status=="200"){
-										var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
-										$this.siblings(".perleft").find('span.ticNum').html(++lastNum);
-										resub=true;
-										showAlert("投票成功，感谢您的投票");
-									}else if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){
-										resub=true;
-										showAlert("您每天只有三票");
-									}else{
-										resub=true;
-										showAlert("投票失败"+xhr.status+":"+xhr.responseText);
-									}
-									
-								}
-							});
-						}else{						
-							resub=true;
-							//没有关注
-							$("#myConfirm").show();
-						}
-					}
-				}	
-			});
-		});
-			
-		
-		
-	</script>
+                if(typeof data === 'string'){
+                    data = JSON.parse(data);
+                }
+                if(data==null){
+                }else{
+                    //数据解析
+                    page=Number(data.index);
+                    $(".sigpage>input").val(page);
+                    pageSize=Number(data.size);
+                    MAXPAGE=Number(data.total_pages);
+                    pageNum=data.page_data.length;
+                    pageData=data.page_data;
+                    var fragment="";
+                    if(pageNum>0){
+                        for(var g=0;g<pageNum;g++){
+                            fragment+='<li class="panel-box"><div class="img-box" style="height:'+imgboxWidth+'px;"><img src="voterimages/'+pageData[g].image+'" class="panel-img"></div><div class="panel-footer"><div class="perleft"><span class="name">'+pageData[g].name+'</span><p><span class="ticNum">'+pageData[g].voteCount+'</span>票</p></div><button class="weui_btn weui_btn_primary">投他一票</button></div><p class="checkbox">编号<span class="checkNum">'+pageData[g].voterid+'</span></p></li>';
+                        };
+                        $(".main>ul.my-panel").append(fragment);
+                    }
+                }
+            });//ajax-end
+        };//ajaxPage-function-end
+
+
+        //滑动事件
+        $("body").on('touchstart',function(e){
+            var touch = event.targetTouches[0];
+            touchY=touch.pageY;
+            newY=touchY;
+        });
+        $("body").on('touchmove',function(e){
+            var touch = event.targetTouches[0];
+            newY=touch.pageY;
+            if(newY>telHeight*page){
+                if(page<MAXPAGE){
+                    page++;
+                    parameter.index=page;
+                    if(inpKey.length<=0){
+                        delete parameter.key;
+                        ajaxPage(parameter);
+                    }else{
+                        parameter.key=inpKey;
+                        ajaxPage(parameter);
+                    }
+
+                }
+            }else{
+            }
+            if($("body").scrollTop()>telHeight){
+                $("#goTop").show();
+            }else{
+                $("#goTop").hide();
+            }
+        });
+        $("#goTop").on('touchstart',function(){
+            $("body").scrollTop(0);
+            $("#goTop").hide();
+        });
+        //我要报名
+        $("#goRegist").on('touchstart',function(e){
+            if(request.openid){
+                $.ajax({
+                    url:baseUrl+"/api/activity/voter?openid="+request.openid,
+                    type:"get",
+                    complete:function(xhr){
+                        if(xhr.status=="200"){
+                            showAlert("已经报名过了");
+                        }else if((xhr.status=="404")&&(xhr.responseText=="user not regist")){
+                            window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
+                        }else if((xhr.status=="404")&&(xhr.responseText=="user not follow")){
+                            $("#myConfirm").show();
+                        }else{
+                            showAlert("失败"+xhr.status+":"+xhr.responseText);
+                        }
+                    }
+                });
+            }else{
+                //未关注公众号
+                showAlert("请从微信登陆");
+            }
+        });
+        //搜索框焦点事件
+        $("#searchinp input[type='search']").focus(function(){
+            $("#search_cancel").show(0);
+        });
+        $("#searchinp input[type='search']").blur(function(){
+            if($("#searchinp input[type='search']").val()==""){
+                $("#search_cancel").hide(0);
+            }else{
+                $("#search_cancel").show(0);
+            }
+        });
+
+
+        //搜索框清除点击事件
+        $("#searchinp").on('touchstart','#search_clear',function(){
+            $("#searchinp input[type='search']").val("");
+            inpKey="";
+            $("#search_cancel").hide(0);
+            delete parameter.key;
+            page=1;
+            parameter.index=page;
+            $(".main>ul.my-panel").html("");
+            ajaxPage(parameter);
+        });
+        //搜索框搜索点击
+        $(".main").on('touchstart','#search_cancel',function(e){
+            inpKey=$("#searchinp input[type='search']").val();
+            if(inpKey.length>0){
+                parameter.key=inpKey;
+            }else{
+                delete parameter.key;
+            }
+            page=1;
+            parameter.index=page;
+            $(".main>ul.my-panel").html("");
+            ajaxPage(parameter);
+        });
+        //
+        $("form.weui_search_outer").on('submit',function(e){
+            e.preventDefault();
+            inpKey=$("#searchinp input[type='search']").val();
+            if(inpKey.length>0){
+                param.key=inpKey;
+                page=1;
+                parameter.index=page;
+                $(".main>ul.my-panel").html("");
+                ajaxPage(param);
+            }
+        });
+        //投票按钮
+        //重复提交变量
+        var resub=true;
+        $(".main>ul.my-panel").on('touchend','li.panel-box button',function(e){
+            newY=Math.abs(newY-touchY);
+            if(newY<10){
+                var $this=$(e.target);
+                var voterid=$this.parent(".panel-footer").siblings("p.checkbox").children("span.checkNum").html();
+                if(resub){
+                    resub=false;
+                    $(e.target).addClass("active");
+                    if(request.openid){
+                        $.ajax({
+                            type:"post",
+                            url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
+                            data:{},
+                            complete:function(xhr){
+                                resub=true;
+                                $(e.target).removeClass("active");
+                                if(xhr.status=="200"){
+                                    var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
+                                    $this.siblings(".perleft").find('span.ticNum').html(++lastNum);
+                                    showAlert("投票成功，感谢您的投票");
+                                }else if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){
+                                    showAlert("您每天只有一票");
+                                }else if(xhr.status=="404"){
+                                    $("#myConfirm").show();
+                                }else{
+                                    showAlert("投票失败"+xhr.status+":"+xhr.responseText);
+                                }
+
+                            }
+                        });
+                    }else{
+                        resub=true;
+                        $(e.target).removeClass("active");
+                        //没有关注
+                        showAlert("请从微信登陆");
+                    }
+                }
+            }
+        });
+    });
+
+
+
+</script>
 </html>
+
