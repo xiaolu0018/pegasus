@@ -252,7 +252,7 @@
 				    	//ios wkwebview模式
 						if (window.__wxjs_is_wkwebview) {
 							wx.getLocalImgData({
-								localId: localStorage.iosImgId, // 图片的localID
+								localId: images.localId, // 图片的localID
 								success: function (res) {
 								    var mylocal= res.localData; // localData是图片的base64数据，可以用img标签显示
 								    images.localId= mylocal.replace('jgp', 'jpeg');//iOS 系统里面得到的数据，类型为 image/jgp,因此需要替换一下						  						  
