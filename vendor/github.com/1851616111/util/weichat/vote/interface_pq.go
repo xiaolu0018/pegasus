@@ -209,7 +209,7 @@ func (d DB) updateVoterImageStatus(image string) (err error) {
 }
 
 func hasVoteRight(records []int64) bool {
-	if len(records) >= 100 {
+	if len(records) >= 3 {
 		sort.Sort(Int64Slice(records))
 		return time.Now().Unix()-records[2] >= 3600*24
 	} else {

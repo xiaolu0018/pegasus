@@ -332,8 +332,8 @@
 									if(xhr.status=="200"){
 										
 										setTimeout(function(){
-											var myname=encodeURIComponent(formData.name);
-											var mycompany=encodeURIComponent(formData.company);
+											var myname=encodeURIComponent(encodeURIComponent(formData.name));
+											var mycompany=encodeURIComponent(encodeURIComponent(formData.company));
 											window.location.href="placard.html?isios=true&image="+formData.image+"&name="+myname+"&company="+mycompany+"&declaration="+formData.declaration+"&openid="+formData.openid;												
 										},1500);
 										
@@ -385,8 +385,8 @@
 											if(xhr.status=="200"){
 												
 												setTimeout(function(){
-													var myname=encodeURIComponent(formData.name);
-													var mycompany=encodeURIComponent(formData.company);
+													var myname=encodeURIComponent(encodeURIComponent(formData.name));
+													var mycompany=encodeURIComponent(encodeURIComponent(formData.company));
 													window.location.href="placard.html?isios=false&image="+formData.image+".jpg&name="+myname+"?&company="+mycompany+"&declaration="+formData.declaration;
 												},1500);
 												
