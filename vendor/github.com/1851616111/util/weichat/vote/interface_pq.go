@@ -234,13 +234,17 @@ func (d DB) GetVoter(openid string) (*Voter, error) {
 }
 
 func (d DB) Follow(e *event.Event)( err error) {
+	fmt.Printf("--------------follow event-------------------------> %v\n", *e)
 	_, err = d.Exec(`INSERT INTO ` + TABLE_VOTER+ ` (openid, followed) VALUES($1, TRUE)
 		ON CONFLIECT(openid) DO UPDATE SET openid=EXCLUDED.openid, followed=EXCLUDED.followed`, e.From)
+	fmt.Println("--------------------------------------->", err)
 	return
 }
 
 func (d DB) UnFollow(e *event.Event) (err error) {
+	fmt.Printf("-------------------unfollow event--------------------> %v\n", *e)
 	_, err = d.Exec(`UPDATE ` + TABLE_VOTER+ ` SET followed = FALSE WHERE openid = $1`, e.From)
+	fmt.Println("--------------------------------------->", err)
 	return
 }
 

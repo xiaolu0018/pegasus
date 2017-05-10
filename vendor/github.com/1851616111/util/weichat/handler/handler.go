@@ -54,6 +54,7 @@ func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		glog.Errorf("decode weichat notify event msg err %v\n", err)
 		return
 	}
+	glog.Infof("weichat event action: %#v\n", e)
 
 	if err := EventManager.CallBack(&e); err != nil {
 		glog.Errorf("weichat event callback　event(%v) \n", e)
