@@ -1,5 +1,5 @@
 var baseUrl="http://hd1.dahe100.cn";
-var weLink="http://mp.weixin.qq.com/s?__biz=MzAwNDE4OTgyNw==&mid=506735864&idx=1&sn=ccb723be42baa87a748a4f511a2f8260&chksm=00ef37143798be02f90644c35eb2a0e95e4b38b6c181c0711506d0ca8874039328a0b46c9fbf&scene=18#wechat_redirect";
+var weLink="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzAwNDE4OTgyNw==#wechat_redirect";
 //提示框显示
 var $toast = $('#toast');
 function showToast(htdata,myclass){
