@@ -364,13 +364,11 @@
 						if(data==null){
                             alert("net error");
 						}else{
-							alert(typeof data.followed);
 							if(data.followed==false){
 								$("#myconfirm").show();
 							}else if((data.followed==true)&&(data.registed==true)){
 								showAlert("您已经报过名了");
 							}else if((data.followed==true)&&(data.registed==false)){
-								alert("跳转");
 								window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
 							}
 						}
