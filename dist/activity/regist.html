@@ -259,7 +259,7 @@
 								    $("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
 									/////ios base64数据post
 									$.ajax({
-										url:baseUrl+"/api/ios/image,
+										url:baseUrl+"/api/ios/image",
 										type:"post",
 										data:{"data":images.localId},
 										success:function(data, textStatus, xhr){
