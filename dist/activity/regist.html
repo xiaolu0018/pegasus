@@ -297,7 +297,7 @@
 					//获取表单值
 					formData.openid=request.openid;
 					formData.name=$("input[name='name']").val();
-					formData.image=request.image;
+					formData.image=images.localId;
 					images.serverId=request.openid;
 					formData.company=$("input[name='company']").val();
 					formData.mobile=$("input[name='mobile']").val();
@@ -309,7 +309,7 @@
 					//ios android兼容
 					if (window.__wxjs_is_wkwebview) {
 						//ios
-						formData.image=request.openid;
+						formData.image=request.image;
 						images.serverId=request.openid;
 						//非空验证
 						if(formData.name.length<=0){
