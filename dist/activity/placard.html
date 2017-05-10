@@ -18,6 +18,7 @@
         .phone{
             position: relative;
             width:100%;
+            overflow: hidden;
         }
         .phone div{
             position: absolute;
@@ -96,42 +97,52 @@
     </style>
 </head>
 <body>
-    <div class="phone">
-        <img id="pictrue" src="" alt="photo" width="100%">
-        <div class="left-B"></div>
-        <div class="right-U"></div>
-        <div class="right-B"></div>
-        <div class="text">
-            <img src="" alt="text" width="100%">
-        </div>
-        <h1><img src="img/logo.png"/></h1>
-    </div>
-    <div class="slogan">
-        <img src="img/333.png" alt="slogan"  width="75%">
-    </div>
-    <div class="footer">
-    	<img class="bgimg" src="img/11.png"/>
-        <div class="text-content">
-            <img src="img/22.png" alt="QR_Code" class="QR_Code">
-            <div class="textbox">
-            	<p>我是<span id="company"></span>的<span id="name"></span></p>
-                <p>我正在参加晒合影赢万元大奖活动</p>
-                <p>请为我投一票</p>
-                <p>希望有机会为父母赢取15800元健康大奖</p>
-                <p>让父母老得慢一些</p>
-            </div>
-        </div>
-    </div>
+	<div id="mainbox">
+		<div class="phone">
+	        <img id="pictrue" src="" width="100%">
+	        <div class="left-B"></div>
+	        <div class="right-U"></div>
+	        <div class="right-B"></div>
+	        <div class="text">
+	            <img src="" alt="text" width="100%">
+	        </div>
+	        <h1><img src="img/logo.png"/></h1>
+	    </div>
+	    <div class="slogan">
+	        <img src="img/333.png" alt="slogan"  width="75%">
+	    </div>
+	    <div class="footer">
+	    	<img class="bgimg" src="img/11.png"/>
+	        <div class="text-content">
+	            <img src="img/22.png" alt="QR_Code" class="QR_Code">
+	            <div class="textbox">
+	            	<p>我是<span id="company"></span>的<span id="name"></span></p>
+	                <p>我正在参加晒合影赢万元大奖活动</p>
+	                <p>请为我投一票</p>
+	                <p>希望有机会为父母赢取15800元健康大奖</p>
+	                <p>让父母老得慢一些</p>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+   
 </body>
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
 <script>
-	$(function(){
+	$(function(){	
+		UrlSearch();
+		for(var ind in request){
+			console.log(ind+"=="+request[ind]);
+		}
+		var telWidth=$(window).width();
+		$("div.phone").css('max-height',(3*telWidth)/2);
+		$("div.text>img").attr("src","img/"+(100+Number(request.declaration))+".png");
+		$("#company").html(request.company);
+		$("#name").html(request.name);
+		$("#picture").attr("src","voterimages/"+request.image);
 		
-			$("#pictrue").attr("src",localStorage.imageData);
-			$("#company").html(localStorage.company);
-			$("#name").html(localStorage.name);
-			$(".text>img").attr("src","img/"+(100+Number(localStorage.declaration))+".png");
-				
+			
 	});
 </script>
 </html>

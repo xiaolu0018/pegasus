@@ -50,13 +50,25 @@
             line-height: 60px;
             text-align: center;
             margin-bottom:0.6em;
-            /*background-image:url(../../dist/img/banner1.jpg);*/
+            float:left;
         }
        
         p.file:hover {
             background-color: #AADFFD;
             border-color: #78C3F3;
             color: #004974;
+        }
+        .imgbox{
+        	width:100%;
+        	overflow:hidden;
+        }
+        .imgbox>.righttext{
+        	width:80%;
+        	float:right;
+        	font-size:10px;
+        }
+        .imgbox>.righttext>p{
+        	text-indent:2em;
         }
         input{
             width:100%;
@@ -81,6 +93,7 @@
         label{
             font-size: 1.4rem;
         }
+        
         button{
             background: #B4D465;
             color: #ffffff;
@@ -111,13 +124,21 @@
 <body>
     <div class="container">
        <p>上传照片</p>
-        <p id="picture" class="file">+</p>
+       <div class="imgbox">
+       		<p id="picture" class="file">+</p>
+       		<div class="righttext">
+       			<p>第一期活动仅针对迪安相关公司员工</p>
+       			<p>父亲节将面向大众推出第二期</p>
+       			<p>敬请期待</p>
+       		</div>
+       </div>
+        
         <p>姓名</p>
         <input type="text" name="name">
         <p>公司/部门</p>
         <input type="text" name="company">
         <p>联系电话</p>
-        <input name="mobile" pattern="[0-9]*" type="number">
+        <input name="mobile"  oninput="this.value=this.value.replace(/\D/g,'')" type="number">
         <p>报名宣言（请勾选）</p>
         <ul class="declaration">
             <li>
@@ -206,13 +227,13 @@
 				    data = JSON.parse(data);
 			}
 	   		wx.config({
-					debug:develop,
+					debug:false,
 					appId:data.appid,
 					timestamp:data.timestamp,
 					nonceStr:data.noncestr,
 					signature:data.signature,
 					jsApiList:['checkJsApi','chooseImage','previewImage','uploadImage']
-			});
+			});			
 	   	});
 		//图片上传
 		var images = {};
@@ -228,115 +249,172 @@
 				    success: function (res) {
 				        images.localId = res.localIds[0]; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片					    	
 				    	$("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
+				    	//ios wkwebview模式
+						if (window.__wxjs_is_wkwebview) {
+							wx.getLocalImgData({
+								localId: localStorage.iosImgId, // 图片的localID
+								success: function (res) {
+								    var mylocal= res.localData; // localData是图片的base64数据，可以用img标签显示
+								    images.localId= mylocal.replace('jgp', 'jpeg');//iOS 系统里面得到的数据，类型为 image/jgp,因此需要替换一下						  						  
+								    $("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
+									/////ios base64数据post
+									$.ajax({
+										url:baseUrl+"/api/ios/image,
+										type:"post",
+										data:{"data":images.localId},
+										success:function(data, textStatus, xhr){
+											request.image=data;
+										},
+										error:function(xhr){alert(xhr.status);}
+									});
+								},
+								fail:function(res){
+									  showToast("图片选取成功，但预览失败");
+									 }
+								});
+						}//if==ios	
 				    }
 				});
-				//ios wkwebview模式
-				if (window.__wxjs_is_wkwebview) {
-					wx.getLocalImgData({
-					localId: localIds[0], // 图片的localID
-					success: function (res) {
-					    var mylocal= res.localData; // localData是图片的base64数据，可以用img标签显示
-					    images.localId= mylocal.replace('jgp', 'jpeg');//iOS 系统里面得到的数据，类型为 image/jgp,因此需要替换一下						  
-					    $("#picture").html('<img src="'+images.localId+'" style="width:100%;height:100%;"/>');
-					},
-					fail:function(res){
-						  showToast("图片选取成功，但预览失败");
-						 }
-					});
-				}
-			 
+						 
 			};
 		});//pictrue--chooseimage
 			
 			$(".btn_container").on("touchstart","button",function(e){
 				if(!(images.localId)){
+					
 					showToast("没有选择图片",myinfo);
+					
 				}else{
-					// 上传图片
-				    showAlert("图片的本地路径:"+images.localId);
-				    wx.uploadImage({
-				        localId: images.localId,
-				        isShowProgressTips: 1,
-				        success: function (res) {
-				            var formData={
-							    "openid":"",
-							    "name": "",
-							    "image":"",
-							    "company": "",
-							    "mobile": "",
-							    "declaration": ""
-							};
-							//获取表单值
-							formData.openid=request.openid;
-							formData.name=$("input[name='name']").val();
-							formData.image=res.serverId;
-							console.log(formData.image);
-							images.serverId=formData.image;
-							formData.company=$("input[name='company']").val();
-							formData.mobile=$("input[name='mobile']").val();
-							$(".declaration>li").each(function(i,n){
-								if($(this).children("input[name='declaration']").prop("checked")){
-									formData.declaration=String($(this).index());
-								}
-							});
-							//非空验证
-							if(!(images.serverId)){
-								showToast('图片上传失败',mywarn);
-							}else if(formData.name.length<=0){
-								showToast("姓名不能为空",myinfo);
-							}else if(formData.company.length<=0){
-								showToast("部门不能为空",myinfo);
-							}else if(formData.mobile.length<=0){
-								showToast("联系电话不能为空",myinfo);
-							}else if(formData.declaration==""){
-								showToast("请选择报名宣言",myinfo);
-							}else{
-								//提交
-								$.ajax({
-									type:"post",
-									url:baseUrl+"/api/activity/voter",
-									data:JSON.stringify(formData),
-									success:function(data, textStatus, xhr){
-										$.each(formData,function(ind,val){
-											localStorage.setItem(ind,val);
-										});
-										localStorage.imageData=images.localId;
-										$("#picture").html('+');
-										if(xhr.status=="200"){
-											window.location.href="placard.html";
-										}else{
-											showAlert("注册失败!");
-											alert(textStatus+"-"+xhr.status);
-										}
+					
+					var formData={
+						    "openid":"",
+						    "name": "",
+						    "image":"",
+						    "company": "",
+						    "mobile": "",
+						    "declaration": ""
+						};
+					//获取表单值
+					formData.openid=request.openid;
+					formData.name=$("input[name='name']").val();
+					formData.image=request.image;
+					images.serverId=request.openid;
+					formData.company=$("input[name='company']").val();
+					formData.mobile=$("input[name='mobile']").val();
+					$(".declaration>li").each(function(i,n){
+						if($(this).children("input[name='declaration']").prop("checked")){
+							formData.declaration=String($(this).index());
+						}
+					});
+					//ios android兼容
+					if (window.__wxjs_is_wkwebview) {
+						//ios
+						formData.image=request.openid;
+						images.serverId=request.openid;
+						//非空验证
+						if(formData.name.length<=0){
+							showToast("姓名不能为空",myinfo);
+						}else if(formData.company.length<=0){
+							showToast("部门不能为空",myinfo);
+						}else if(formData.mobile.length<=0){
+							showToast("联系电话不能为空",myinfo);
+						}else if(formData.declaration==""){
+							showToast("请选择报名宣言",myinfo);
+						}else{
+							//提交
+							$.ajax({
+								type:"post",
+								url:baseUrl+"/api/activity/voter",
+								data:JSON.stringify(formData),
+								success:function(data, textStatus, xhr){
+									$("#picture").html('+');
+									
+									if(xhr.status=="200"){
 										
-									},
-									error:function(xhr, textStatus){
-											console.log(xhr);
-						                    alert(xhr.responseText);
-																		
-									},
-									complete:function(xhr,textStatus){
-										if(xhr.status==409){
-											showAlert("您已经报过名了");
-										}
+										setTimeout(function(){
+											var myname=encodeURIComponent(formData.name);
+											var mycompany=encodeURIComponent(formData.company);
+											window.location.href="placard.html?isios=true&image="+formData.image+"&name="+myname+"&company="+mycompany+"&declaration="+formData.declaration+"&openid="+formData.openid;												
+										},1500);
+										
+									}else{
+										showAlert("注册失败!");
+										showAlert(textStatus+"-"+xhr.status);
+									}										
+								},
+								error:function(xhr, textStatus){
+					                    alert(xhr.responseText);																		
+								},
+								complete:function(xhr,textStatus){
+									if(xhr.status==409){
+										showAlert("您已经报过名了");
 									}
-								});	
-							};
-							
-				        },
-				        fail: function (res) {
-				        	formData={
-							    "openid":"",
-							    "name": "",
-							    "image":"",
-							    "company": "",
-							    "mobile": "",
-							    "declaration": ""
-							};
-				          alert(JSON.stringify(res));
-				        }
-				    });
-				}
+								}
+							});	
+						};
+						
+					}else{
+						
+						// android
+						wx.uploadImage({
+					        localId: images.localId,
+					        isShowProgressTips: 1,
+					        success: function (res) {
+								//获取表单值
+								formData.image=res.serverId;
+								images.serverId=request.openid;
+								
+								//非空验证
+								if(formData.name.length<=0){
+									showToast("姓名不能为空",myinfo);
+								}else if(formData.company.length<=0){
+									showToast("部门不能为空",myinfo);
+								}else if(formData.mobile.length<=0){
+									showToast("联系电话不能为空",myinfo);
+								}else if(formData.declaration==""){
+									showToast("请选择报名宣言",myinfo);
+								}else{
+									//提交
+									$.ajax({
+										type:"post",
+										url:baseUrl+"/api/activity/voter",
+										data:JSON.stringify(formData),
+										success:function(data, textStatus, xhr){
+											$("#picture").html('+');
+											
+											if(xhr.status=="200"){
+												
+												setTimeout(function(){
+													var myname=encodeURIComponent(formData.name);
+													var mycompany=encodeURIComponent(formData.company);
+													window.location.href="placard.html?isios=false&image="+formData.image+"&name="+myname+"?&company="+mycompany+"&declaration="+formData.declaration;
+												},1500);
+												
+											}else{
+												
+												showAlert("注册失败!");
+												showAlert(textStatus+"-"+xhr.status);
+											}										
+										},
+										error:function(xhr, textStatus){
+							                    alert(xhr.responseText);																		
+										},
+										complete:function(xhr,textStatus){
+											if(xhr.status==409){
+												showAlert("您已经报过名了");
+											}
+										}
+									});	
+								};
+								
+					        },
+					        fail: function (res) {
+					          alert(JSON.stringify(res));
+					        }
+					   });//uploadimg-jssdk
+					}//else ios/android
+				   
+				}//if 选择图片
 				
 			});//form submit
 					
