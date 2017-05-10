@@ -53,24 +53,18 @@ func AddRouter(r *httprouter.Router, dist string) {
 }
 
 func RegisterImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	imageName := r.FormValue("image")
-	if len(imageName) == 0 {
-		httputil.Response(w, 400, "param image not found")
-		return
-	}
-
-	target := fmt.Sprintf("%s/%s.jpg", iosImagePath, imageName)
+	imageName := time.Now().String() + "_"+ rand.String(10) + ".jpg"
 	data := r.FormValue("data")
 
 	idx := strings.Index(data, ",")
 	data = data[idx+1:]
 
-	if err := image.GenImageFromBase64([]byte(data), target); err != nil {
+	if err := image.GenImageFromBase64([]byte(data), imageName); err != nil {
 		httputil.Response(w, 400, err)
 		return
 	}
 
-	httputil.Response(w, 200, "ok")
+	httputil.Response(w, 200, imageName)
 	return
 }
 
