@@ -126,10 +126,10 @@ func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 	v.Complete()
 
 	if CH_CACHE_IMAGES != nil {
-		if len(v.Image) != 28 {
-			CH_CACHE_IMAGES <- v.Image
+		if !strings.HasSuffix(v.Image, ".jpg") {
+			CH_CACHE_IMAGES <- v.Image //android
 		} else {
-			v.imageCached = true
+			v.imageCached = true //ios
 		}
 	}
 
