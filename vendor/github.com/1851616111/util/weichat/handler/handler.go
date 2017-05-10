@@ -60,8 +60,10 @@ func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		if err != nil {
 			glog.Errorf("encode weichat event action err %v\n", err)
 		}
-
+		glog.Infof("handler event message %s \n", string(b))
 		w.Write(b)
+	}else {
+		glog.Errorln("weichat event handler action nil", )
 	}
 	return
 }
