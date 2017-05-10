@@ -23,9 +23,14 @@ type Voter struct {
 	Mobile      string `json:"mobile,omitempty"`
 	Declaration string `json:"declaration,omitempty"`
 	VotedCount  int    `json:"voteCount"`
-	followed bool
-	registed bool
+	followed    bool
+	registed    bool
 	imageCached bool
+}
+
+type VStatus struct {
+	Followed    bool `json:"followed"`
+	Registed    bool `json:"registed"`
 }
 
 func (v Voter) ValidateRegister() error {

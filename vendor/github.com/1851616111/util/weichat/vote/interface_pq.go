@@ -1,16 +1,16 @@
 package vote
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"time"
-	"errors"
 
 	"database/sql"
+	"github.com/1851616111/util/weichat/event"
+	"github.com/1851616111/util/weichat/manager/user"
 	"github.com/golang/glog"
 	"github.com/lib/pq"
-	"github.com/1851616111/util/weichat/manager/user"
-	"github.com/1851616111/util/weichat/event"
 )
 
 var TABLE_VOTER string = "GO_WEICHAT_ACTIVITY_VOTER"
@@ -38,16 +38,16 @@ CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_i
   BEGIN
     SELECT followed from go_weichat_activity_voter where openid = p_openid into b_followed;
     IF b_followed IS NULL THEN
-         RETURN 'not found';
+         RETURN 'notfound';
     ELSEIF b_followed = FALSE THEN
-         RETURN 'not follow';
+         RETURN 'notfollow';
     ELSE
         SELECT registed from go_weichat_activity_voter where openid = p_openid into b_registed;
         IF b_registed THEN
-              RETURN 'already regist';
+              RETURN 'registed';
         ELSE
               UPDATE go_weichat_activity_voter SET
-                name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed=TRUE , imageCached=p_imageCached
+                name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed=TRUE, imageCached=p_imageCached
               WHERE openid = p_openid;
               RETURN 'ok';
         END IF;
@@ -57,7 +57,7 @@ $$ LANGUAGE plpgsql;`
 
 var ERR_NOT_FOLLOW error = errors.New("user not follow")
 var ERR_NOT_REGISTER error = errors.New("user not regist")
-var ERR_EXIST error =  errors.New("user exists")
+var ERR_EXIST error = errors.New("user exists")
 var ERR_UNKNOWN_STATUS error = errors.New("user not follow but regist")
 
 func NewDBInterface(ip, port, user, passwd, database string) (DBInterface, error) {
@@ -88,16 +88,16 @@ func (d DB) Init(access_token string) error {
 
 	var cuccessCount int
 	for id := range users {
-		if _, err:= d.Exec(`INSERT INTO ` +TABLE_VOTER+ `(openid, followed) VALUES($1, TRUE) ON CONFLICT(openid)
+		if _, err := d.Exec(`INSERT INTO `+TABLE_VOTER+`(openid, followed) VALUES($1, TRUE) ON CONFLICT(openid)
 		DO UPDATE SET openid = EXCLUDED.openid, followed = EXCLUDED.followed`, users[id]); err != nil {
 			glog.Errorf("weichat init vote user err %v\n", err)
 		} else {
-			cuccessCount ++
+			cuccessCount++
 		}
 	}
 
 	glog.Errorf("weichat activity init followers: %d \n", len(users))
-	glog.Errorf("weichat activity init db user: %d \n", cuccessCount )
+	glog.Errorf("weichat activity init db user: %d \n", cuccessCount)
 	return nil
 }
 
@@ -105,15 +105,15 @@ func (d DB) Register(v *Voter) error {
 	var result string
 	if err := d.QueryRow(`SELECT wc_Regist_Voter($1, $2, $3, $4, $5, $6, $7)`,
 		v.OpenID, v.Name, v.Image, v.Company, v.Mobile, v.Declaration, v.imageCached).Scan(&result); err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	switch result {
-	case "already regist":
+	case "registed":
 		return ERR_EXIST
-	case "not found":
+	case "notfound":
 		return ERR_UNKNOWN_STATUS
-	case "not follow":
+	case "notfollow":
 		return ERR_NOT_FOLLOW
 	case "ok":
 		return nil
@@ -126,7 +126,7 @@ func (d DB) Vote(openID, votedID string) (err error) {
 	voteRecords := pq.Int64Array{}
 	if err = d.QueryRow(`SELECT voteRecords FROM `+TABLE_VOTER+` WHERE openid = $1`, openID).Scan(&voteRecords); err != nil {
 		if err == sql.ErrNoRows {
-			if _, err := d.Exec(`INSERT INTO ` +TABLE_VOTER+ ` (openid) VALUES($1)`, openID); err != nil {
+			if _, err := d.Exec(`INSERT INTO `+TABLE_VOTER+` (openid) VALUES($1)`, openID); err != nil {
 				glog.Errorf("weichat vote from openid %s update user err %v\n", err)
 				return err
 			}
@@ -213,28 +213,22 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 	return &l, nil
 }
 
-func (d DB) GetVoter(openid string) (*Voter, error) {
-	v := Voter{}
-
-	if err := d.QueryRow(`SELECT voterid,COALESCE(name, '')me,COALESCE(image, ''),COALESCE(company, ''),COALESCE(mobile, ''), COALESCE(votedcount, 0),followed, registed, imageCached FROM GO_WEICHAT_ACTIVITY_VOTER WHERE openid = $1`, openid).
-		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount,
-			&v.followed, &v.registed, &v.imageCached); err != nil {
+func (d DB) GetVoterStatus(openid string) (*VStatus, error) {
+	v := VStatus{}
+	if err := d.QueryRow(`SELECT followed, registed FROM GO_WEICHAT_ACTIVITY_VOTER WHERE openid = $1`, openid).
+		Scan(&v.Followed, &v.Registed); err != nil {
 		if err == sql.ErrNoRows {
-			return nil, ERR_NOT_FOLLOW
+			return &v, nil
 		}
 		return nil, err
-	}
-
-	if !v.registed {
-		return nil, ERR_NOT_REGISTER
 	}
 
 	return &v, nil
 }
 
-func (d DB) Follow(e *event.Event)( err error) {
+func (d DB) Follow(e *event.Event) (err error) {
 	fmt.Printf("--------------follow event-------------------------> %v\n", *e)
-	_, err = d.Exec(`INSERT INTO ` + TABLE_VOTER+ ` (openid, followed) VALUES($1, TRUE)
+	_, err = d.Exec(`INSERT INTO `+TABLE_VOTER+` (openid, followed) VALUES($1, TRUE)
 		ON CONFLICT(openid) DO UPDATE SET openid=EXCLUDED.openid, followed=EXCLUDED.followed`, e.From)
 	fmt.Println("--------------------------------------->", err)
 	return
@@ -242,7 +236,7 @@ func (d DB) Follow(e *event.Event)( err error) {
 
 func (d DB) UnFollow(e *event.Event) (err error) {
 	fmt.Printf("-------------------unfollow event--------------------> %v\n", *e)
-	_, err = d.Exec(`UPDATE ` + TABLE_VOTER+ ` SET followed = FALSE WHERE openid = $1`, e.From)
+	_, err = d.Exec(`UPDATE `+TABLE_VOTER+` SET followed = FALSE WHERE openid = $1`, e.From)
 	fmt.Println("--------------------------------------->", err)
 	return
 }
@@ -255,9 +249,8 @@ func (d DB) updateVoterImageStatus(image string) (err error) {
 func hasVoteRight(records []int64) bool {
 	if len(records) >= 1 {
 		sort.Sort(Int64Slice(records))
-		return time.Now().Unix()-records[2] >= 3600*24
+		return time.Now().Unix()-records[0] >= 3600*24
 	} else {
 		return true
 	}
-
 }

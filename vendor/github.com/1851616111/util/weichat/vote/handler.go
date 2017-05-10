@@ -1,23 +1,23 @@
 package vote
 
 import (
+	"encoding/json"
 	"fmt"
-	"time"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
-	"io/ioutil"
-	"encoding/json"
-	"path/filepath"
+	"time"
 
 	httputil "github.com/1851616111/util/http"
+	"github.com/1851616111/util/image"
 	"github.com/1851616111/util/rand"
 	"github.com/1851616111/util/weichat/handler"
 	apiotoken "github.com/1851616111/util/weichat/util/api-token"
 	"github.com/1851616111/util/weichat/util/sign"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
-	"github.com/1851616111/util/image"
 )
 
 var DBI DBInterface
@@ -212,16 +212,9 @@ func GetVoterByOpenIDHandler(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	v, err := DBI.GetVoter(openid)
+	v, err := DBI.GetVoterStatus(openid)
 	if err != nil {
-		switch err {
-		case ERR_NOT_FOLLOW:
-			httputil.Response(w, 404, err)
-		case ERR_NOT_REGISTER:
-			httputil.Response(w, 404, err)
-		default:
-			httputil.Response(w, 400, err)
-		}
+		httputil.ResponseJson(w, 400, err)
 		return
 	}
 
