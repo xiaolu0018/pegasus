@@ -14,7 +14,11 @@ func WatchEvent(appid, schema, domain string) error {
 	article := event.NewArticleAction("跟衰老 Say Bye Bye", "晒合影, 喊好友来助力！！！", imgUrl, url)
 	handler.EventManager.RegistAction(event.E_Subscribe, article)
 	handler.EventManager.RegistAction(event.E_UnSubscribe, article)
-	handler.EventManager.RegistEventCallBack(event.E_Subscribe, vote.DBI.Follow)
-	handler.EventManager.RegistEventCallBack(event.E_UnSubscribe, vote.DBI.UnFollow)
+	if err := handler.EventManager.RegistEventCallBack(event.E_Subscribe, vote.DBI.Follow); err != nil {
+		return err
+	}
+	if err := handler.EventManager.RegistEventCallBack(event.E_UnSubscribe, vote.DBI.UnFollow); err != nil {
+		return err
+	}
 	return nil
 }

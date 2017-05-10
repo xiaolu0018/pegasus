@@ -3,6 +3,7 @@ package event
 import (
 	"errors"
 	"time"
+	"fmt"
 )
 
 var ErrEventNotFound error = errors.New("event not found")
@@ -87,14 +88,15 @@ func (m *EventManager) Handle(e *Event) *Action {
 }
 
 func (m *EventManager) CallBack(e *Event) error {
+	fmt.Println("------------------------01")
 	if m.eventCallBackNum == 0 {
 		return nil
 	}
-
+	fmt.Println("------------------------02")
 	cb, exist := m.eventToCallBackM[string(e.E)]
 	if !exist {
 		return nil
 	}
-
+	fmt.Println("------------------------03")
 	return cb(e)
 }
