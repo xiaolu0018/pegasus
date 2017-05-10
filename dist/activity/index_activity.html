@@ -1,473 +1,472 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<title>晒合影活动</title>
-	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<link rel="stylesheet" href="css/weui.min.css" />
-	<style>
-		*{
-			padding:0;
-			margin:0;
-		}
-		html,body{
-			width:100%;
-			height:100%;
-			-webkit-overflow-scrolling:touch;
-		}
-		ul,li{
-			list-style: none;
-		}
-		.scroll-box{
-			width:100%;
-			background:url(img/bg.png) repeat-y;
-			background-size:100% auto;
-		}
-		header{
-			width:100%;
-			background:url(img/head.png) no-repeat;
-			background-size:contain;
-			position:relative;
-		}
-		header>a#mylink{
-			color:#fff;
-			text-align: center;
-			text-decoration: none;
-			display:block;
-			line-height:1;
-			font-size:12px;
-			font-weight:300;
-			background:#B3D465;
-			border:none;
-			padding:0.5em 1em;
-			border-radius:6px;
-			position:absolute;
-			left:2%;
-			font-size:10px;
-			bottom:40%;
-			box-shadow: 2px 2px 2px  #5D5257;
-		}
-		header>a#mylink:active{
-			color:#F7926F;
-			box-shadow: none;
-		}
-		.btnbox{
-			overflow: hidden;
-		}
-		.regist-btn{
-			background-color:#B3D465;
-			width:35%;
-			margin:15px auto 18px;
-			box-shadow: 1px 2px 2px #1A3440;
-		}
-		.main{
-			padding:5px 5px 10px;
-		}
-		.weui_search_bar {
-			background-color: #fff;
-		}
-		.weui_search_outer:after{
-			background:#efeff4;
-			border-color:#ddd;
-
-		}
-		.main ul.my-panel{
-			overflow: hidden;
-		}
-		.main .my-panel>.panel-box{
-			box-sizing: border-box;
-			width:49.5%;
-			float:left;
-			padding:1em 5px 0.5em;
-			margin-top:1%;
-			background:#fff;
-			position:relative;
-			color:#fff;
-		}
-		.main .my-panel>.panel-box:nth-of-type(even){
-			margin-right:0;
-			float:right;
-		}
-		.img-box{
-			width:100%;
-			overflow: hidden;
-			margin-bottom:8px;
-		}
-		.img-box>img{
-			width:100%;
-			height:100%;
-		}
-		.panel-box>.panel-footer{
-			overflow: hidden;
-		}
-		.panel-footer .perleft{
-			float:left;
-			width:40%;
-			color:#B3D465;
-			line-height:1.2;
-			white-space: nowrap;
-
-		}
-		.panel-footer .perleft>p{
-			text-overflow: clip;
-		}
-		.panel-footer button{
-			float:right;
-			width:55%;
-			background:#B3D465;
-			white-space: nowrap;
-			text-overflow: clip;
-			padding-left:0;
-			padding-right:0;
-		}
-		.panel-footer .active{
-			color: hsla(0,0%,100%,.4);
-			background-color: #039702;
-		}
-		.panel-box>p.checkbox{
-			position:absolute;
-			padding:0 3px;
-			top:1em;
-			right:1em;
-			background:url(img/4.png) no-repeat;
-			background-size:cover;
-		}
-		.panel-box>p.checkbox:after{
-			content:"";
-			display:block;
-			height:3px;
-			width:100%;
-		}
-		.main .my-paging{
-			color:#333;
-			overflow: hidden;
-			text-align: center;
-			box-sizing: border-box;
-			padding:1em 0;
-		}
-		.my-paging ul{
-			overflow:hidden;
-
-		}
-		.my-paging ul>li{
-			float:left;
-			padding:0 0.5em 0 0;
-		}
-		.my-paging .sigpage input{
-			width:2em;
-			background:rgba(255,255,255,0.3);
-			border:none;
-			border-radius:4px;
-			outline: none;
-			padding:3px 1em;
-			text-align: center;
-			color:#333;
-		}
-		.pagelist>span:active{
-			color:#fff;
-		}
-		#sec,#clip,#negfir,#negsec{
-			display:none;
-		}
-		#toast [class*=" weui_icon_"]:before,#toast [class^=weui_icon_]:before{
-			font-size:3em;
-		}
-		#toast [class*=" weui_icon_"],#toast [class^=weui_icon_]{
-			margin: 22px 0 0;
-			display: block;
-		}
-		#goTop{
-			position:fixed;
-			bottom:3em;
-			left:0;
-			background: rgba(40,40,40,.6);
-			border:none;
-			border-radius:6px;
-			color:#fff;
-			text-align: center;
-			padding:0.5em 1em;
-			display:none;
-		}
-		#goTop:active{
-			background:rgba(40,40,40,1);
-		}
-	</style>
-</head>
-<body ontouchstart="">
-<div class="scroll-box">
-	<header>
-		<a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
-	</header>
-	<div class='btnbox'>
-		<a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
-	</div>
-	<div class="main">
-		<div class="weui_search_bar" id="searchinp">
-			<form action="#" class="weui_search_outer">
-				<div class="weui_search_inner">
-					<i class="weui_icon_search"></i>
-					<input type="search" class="weui_search_input" id="search_input" placeholder="请输入姓名或编号">
-					<a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
-				</div>
-				<label for="search_input" class="weui_search_text" id="search_text" style="display: none;">
-					<i class="weui_icon_search"></i>
-					<span>搜索</span>
-				</label>
-			</form>
-			<a href="javascript:" class="weui_search_cancel" id="search_cancel">搜索</a>
+	<head>
+		<meta charset="UTF-8">
+		<title>晒合影活动</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<link rel="stylesheet" href="css/weui.min.css" />
+		<style>
+			*{
+				padding:0;
+				margin:0;
+			}
+			html,body{
+				width:100%;
+				height:100%;
+				 -webkit-overflow-scrolling:touch;				
+			}
+			ul,li{
+				list-style: none;
+			}
+			.scroll-box{
+				width:100%;
+				background:url(img/bg.png) repeat-y;
+				background-size:100% auto;
+			}
+			header{
+				width:100%;
+				background:url(img/head.png) no-repeat;
+				background-size:contain;
+				position:relative;
+			}
+			header>a#mylink{
+				color:#fff;
+				text-align: center;
+				text-decoration: none;
+				display:block;
+				line-height:1;
+				font-size:12px;
+				font-weight:300;
+				background:#B3D465;
+				border:none;
+				padding:0.5em 1em;
+				border-radius:6px;
+				position:absolute;
+				left:2%;
+				font-size:10px;
+				bottom:40%;
+				box-shadow: 2px 2px 2px  #5D5257;
+			}
+			header>a#mylink:active{
+				color:#F7926F;
+				box-shadow: none;
+			}
+			.btnbox{
+				overflow: hidden;
+			}
+			.regist-btn{
+				background-color:#B3D465;
+				width:35%;
+				margin:15px auto 18px;
+				box-shadow: 1px 2px 2px #1A3440;
+			}
+			.main{
+				padding:5px 5px 10px;
+			}
+			.weui_search_bar {
+			    background-color: #fff;
+			}
+			.weui_search_outer:after{
+				background:#efeff4;
+				border-color:#ddd;
+				
+			}
+			.main ul.my-panel{
+				overflow: hidden;
+			}
+			.main .my-panel>.panel-box{
+				box-sizing: border-box;
+				width:49.5%;
+				float:left;
+				padding:1em 5px 0.5em;
+				margin-top:1%;
+				background:#fff;
+				position:relative;
+				color:#fff;
+			}
+			.main .my-panel>.panel-box:nth-of-type(even){
+				margin-right:0;
+				float:right;				
+			}
+			.img-box{
+				width:100%;
+				overflow: hidden;
+				margin-bottom:8px;
+			}
+			.img-box>img{
+				width:100%;
+				height:100%;
+			}
+			.panel-box>.panel-footer{
+				overflow: hidden;
+			}
+			.panel-footer .perleft{
+				float:left;
+				width:40%;
+				color:#B3D465;
+				line-height:1.2;
+				white-space: nowrap;
+				
+			}
+			.panel-footer .perleft>p{
+				text-overflow: clip;				
+			}
+			.panel-footer button{
+				float:right;
+				width:55%;
+				background:#B3D465;
+				white-space: nowrap;
+				text-overflow: clip;
+				padding-left:0;
+				padding-right:0;
+			}
+			.panel-footer .active{
+				color: hsla(0,0%,100%,.4);
+    			background-color: #039702;
+			}
+			.panel-box>p.checkbox{
+				position:absolute;
+				padding:0 3px;
+				top:1em;
+				right:1em;
+				background:url(img/4.png) no-repeat;
+				background-size:cover;
+			}
+			.panel-box>p.checkbox:after{
+				content:"";
+				display:block;
+				height:3px;
+				width:100%;				
+			}
+			.main .my-paging{
+				color:#333;
+				overflow: hidden;
+				text-align: center;
+				box-sizing: border-box;
+				padding:1em 0;
+			}
+			.my-paging ul{
+				overflow:hidden;
+				
+			}
+			.my-paging ul>li{
+				float:left;
+				padding:0 0.5em 0 0;
+			}
+			.my-paging .sigpage input{
+				width:2em;
+				background:rgba(255,255,255,0.3);
+				border:none;
+				border-radius:4px;
+				outline: none;
+				padding:3px 1em;
+				text-align: center;
+				color:#333;
+			}
+			.pagelist>span:active{
+				color:#fff;
+			}
+			#sec,#clip,#negfir,#negsec{
+				display:none;
+			}
+			#toast [class*=" weui_icon_"]:before,#toast [class^=weui_icon_]:before{
+	        	font-size:3em;
+	        }
+	        #toast [class*=" weui_icon_"],#toast [class^=weui_icon_]{
+	        	margin: 22px 0 0;
+	    		display: block;
+	        }
+	        #goTop{
+	        	position:fixed;
+	        	bottom:3em;
+	        	left:0;
+	        	background: rgba(40,40,40,.6);
+	        	border:none;
+	        	border-radius:6px;
+	        	color:#fff;
+	        	text-align: center;
+	        	padding:0.5em 1em;
+	        	display:none;
+	        }
+	        #goTop:active{
+	        	background:rgba(40,40,40,1);
+	        }
+		</style>
+	</head>
+	<body ontouchstart="">
+		<div class="scroll-box">
+			<header>
+				<a id="mylink" href="http://c.eqxiu.com/s/w8GwTqCg">点击了解奖品详细信息</a>
+			</header>
+			<div class='btnbox'>
+				<a id="goRegist" class='weui_btn weui_btn_primary regist-btn'>我要报名</a>
+			</div>
+			<div class="main">
+				<div class="weui_search_bar" id="searchinp">
+			        <form action="#" class="weui_search_outer">
+			            <div class="weui_search_inner">
+			                <i class="weui_icon_search"></i>
+			                <input type="search" class="weui_search_input" id="search_input" placeholder="请输入姓名或编号">
+			                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+			            </div>
+			            <label for="search_input" class="weui_search_text" id="search_text" style="display: none;">
+			                <i class="weui_icon_search"></i>
+			                <span>搜索</span>
+			            </label>
+			        </form>
+			        <a href="javascript:" class="weui_search_cancel" id="search_cancel">搜索</a>
+			    </div>
+				<ul class="my-panel">
+					
+				</ul>
+			</div>
 		</div>
-		<ul class="my-panel">
-
-		</ul>
+		<!--回到顶部-->
+		<p id="goTop">TOP</p>
+		<!--提示消息-->
+    <div id="toast" style="display:none;">
+	    <div class="weui_mask_transparent"></div>
+	    <div class="weui_toast">
+	        <i class="weui_icon_toast"></i>
+	        <p class="weui_toast_content">已完成</p>
+	    </div>
 	</div>
-</div>
-<!--回到顶部-->
-<p id="goTop">TOP</p>
-<!--提示消息-->
-<div id="toast" style="display:none;">
-	<div class="weui_mask_transparent"></div>
-	<div class="weui_toast">
-		<i class="weui_icon_toast"></i>
-		<p class="weui_toast_content">已完成</p>
+	<!--alert框-->
+	<div class="weui_dialog_alert" id="myAlert" style="display:none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong style="color:#FAFAFC;visibility: hidden;"  class="weui_dialog_title">我的</strong></div>
+	        <div class="weui_dialog_bd" id="alertCon" style="color:#333;"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="#" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
 	</div>
-</div>
-<!--alert框-->
-<div class="weui_dialog_alert" id="myAlert" style="display:none;">
-	<div class="weui_mask"></div>
-	<div class="weui_dialog">
-		<div class="weui_dialog_hd"><strong style="color:#FAFAFC;visibility: hidden;"  class="weui_dialog_title">我的</strong></div>
-		<div class="weui_dialog_bd" id="alertCon" style="color:#333;"></div>
-		<div class="weui_dialog_ft">
-			<a href="#" class="weui_btn_dialog primary">确定</a>
+	<!--dialog-->
+	<div class="weui_dialog_confirm" id="myConfirm" style="display: none;">
+	    <div class="weui_mask"></div>
+		<div class="weui_dialog">
+		    <div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
+		    <div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
+		    <div class="weui_dialog_ft">
+		        <a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
+		        <a href="#" class="weui_btn_dialog primary">确定</a>
+		    </div>
 		</div>
 	</div>
-</div>
-<!--dialog-->
-<div class="weui_dialog_confirm" id="myConfirm" style="display: none;">
-	<div class="weui_mask"></div>
-	<div class="weui_dialog">
-		<div class="weui_dialog_hd"><strong class="weui_dialog_title">您没有关注公众号</strong></div>
-		<div class="weui_dialog_bd">是否关注迪安健检参与活动</div>
-		<div class="weui_dialog_ft">
-			<a href="#" onclick='$("#myConfirm").hide()' class="weui_btn_dialog default">取消</a>
-			<a href="#" class="weui_btn_dialog primary">确定</a>
-		</div>
-	</div>
-</div>
-</body>
-<script src="js/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="js/base.js"></script>
-<script>
-    $(function(){
-        var pageData=[];//页面数据
-        var scrollTop=0;//页面滚动
-        var page=1;//当前页码
-        var pageNum=0;//当前页ajax.data.length
-        var pageSize=16;//每次请求的数据size
-        var MAXPAGE=0;//数据长度
-        var openid="";
-        var inpKey="";//搜索框val
-        var clientSize=0;//当前页加载数据长度；
-        var telHeight=$(window).height();
-        var telWidth=$(window).width();//屏幕宽度
-        var touchY=0;//touchstart位置
-        var newY=0;
-        $('header').css("height",telWidth+"px");
-
-        //图片宽高自适应设置；
-        var imgboxWidth=((telWidth-10)*49.5/100)-10;
-        $("div.img-box").each(function(){
-            $(this).css("height",imgboxWidth+"px");
-        });
-
-        $("#myConfirm a.primary").attr('href',weLink);
-        UrlSearch();
-        var parameter={"index":page,"size":pageSize};
-        $(".main>ul.my-panel").html("");
-        ajaxPage(parameter);
-
-        //页码变化时的ajax,并解析渲染
-        function ajaxPage(parameter){
-
-            $.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
+	</body>
+	<script src="../js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script>
+		$(function(){
+			var pageData=[];//页面数据
+			var scrollTop=0;//页面滚动
+			var page=1;//当前页码
+			var pageNum=0;//当前页ajax.data.length
+			var pageSize=16;//每次请求的数据size
+			var MAXPAGE=0;//数据长度
+			var openid="";
+			var inpKey="";//搜索框val
+			var clientSize=0;//当前页加载数据长度；
+			var telHeight=$(window).height();
+			var telWidth=$(window).width();//屏幕宽度
+			var touchY=0;//touchstart位置
+			var newY=0;
+			$('header').css("height",telWidth+"px");
+			
+			//图片宽高自适应设置；
+			var imgboxWidth=((telWidth-10)*49.5/100)-10;
+			$("div.img-box").each(function(){
+				$(this).css("height",imgboxWidth+"px");
+			});
+			
+			$("#myConfirm a.primary").attr('href',weLink);
+			UrlSearch();
+			var parameter={"index":page,"size":pageSize};
+			$(".main>ul.my-panel").html("");
+			ajaxPage(parameter);	
+			//获取个人信息
+			
+			//页码变化时的ajax,并解析渲染
+			function ajaxPage(parameter){
+				
+				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
 //				$.getJSON("data/img.json",parameter,function(data){
-                if(typeof data === 'string'){
-                    data = JSON.parse(data);
-                }
-                if(data==null){
-                }else{
-                    //数据解析
-                    page=Number(data.index);
-                    $(".sigpage>input").val(page);
-                    pageSize=Number(data.size);
-                    MAXPAGE=Number(data.total_pages);
-                    pageNum=data.page_data.length;
-                    pageData=data.page_data;
-                    var fragment="";
-                    if(pageNum>0){
-                        for(var g=0;g<pageNum;g++){
-                            fragment+='<li class="panel-box"><div class="img-box" style="height:'+imgboxWidth+'px;"><img src="voterimages/'+pageData[g].image+'" class="panel-img"></div><div class="panel-footer"><div class="perleft"><span class="name">'+pageData[g].name+'</span><p><span class="ticNum">'+pageData[g].voteCount+'</span>票</p></div><button class="weui_btn weui_btn_primary">投他一票</button></div><p class="checkbox">编号<span class="checkNum">'+pageData[g].voterid+'</span></p></li>';
-                        };
-                        $(".main>ul.my-panel").append(fragment);
-                    }
-                }
-            });//ajax-end
-        };//ajaxPage-function-end
-
-
-        //滑动事件
-        $("body").on('touchstart',function(e){
-            var touch = event.targetTouches[0];
-            touchY=touch.pageY;
-            newY=touchY;
-        });
-        $("body").on('touchmove',function(e){
-            var touch = event.targetTouches[0];
-            newY=touch.pageY;
-            if(newY>telHeight*page){
-                if(page<MAXPAGE){
-                    page++;
-                    parameter.index=page;
-                    if(inpKey.length<=0){
-                        delete parameter.key;
-                        ajaxPage(parameter);
-                    }else{
-                        parameter.key=inpKey;
-                        ajaxPage(parameter);
-                    }
-
-                }
-            }else{
-            }
-            if($("body").scrollTop()>telHeight){
-                $("#goTop").show();
-            }else{
-                $("#goTop").hide();
-            }
-        });
-        $("#goTop").on('touchstart',function(){
-            $("body").scrollTop(0);
-            $("#goTop").hide();
-        });
-        //我要报名
-        $("#goRegist").on('touchstart',function(e){
-            if(request.openid){
-                $.ajax({
-                    url:baseUrl+"/api/activity/voter?openid="+request.openid,
-                    type:"get",
-                    complete:function(xhr){
-                        if(xhr.status=="200"){
-                            showAlert("已经报名过了");
-                        }else if((xhr.status=="404")&&(xhr.responseText=="user not regist")){
-                            window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
-                        }else if((xhr.status=="404")&&(xhr.responseText=="user not follow")){
-                            $("#myConfirm").show();
-                        }else{
-                            showAlert("失败"+xhr.status+":"+xhr.responseText);
-                        }
-                    }
-                });
-            }else{
-                //未关注公众号
-                showAlert("请从微信登陆");
-            }
-        });
-        //搜索框焦点事件
-        $("#searchinp input[type='search']").focus(function(){
-            $("#search_cancel").show(0);
-        });
-        $("#searchinp input[type='search']").blur(function(){
-            if($("#searchinp input[type='search']").val()==""){
-                $("#search_cancel").hide(0);
-            }else{
-                $("#search_cancel").show(0);
-            }
-        });
-
-
-        //搜索框清除点击事件
-        $("#searchinp").on('touchstart','#search_clear',function(){
-            $("#searchinp input[type='search']").val("");
-            inpKey="";
-            $("#search_cancel").hide(0);
-            delete parameter.key;
-            page=1;
-            parameter.index=page;
-            $(".main>ul.my-panel").html("");
-            ajaxPage(parameter);
-        });
-        //搜索框搜索点击
-        $(".main").on('touchstart','#search_cancel',function(e){
-            inpKey=$("#searchinp input[type='search']").val();
-            if(inpKey.length>0){
-                parameter.key=inpKey;
-            }else{
-                delete parameter.key;
-            }
-            page=1;
-            parameter.index=page;
-            $(".main>ul.my-panel").html("");
-            ajaxPage(parameter);
-        });
-        //
-        $("form.weui_search_outer").on('submit',function(e){
-            e.preventDefault();
-            inpKey=$("#searchinp input[type='search']").val();
-            if(inpKey.length>0){
-                param.key=inpKey;
-                page=1;
-                parameter.index=page;
-                $(".main>ul.my-panel").html("");
-                ajaxPage(param);
-            }
-        });
-        //投票按钮
-        //重复提交变量
-        var resub=true;
-        $(".main>ul.my-panel").on('touchend','li.panel-box button',function(e){
-            newY=Math.abs(newY-touchY);
-            if(newY<10){
-                var $this=$(e.target);
-                var voterid=$this.parent(".panel-footer").siblings("p.checkbox").children("span.checkNum").html();
-                if(resub){
-                    resub=false;
-                    $(e.target).addClass("active");
-                    if(request.openid){
-                        $.ajax({
-                            type:"post",
-                            url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
-                            data:{},
-                            complete:function(xhr){
-                                resub=true;
-                                $(e.target).removeClass("active");
-                                if(xhr.status=="200"){
-                                    var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
-                                    $this.siblings(".perleft").find('span.ticNum').html(++lastNum);
-                                    showAlert("投票成功，感谢您的投票");
-                                }else if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){
-                                    showAlert("您每天只有一票");
-                                }else if(xhr.status=="404"){
-                                    $("#myConfirm").show();
-                                }else{
-                                    showAlert("投票失败"+xhr.status+":"+xhr.responseText);
-                                }
-
-                            }
-                        });
-                    }else{
-                        resub=true;
-                        $(e.target).removeClass("active");
-                        //没有关注
-                        showAlert("请从微信登陆");
-                    }
-                }
-            }
-        });
-    });
-
-
-
-</script>
+					if(typeof data === 'string'){
+					    data = JSON.parse(data);
+					}
+					if(data==null){
+					}else{
+						//数据解析
+						page=Number(data.index);
+						$(".sigpage>input").val(page);
+						pageSize=Number(data.size);
+						MAXPAGE=Number(data.total_pages);
+						pageNum=data.page_data.length;
+						pageData=data.page_data;
+						var fragment="";
+						if(pageNum>0){
+							for(var g=0;g<pageNum;g++){
+								fragment+='<li class="panel-box"><div class="img-box" style="height:'+imgboxWidth+'px;"><img src="voterimages/'+pageData[g].image+'" class="panel-img"></div><div class="panel-footer"><div class="perleft"><span class="name">'+pageData[g].name+'</span><p><span class="ticNum">'+pageData[g].voteCount+'</span>票</p></div><button class="weui_btn weui_btn_primary">投他一票</button></div><p class="checkbox">编号<span class="checkNum">'+pageData[g].voterid+'</span></p></li>';
+							};
+							$(".main>ul.my-panel").append(fragment);
+						}
+					}
+				});//ajax-end
+			};//ajaxPage-function-end
+				
+			
+			//滑动事件
+			$("body").on('touchstart',function(e){
+				var touch = event.targetTouches[0];
+				touchY=touch.pageY;
+				newY=touchY;
+			});
+			$("body").on('touchmove',function(e){
+				 var touch = event.targetTouches[0];
+				 newY=touch.pageY;
+            	if(newY>telHeight*page){
+            		if(page<MAXPAGE){
+            			page++;
+            			parameter.index=page;
+            			if(inpKey.length<=0){
+            				delete parameter.key;
+            				ajaxPage(parameter);
+            			}else{
+            				parameter.key=inpKey;
+            				ajaxPage(parameter);
+            			}
+					 	
+            		}
+            	}else{
+            	}
+            	if($("body").scrollTop()>telHeight){
+            		$("#goTop").show();
+            	}else{
+            		$("#goTop").hide();
+            	}
+			});
+			$("#goTop").on('touchstart',function(){
+				$("body").scrollTop(0);
+				$("#goTop").hide();
+			});
+			//我要报名
+			$("#goRegist").on('touchstart',function(e){
+				if((request.openid)&&(request.from==undefined)){
+					$.ajax({
+						url:baseUrl+"/api/activity/voter?openid="+request.openid,
+						type:"get",
+						success:function(data){
+							if(data.followed==false){
+								$("#myconfirm").show();
+							}else if((data.followed==true)&&(data.registed==true)){
+								showAlert("您已经报过名了");
+							}else if((data.followed==true)&&(data.registed==false)){
+								window.location.href=baseUrl+"/dist/activity/regist.html?openid="+request.openid;
+							}
+						},
+						error:function(xro){
+							
+						}
+					});
+				}else{
+					//未关注公众号
+					showAlert("请从微信登陆");
+				}
+			});
+			//搜索框焦点事件
+			$("#searchinp input[type='search']").focus(function(){
+				$("#search_cancel").show(0);
+			});
+			$("#searchinp input[type='search']").blur(function(){
+				if($("#searchinp input[type='search']").val()==""){
+					$("#search_cancel").hide(0);
+				}else{
+					$("#search_cancel").show(0);
+				}
+			});
+			
+			
+			//搜索框清除点击事件
+			$("#searchinp").on('touchstart','#search_clear',function(){
+				$("#searchinp input[type='search']").val("");
+				inpKey="";
+				$("#search_cancel").hide(0);
+				delete parameter.key;
+				page=1;
+				parameter.index=page;
+				$(".main>ul.my-panel").html("");
+            	ajaxPage(parameter);
+			});
+			//搜索框搜索点击
+			$(".main").on('touchstart','#search_cancel',function(e){
+				inpKey=$("#searchinp input[type='search']").val();
+				if(inpKey.length>0){
+					parameter.key=inpKey;
+				}else{
+					delete parameter.key;
+				}
+				page=1;
+				parameter.index=page;
+				$(".main>ul.my-panel").html("");
+            	ajaxPage(parameter);
+			});
+			//
+			$("form.weui_search_outer").on('submit',function(e){
+				e.preventDefault();
+				inpKey=$("#searchinp input[type='search']").val();
+				if(inpKey.length>0){
+					param.key=inpKey;
+					page=1;
+					parameter.index=page;
+					$(".main>ul.my-panel").html("");
+					ajaxPage(param);
+				}
+			});
+			//投票按钮
+			//重复提交变量
+			var resub=true;
+			$(".main>ul.my-panel").on('touchend','li.panel-box button',function(e){
+				newY=Math.abs(newY-touchY);
+				if(newY<10){
+					var $this=$(e.target);
+					var voterid=$this.parent(".panel-footer").siblings("p.checkbox").children("span.checkNum").html();
+					if(resub){
+						resub=false;
+						$(e.target).addClass("active");
+						if((request.openid)&&(request.from==undefined)){
+							$.ajax({
+								type:"post",
+								url:baseUrl+"/api/activity/voter/"+voterid+"/vote?openid="+request.openid,
+								data:{},
+								complete:function(xhr){
+										resub=true;
+										$(e.target).removeClass("active");
+									if(xhr.status=="200"){
+										var lastNum=Number($this.siblings(".perleft").find('span.ticNum').html());
+										$this.siblings(".perleft").find('span.ticNum').html(++lastNum);
+										showAlert("投票成功，感谢您的投票");
+									}else if((xhr.status=="400")&&(xhr.responseText=="vote chance large than 3")){										
+										showAlert("您每天只有一票");
+									}else{
+										showAlert("投票失败"+xhr.status+":"+xhr.responseText);
+									}
+									
+								}
+							});
+						}else{						
+							resub=true;
+							$(e.target).removeClass("active");
+							//没有关注
+							showAlert("请从微信登陆");
+						}
+					}
+				}	
+			});
+		});
+			
+		
+		
+	</script>
 </html>
-
