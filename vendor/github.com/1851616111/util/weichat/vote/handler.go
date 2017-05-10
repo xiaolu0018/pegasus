@@ -53,7 +53,7 @@ func AddRouter(r *httprouter.Router, dist string) {
 }
 
 func RegisterImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	imageName := fmt.Sprintf("%d_%s.jpg", time.Now().UnixNano(), rand.String(10))
+	imageName := fmt.Sprintf("%s/%d_%s.jpg", iosImagePath, time.Now().UnixNano(), rand.String(10))
 	data := r.FormValue("data")
 
 	idx := strings.Index(data, ",")
