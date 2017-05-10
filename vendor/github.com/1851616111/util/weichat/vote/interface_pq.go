@@ -216,7 +216,7 @@ func (d DB) ListVoters(key interface{}, index, size int) (*VoterList, error) {
 func (d DB) GetVoter(openid string) (*Voter, error) {
 	v := Voter{}
 
-	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount
+	if err := d.QueryRow(`SELECT voterid, name, image, company, mobile, votedcount,
 			followed, registed, imageCached FROM `+TABLE_VOTER+` WHERE openid = $1`, openid).
 		Scan(&v.ID, &v.Name, &v.Image, &v.Company, &v.Mobile, &v.VotedCount,
 			&v.followed, &v.registed, &v.imageCached); err != nil {
@@ -236,7 +236,7 @@ func (d DB) GetVoter(openid string) (*Voter, error) {
 func (d DB) Follow(e *event.Event)( err error) {
 	fmt.Printf("--------------follow event-------------------------> %v\n", *e)
 	_, err = d.Exec(`INSERT INTO ` + TABLE_VOTER+ ` (openid, followed) VALUES($1, TRUE)
-		ON CONFLIECT(openid) DO UPDATE SET openid=EXCLUDED.openid, followed=EXCLUDED.followed`, e.From)
+		ON CONFLICT(openid) DO UPDATE SET openid=EXCLUDED.openid, followed=EXCLUDED.followed`, e.From)
 	fmt.Println("--------------------------------------->", err)
 	return
 }
