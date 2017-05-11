@@ -222,7 +222,7 @@
 			};
 		})();
 		//获取wx配置参数
-	   	$.getJSON(baseUrl+'/api/activity/jsconfig',{"openid":request.openid},function(data){
+	   	$.getJSON(baseUrl+'/api/activity/jsconfig',{"openid":request.openid,"reqpage":window.location.href},function(data){
 	   		if (typeof data === 'string') {
 				    data = JSON.parse(data);
 			}
@@ -368,7 +368,7 @@
 								//获取表单值
 								formData.image=res.serverId;
 								images.serverId=request.openid;
-                                var isMobile=/^(?:13\d|15\d)\d{5}(\d{3}|\*{3})$/;
+                                var isMobile=/^1[34578]\d{9}$/;
                                 var isPhone=/^0\d{2,3}-?\d{7,8}$/;
                                 if((!isMobile.test(formData.mobile))&&(!isPhone.test(formData.mobile))){
                                     //联系电话格式验证

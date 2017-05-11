@@ -260,7 +260,7 @@
 	</body>
 	<script src="js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/base.js"></script>
-	<script id="and" type="text/javascript" src="js/jweixin-1.0.0.js"></script>
+	
 	<script>
 		$(function(){
 			var pageData=[];//页面数据
@@ -290,43 +290,6 @@
 			$(".main>ul.my-panel").html("");
 			ajaxPage(parameter);	
 			//自定义分享
-			$.getJSON(baseUrl+'/api/activity/jsconfig',{"openid":request.openid},function(data){
-		   		if (typeof data === 'string') {
-					    data = JSON.parse(data);
-				}
-		   		wx.config({
-						debug:false,
-						appId:data.appid,
-						timestamp:data.timestamp,
-						nonceStr:data.noncestr,
-						signature:data.signature,
-						jsApiList:['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage']
-				});			
-		   	});
-			wx.ready(function(){
-                //share to timeline
-                wx.onMenuShareTimeline({
-                    title: "迪安健检晒合影活动",
-					desc:"帮我投票",
-                    link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
-                    imgUrl: "http://hd1.dahe100.cn/dist/activity/img/head.png",
-                    success: function () {},
-                    cancel: function () {
-                    }
-                });
-
-                wx.onMenuShareAppMessage({
-                    desc:"帮我投票",
-                    title: "迪安健检晒合影活动",
-                    link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
-                    imgUrl: "http://hd1.dahe100.cn/dist/activity/img/head.png",
-                    type: 'link',
-                    dataUrl: '',
-                    success: function () {},
-                    cancel: function () {
-                    }
-                });
-			});
 			//页码变化时的ajax,并解析渲染
 			function ajaxPage(parameter){
 				
