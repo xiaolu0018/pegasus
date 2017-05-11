@@ -9,8 +9,8 @@ import (
 
 func CreateMenu(appid, schema, domain string) error {
 	bt_1_1 := menu.NewViewButton("免费wifi", "http://wifi.weixin.qq.com/mbl/connect.xhtml?type=1")
-	bt_1_2 := menu.NewViewButton("查看报告", "http://hd1.dahe100.cn/dist/updating.html")
-	bt_1_3 := menu.NewViewButton("预约", "http://hd1.dahe100.cn/dist/updating.html")
+	bt_1_2 := menu.NewViewButton("查看报告", "http://hd1.dahe100.cn/dist/activity/updating.html")
+	bt_1_3 := menu.NewViewButton("预约", "http://hd1.dahe100.cn/dist/activity/updating.html")
 	bt_1 := menu.NewTopButton("体检服务").AddSub(bt_1_3).AddSub(bt_1_2).AddSub(bt_1_1)
 
 	appoint2 := fmt.Sprintf("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s%%3a%%2f%%2f%s%%2fapi%%2factivity%%2findex&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
