@@ -20,6 +20,7 @@
             width:100%;
             overflow: hidden;
             text-align: center;
+            background-color:#67B98C;
             /*background-size:100% auto;
             background-repeat: no-repeat;*/
         }
@@ -109,7 +110,7 @@
 	<div id="mainbox">
 		<div class="phone">
 			<h1><img src="http://hd1.dahe100.cn/dist/activity/img/logo.png"/></h1>
-	        <img id="pictrue" src="" style="width:100%;height:auto;">
+	        <img id="pictrue" src="" style="height:100%;width:auto;">
 	        <div class="left-B"></div>
 	        <div class="right-U"></div>
 	        <div class="right-B"></div>
@@ -140,6 +141,8 @@
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/base.js"></script>
 <script id="and" type="text/javascript" src="js/jweixin-1.0.0.js"></script>
+
+<script type="text/javascript" src="js/jsapi.js"></script>
 <script>
 	$(function(){	
 		UrlSearch();
@@ -179,6 +182,61 @@
                     }
                 });
 			});
+			var WeixinApi = (function () { 
+ 
+			    /* 这里省略了一堆代码……下面直接看调用接口 */ 
+			    return {
+			        ready           :wxJsBridgeReady,
+			        shareToTimeline :weixinShareTimeline,
+			        shareToWeibo    :weixinShareWeibo,
+			        shareToFriend   :weixinSendAppMessage,
+			        showOptionMenu  :showOptionMenu,
+			        hideOptionMenu  :hideOptionMenu,
+			        showToolbar     :showToolbar,
+			        hideToolbar     :hideToolbar,
+			        getNetworkType  :getNetworkType,
+			        imagePreview    :imagePreview
+			    };    
+			 
+			});
+			
+// 所有功能必须包含在 WeixinApi.ready 中进行
+WeixinApi.share = function (wxData, wxCallbacks) {
+	WeixinApi.ready(function(Api){
+   var wxData = {
+        "imgUrl":'http://hd1.dahe100.cn/dist/activity/img/dajj.png',
+        "link":'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect',
+        "desc":'晒与父母合影，赢取¥15800《衰老指数精准评估》，这绝对是母亲节最好的礼物',
+        "title":"你有与父母的合影吗？想让父母老得慢些吗？"
+    };
+     var wxCallbacks = {
+        // 分享操作开始之前
+        ready:function () {
+            // 你可以在这里对分享的数据进行重组
+        },
+        // 分享被用户自动取消
+        cancel:function (resp) {
+            // 你可以在你的页面上给用户一个小Tip，为什么要取消呢？
+        },
+        // 分享失败了
+        fail:function (resp) {
+            // 分享失败了，是不是可以告诉用户：不要紧，可能是网络问题，一会儿再试试？
+        },
+        // 分享成功
+        confirm:function (resp) {
+            // 分享成功了，我们是不是可以做一些分享统计呢？
+        },
+        // 整个分享过程结束
+        all:function (resp) {
+            // 如果你做的是一个鼓励用户进行分享的产品，在这里是不是可以给用户一些反馈了？
+        }
+    };
+});
+
+}
+   
+    
+
 		var telWidth=$(window).width();
 		var telHeight=$(window).height();
 		$("div.text>img").attr("src","img/"+(100+Number(request.declaration))+".png");
