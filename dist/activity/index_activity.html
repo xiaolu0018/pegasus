@@ -361,11 +361,9 @@
 							if(typeof data === 'string'){
 					    		data = JSON.parse(data);
 							}
-						if(data==null){
-                            alert("net error");
-						}else{
+						if(data==null){}else{
 							if(data.followed==false){
-								$("#myconfirm").show();
+								$("#myConfirm").show();
 							}else if((data.followed==true)&&(data.registed==true)){
 								showAlert("您已经报过名了");
 							}else if((data.followed==true)&&(data.registed==false)){
