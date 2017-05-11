@@ -21,7 +21,6 @@ import (
 )
 
 var DBI DBInterface
-var URL_REGISTER_HTML string
 var APPID string
 var iosImagePath string
 
@@ -87,10 +86,11 @@ func GetImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	return
 }
 
+
 func ExchangeJSConfigHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	openid := r.FormValue("openid")
-	if len(openid) == 0 {
-		httputil.Response(w, 400, "openid not found")
+	reqPage := r.FormValue("reqpage")
+	if len(reqPage) == 0 {
+		httputil.Response(w, 400, "reqPage not found")
 		return
 	}
 
@@ -98,7 +98,7 @@ func ExchangeJSConfigHandler(w http.ResponseWriter, r *http.Request, ps httprout
 	nonce := strings.ToLower(rand.String(5))
 	timeStamp := time.Now().Unix()
 	//http://mp.weixin.qq.com?params=value
-	signStr := sign.SignJsTicket(ticket, nonce, fmt.Sprintf("%s?openid=%s", URL_REGISTER_HTML, openid), timeStamp)
+	signStr := sign.SignJsTicket(ticket, nonce, reqPage, timeStamp)
 	m := map[string]interface{}{
 		"appid":     APPID,
 		"timestamp": timeStamp,
