@@ -1,13 +1,13 @@
 package vote
 
 import (
-	"testing"
-	"sort"
 	"fmt"
+	"sort"
+	"testing"
 )
 
 func TestDB_GetVoter(t *testing.T) {
-	r := []int64{1,23,234235,626345}
+	r := []int64{1, 23, 234235, 626345}
 	sort.Sort(Int64Slice(r))
 	fmt.Println(r)
 }

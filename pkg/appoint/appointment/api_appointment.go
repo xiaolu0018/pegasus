@@ -16,7 +16,6 @@ import (
 	"bjdaos/pegasus/pkg/appoint/organization"
 	"bjdaos/pegasus/pkg/common/util/methods"
 	"errors"
-
 	//pintosdk "bjdaos/pegasus/pkg/common/sdk/pinto"
 )
 
@@ -346,7 +345,6 @@ func addAppointment(tx *sql.Tx, a *Appointment) (err error) {
 	if len(sales) == 0 {
 		return errors.New("plan sales empty")
 	}
-
 
 	date := time.Unix(a.AppointTime, 0).Format("2006-01-02")
 	if itemLimits, err = GetLimit(tx, a.OrgCode, sales); err != nil {

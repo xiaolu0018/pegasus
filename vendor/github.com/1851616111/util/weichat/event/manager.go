@@ -3,29 +3,29 @@ package event
 import (
 	"errors"
 	"time"
-	"fmt"
 )
 
 var ErrEventNotFound error = errors.New("event not found")
 var ErrEventExist error = errors.New("event already exist")
 var ErrEventActionNotFount error = errors.New("event action not found")
 var ErrEventCBNotFount error = errors.New("event action not found")
+
 func NewEventManager() *EventManager {
 	return &EventManager{
-		eventActionNum:    0,
-		eventToActionM:    make(map[string]*Action),
-		eventCallBackNum : 0,
-		eventToCallBackM:  make(map[string]func(*Event) error),
+		eventActionNum:   0,
+		eventToActionM:   make(map[string]*Action),
+		eventCallBackNum: 0,
+		eventToCallBackM: make(map[string]func(*Event) error),
 	}
 }
 
 //reference https://mp.weixin.qq.com/wiki/2/5baf56ce4947d35003b86a9805634b1e.html
 type EventManager struct {
-	eventActionNum  int
-	eventToActionM  map[string]*Action
+	eventActionNum int
+	eventToActionM map[string]*Action
 
 	eventCallBackNum int
-	eventToCallBackM map[string] func(*Event) error
+	eventToCallBackM map[string]func(*Event) error
 }
 
 func (m *EventManager) RegistAction(tp string, act *Action) error {
@@ -47,7 +47,7 @@ func (m *EventManager) RegistAction(tp string, act *Action) error {
 	return nil
 }
 
-func (m *EventManager) RegistEventCallBack(tp string, cb func(*Event) error ) error {
+func (m *EventManager) RegistEventCallBack(tp string, cb func(*Event) error) error {
 	if tp != E_News && tp != E_Subscribe && tp != E_UnSubscribe {
 		return ErrEventNotFound
 	}
@@ -61,7 +61,7 @@ func (m *EventManager) RegistEventCallBack(tp string, cb func(*Event) error ) er
 	}
 
 	m.eventToCallBackM[tp] = cb
-	m.eventCallBackNum ++
+	m.eventCallBackNum++
 	return nil
 }
 
@@ -82,10 +82,8 @@ func (m *EventManager) Handle(e *Event) *Action {
 	}
 
 	retAct.CreateTime = time.Now().Unix()
-
-	fmt.Println("-------------------------event. from", e.From)
 	retAct.From, retAct.To = e.To, e.From
-	fmt.Println("-------------------------retAct. retActto ", retAct.To)
+
 	return &retAct
 }
 

@@ -48,28 +48,31 @@ func EventAction(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	glog.Infof("weichat event action: %s\n", string(xmlData))
+
 	e := event.Event{}
 	if err := xml.Unmarshal(xmlData, &e); err != nil {
 		httputil.Response(w, 400, err)
 		glog.Errorf("decode weichat notify event msg err %v\n", err)
 		return
 	}
-	glog.Infof("weichat event action: %#v\n", e)
 
 	if err := EventManager.CallBack(&e); err != nil {
 		glog.Errorf("weichat event callback　event(%v) \n", e)
 	}
 
-	if act := EventManager.Handle(&e); act != nil {
-		b, err := xml.Marshal(act)
-		if err != nil {
-			glog.Errorf("encode weichat event action err %v\n", err)
-		}
-		glog.Infof("handler event message %s \n", string(b))
-		w.Write(b)
-	}else {
-		glog.Errorln("weichat event handler action nil", )
+	act := EventManager.Handle(&e)
+	if act == nil {
+		return
 	}
+
+	b, err := xml.Marshal(act)
+	if err != nil {
+		glog.Errorf("encode weichat event action err %v\n", err)
+	}
+
+	w.Write(b)
+	glog.Infof("handler event message %s \n", string(b))
+
 	return
 }
 

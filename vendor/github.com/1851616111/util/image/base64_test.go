@@ -1,8 +1,8 @@
 package image
 
 import (
-	"testing"
 	"io/ioutil"
+	"testing"
 )
 
 func TestGenImageFromBase64(t *testing.T) {

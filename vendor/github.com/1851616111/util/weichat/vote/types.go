@@ -29,8 +29,8 @@ type Voter struct {
 }
 
 type VStatus struct {
-	Followed    bool `json:"followed"`
-	Registed    bool `json:"registed"`
+	Followed bool `json:"followed"`
+	Registed bool `json:"registed"`
 }
 
 func (v Voter) ValidateRegister() error {

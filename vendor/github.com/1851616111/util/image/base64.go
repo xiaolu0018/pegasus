@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"encoding/base64"
 	"image"
-	"os"
 	"image/jpeg"
+	"os"
 )
 
 func GenImageFromBase64(src []byte, dst string) error {
-	var data []byte = make([]byte, len(src) * 4 / 3 + 100)
+	var data []byte = make([]byte, len(src)*4/3+100)
 	if _, err := base64.StdEncoding.Decode(data, src); err != nil {
 		return err
 	}
