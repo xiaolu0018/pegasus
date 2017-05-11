@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<title>帮我投票</title>
+	<title>你有与父母的合影吗？想让父母老得慢些吗？</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <style>
@@ -19,6 +19,9 @@
             position: relative;
             width:100%;
             overflow: hidden;
+            text-align: center;
+            /*background-size:100% auto;
+            background-repeat: no-repeat;*/
         }
         .phone div{
             position: absolute;
@@ -87,26 +90,33 @@
 			width:30%;
 		}
 		div.text-content>.textbox{
-			font-size:1.2rem;
+			font-size:1.4rem;
 		}
+		
 		@media all and (min-width: 767px){
 			div.text-content>.textbox{
 			font-size:3.2rem;
 		}
 		}
+		@media all and (max-width: 374px){
+			div.text-content>.textbox{
+			font-size:1.2rem;
+		}
+		}
     </style>
 </head>
-<body>
+<body>	
 	<div id="mainbox">
 		<div class="phone">
-	        <img id="pictrue" src="" width="100%">
+			<h1><img src="http://hd1.dahe100.cn/dist/activity/img/logo.png"/></h1>
+	        <img id="pictrue" src="" style="width:100%;height:auto;">
 	        <div class="left-B"></div>
 	        <div class="right-U"></div>
 	        <div class="right-B"></div>
 	        <div class="text">
 	            <img src="" alt="text" width="100%">
 	        </div>
-	        <h1><img src="img/logo.png"/></h1>
+	        
 	    </div>
 	    <div class="slogan">
 	        <img src="img/333.png" alt="slogan"  width="75%">
@@ -170,12 +180,15 @@
                 });
 			});
 		var telWidth=$(window).width();
-		$("div.phone").css('max-height',(3*telWidth)/2);
+		var telHeight=$(window).height();
 		$("div.text>img").attr("src","img/"+(100+Number(request.declaration))+".png");
 		$("#company").html(request.company);
 		$("#name").html(request.name);
 		$("#pictrue").attr("src","voterimages/"+request.image);
-		
+		var foot=$(".footer").height();
+		var slogan=$(".slogan").height();
+		$("div.phone").css('height',(telHeight-foot-slogan)+"px");
+//		$("div.phone").css('background-image',"voterimages/"+request.image)
 			
 	});
 </script>
