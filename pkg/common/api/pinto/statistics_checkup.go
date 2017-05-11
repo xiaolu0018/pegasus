@@ -4,9 +4,9 @@ import (
 	"bjdaos/pegasus/pkg/common/util/timeutil"
 	"database/sql"
 	"fmt"
-	"github.com/xlsx"
-	"strconv"
+	"github.com/tealeg/xlsx"
 	"strings"
+	"time"
 )
 
 type StatisticsCheckup struct {
@@ -58,13 +58,13 @@ func StatisticsCheckups(db *sql.DB, statistics *ForStatistics) ([]StatisticsChec
 	return s_cs, nil
 }
 
-//因为这个s_cs 已经排了序的
 type S_CSForXlsx struct {
 	CheckupNames []string
 	Dates        []string
 	Counts       [][]int
 }
 
+//因为这个s_cs 已经排了序的
 func FilterStatisticsCheckups(f_s *ForStatistics, s_cs []StatisticsCheckup) (*S_CSForXlsx, error) {
 	days, err := timeutil.GetAllDayFromTimePeriod(f_s.StartDate, f_s.EndDate)
 	if err != nil {
@@ -118,7 +118,7 @@ func FilterStatisticsCheckups(f_s *ForStatistics, s_cs []StatisticsCheckup) (*S_
 	return &s_cForXlsx, err
 }
 
-func XlsxStatistics(s_cs []StatisticsCheckup) error {
+func XlsxStatistics(s_cs S_CSForXlsx) error {
 	var file *xlsx.File
 	var sheet *xlsx.Sheet
 	var row *xlsx.Row
@@ -134,19 +134,22 @@ func XlsxStatistics(s_cs []StatisticsCheckup) error {
 	row = sheet.AddRow()
 	cell = row.AddCell()
 	cell.Value = ""
-	cell = row.AddCell()
-	cell.Value = "铁蛋白"
-
-	for _, s_c := range s_cs {
-		row = sheet.AddRow()
+	for _, name := range s_cs.CheckupNames {
 		cell = row.AddCell()
-		cell.Value = s_c.Date
-		cell = row.AddCell()
-		cell.Value = strconv.Itoa(s_c.Count)
-
+		cell.Value = name
 	}
 
-	err = file.Save("MyXLSXFile.xlsx")
+	for k, rowCounts := range s_cs.Counts {
+		row = sheet.AddRow()
+		cell = row.AddCell()
+		cell.Value = s_cs.Dates[k]
+		for _, cellCount := range rowCounts {
+			cell = row.AddCell()
+			cell.SetInt(cellCount)
+		}
+	}
+
+	err = file.Save(time.Now().Format(timeutil.FROMAT_YYMMDDHHMMSSsss) + "预约统计.xlsx")
 	return err
 }
 

@@ -23,6 +23,6 @@ func FilterPersonByAppoint(a *Appointment)*types.Person{
 	p.HosCode = a.OrgCode
 	p.IsMarry = MarryToCode[a.MerryStatus]
 	p.Name = a.Appointor
-	p.PersonCode = a.TimeNow.Format(timeutil.FROMAT_YYMMDDHHMMSS )
+	p.PersonCode = a.TimeNow.Format(timeutil.FROMAT_YYMMDDHHMMSSsss)
 	return &p
 }

@@ -69,12 +69,12 @@ func FilterExamCheckups(db *sql.DB, a *Appointment, exam_no string) ([]types.Exa
 	if checkups, err := GetCheckupCodesBySaleCodes(db, a.SaleCodes); err == nil {
 		exam_checkup.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
 		exam_checkup.HosCode = a.OrgCode
-		for _, checkup := range checkups {
-			exam_checkup.CheckupCode = checkup
-		}
 		exam_checkup.ExaminationNo = exam_no
 		exam_checkup.CheckupStatus = 0
-		exam_checkups = append(exam_checkups, exam_checkup)
+		for _, checkup := range checkups {
+			exam_checkup.CheckupCode = checkup
+			exam_checkups = append(exam_checkups, exam_checkup)
+		}
 	} else {
 		glog.Warning("pinto.MapToExams checkups err ", err)
 		return nil, err
@@ -96,8 +96,8 @@ func FilterExamSales(db *sql.DB, a *Appointment, exam_no string) ([]types.Examin
 			exam_sale.Discount = sale.Sale_Discount
 			exam_sale.SaleSellprice = sale.Sale_SellPrice
 			exam_sale.Curprice = exam_sale.Discount * exam_sale.SaleSellprice / 100
+			exam_sales = append(exam_sales, exam_sale)
 		}
-		exam_sales = append(exam_sales, exam_sale)
 	} else {
 		glog.Warning("pinto.MapToExams exam_sale err ", err)
 		return nil, err
@@ -170,6 +170,9 @@ func SaveExaminations(db *sql.DB, e *ExamsAll) (err error) {
 	}
 
 	exam_checkups := e.Checkups
+
+	glog.Errorln("exam_checkups", len(e.Checkups))
+
 	for _, exam_checkup := range exam_checkups {
 		sqlStr = fmt.Sprint("INSERT INTO examination_checkup(examination_no,checkup_code,checkup_status,createtime,hos_code) VALUES($1,$2,$3,$4,$5)")
 		if _, err = tx.Exec(sqlStr, exam_checkup.ExaminationNo, exam_checkup.CheckupCode, exam_checkup.CheckupStatus, exam_checkup.CreateTime, exam_checkup.HosCode); err != nil {
@@ -178,6 +181,7 @@ func SaveExaminations(db *sql.DB, e *ExamsAll) (err error) {
 		}
 	}
 
+	glog.Errorln("exam_sales", len(e.Sales))
 	exam_sales := e.Sales
 	for _, exam_sale := range exam_sales {
 		sqlStr = fmt.Sprint("INSERT INTO examination_sale(examination_no,sale_code,sale_status,hos_code,sale_sellprice,discount,curprice) VALUES($1,$2,$3,$4,$5,$6,$7)")

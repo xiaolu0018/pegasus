@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	httputil "github.com/1851616111/util/http"
 	//"github.com/golang/glog"
+	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -25,7 +26,6 @@ func GetCheckupCodesBySaleCodesHandler(w http.ResponseWriter, r *http.Request, p
 	cks, err := pinto.GetCheckupCodesBySaleCodes(db.GetReadDB(), m["salecodes"])
 	if err != nil {
 		httputil.ResponseJson(w, 400, map[string]interface{}{"err___": err})
-		//httputil.Response(w, 400, err)
 		return
 
 	}
@@ -42,12 +42,25 @@ type ForStatistics struct {
 }
 
 func AppointStatisticsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var forStatistics ForStatistics
+	var forStatistics pinto.ForStatistics
 	if err := json.NewDecoder(r.Body).Decode(&forStatistics); err != nil {
-		httputil.ResponseJson(w, 400, map[string]interface{}{"err___": err})
+		glog.Errorln("pinto.AppointStatisticsHandler Decode err ", err)
+		httputil.ResponseJson(w, 400, err)
 		return
 	}
 
-
+	statisticsCheckups, err := pinto.StatisticsCheckups(db.GetReadDB(), &forStatistics)
+	if err != nil {
+		glog.Errorln("pinto.AppointStatisticsHandler StatisticsCheckups err ", err)
+		httputil.ResponseJson(w, 400, err)
+		return
+	}
+	result, err := pinto.FilterStatisticsCheckups(&forStatistics, statisticsCheckups)
+	if err != nil {
+		glog.Errorln("pinto.AppointStatisticsHandler FilterStatisticsCheckups err ", err)
+		httputil.ResponseJson(w, 400, err)
+		return
+	}
+	httputil.ResponseJson(w, 200, result)
 
 }

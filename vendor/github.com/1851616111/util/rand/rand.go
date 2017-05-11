@@ -62,3 +62,10 @@ func String(length int) string {
 	}
 	return string(b)
 }
+
+func RandInt(min, max int) int {
+	if min >= max || min == 0 || max == 0 {
+		return max
+	}
+	return rand.Intn(max-min) + min
+}

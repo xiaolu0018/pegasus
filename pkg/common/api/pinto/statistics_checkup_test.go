@@ -18,10 +18,8 @@ func TestStatisticsCheckups(t *testing.T) {
 		EndDate:   "2017-05-20",
 	}
 
-	if result, err := StatisticsCheckups(db, &forstatistics); err != nil {
+	if _, err := StatisticsCheckups(db, &forstatistics); err != nil {
 		t.Fatal(err)
-	} else {
-		XlsxStatistics(result)
 	}
 }
 
@@ -51,8 +49,15 @@ func TestFilterStatisticsCheckups(t *testing.T) {
 }
 
 func TestXlsxStatistics(t *testing.T) {
-	s_cs := []StatisticsCheckup{}
-	XlsxStatistics(s_cs)
+	//s_cs := []StatisticsCheckup{}
+
+	s_csF := S_CSForXlsx{
+		CheckupNames: []string{"血清", "铁蛋白"},
+		Dates:        []string{"2017-05-05", "2017-05-06", "2017-05-07", "2017-05-08"},
+		Counts:       [][]int{[]int{1, 3}, []int{2, 2}, []int{4, 5}, []int{1, 1}},
+	}
+
+	XlsxStatistics(s_csF)
 }
 
 func TestArrArr(t *testing.T) {

@@ -3,16 +3,16 @@ package appointment
 import (
 	"bjdaos/pegasus/pkg/appoint/appointment"
 	"bjdaos/pegasus/pkg/appoint/cache"
+	"bjdaos/pegasus/pkg/common/util/sms"
 	"bjdaos/pegasus/pkg/wc/common"
 	"bjdaos/pegasus/pkg/wc/user"
 	"encoding/json"
-	"fmt"
 	httputil "github.com/1851616111/util/http"
 	"github.com/1851616111/util/message"
+	"github.com/1851616111/util/rand"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
 	"gopkg.in/mgo.v2/bson"
-	"math/rand"
 	"net/http"
 	"strconv"
 )
@@ -150,11 +150,12 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 func GetCheckNoForReport(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	mobile := ps.ByName("mobile")
 	userid := ps.ByName(common.AuthHeaderKey)
-	checkno := rand.Int()
-	////todo 调用短信接口发短信
-	fmt.Println("mobile", mobile, checkno)
-
-	cache.Set(CACHE_TP_Check_message, userid, 8888)
+	checkno := rand.RandInt(1000, 9999)
+	result, code, err := sms.SendMessage([]string{mobile}, sms.SetMessageCheckNum(checkno))
+	if err != nil || code != 200 {
+		glog.Errorln("wc.GetCheckNoForReport SendMessage info %v code %v", string(result), err)
+	}
+	cache.Set(CACHE_TP_Check_message, userid, checkno)
 }
 
 func GetReportByAppid(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

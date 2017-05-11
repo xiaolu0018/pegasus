@@ -66,7 +66,13 @@ func FilterBookRecordByAppoint(a *Appointment) *types.BookRecord {
 	b.Bookidtype = IdCardToCode[a.CardType]
 	b.Sex = SexToCode[a.Sex]
 	b.CreateTime = a.TimeNow.Format(timeutil.FROMAT_DAY)
-	b.BookNo = a.TimeNow.Format(timeutil.FROMAT_YYMMDDHHMMSS)
+	b.BookorgCode = a.OrgCode
+	if a.BookNo != "" {
+		b.BookNo = a.BookNo
+	} else {
+		b.BookNo = a.TimeNow.Format(timeutil.FROMAT_YYMMDDHHMMSSsss)
+	}
+
 	b.Truename = a.Appointor
 	b.Booktimestamp = a.AppointDate
 	b.Telphone = a.Mobile
