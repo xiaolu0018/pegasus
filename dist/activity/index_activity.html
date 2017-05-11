@@ -180,13 +180,15 @@
 	        #goTop{
 	        	position:fixed;
 	        	bottom:3em;
-	        	left:0;
+	        	right:0;
 	        	background: rgba(40,40,40,.6);
 	        	border:none;
 	        	border-radius:6px;
 	        	color:#fff;
 	        	text-align: center;
-	        	padding:0.5em 1em;
+				line-height:1.1;
+	        	padding:0.5em;
+				width:1em;
 	        	display:none;
 	        }
 	        #goTop:active{
@@ -223,7 +225,7 @@
 			</div>
 		</div>
 		<!--回到顶部-->
-		<p id="goTop">TOP</p>
+		<p id="goTop">返回顶部</p>
 		<!--提示消息-->
     <div id="toast" style="display:none;">
 	    <div class="weui_mask_transparent"></div>
@@ -353,7 +355,7 @@
 			});
 			//我要报名
 			$("#goRegist").on('touchstart',function(e){
-				if((request.openid)&&(request.from==undefined)){
+//				if((request.openid)&&(request.from==undefined)){
 					$.ajax({
 						url:baseUrl+"/api/activity/voter?openid="+request.openid,
 						type:"get",
@@ -372,14 +374,14 @@
 						}
 							
 						},
-						error:function(xro){
-							
+						error:function (xhr, textStatus, errorThrown){
+							showToast(textStatus+"->"+errorThrown,myinfo);
 						}
 					});
-				}else{
-					//未关注公众号
-					showAlert("请从微信登陆");
-				}
+//				}else{
+//					//未关注公众号
+//					showAlert("请从微信登陆");
+//				}
 			});
 			//搜索框焦点事件
 			$("#searchinp input[type='search']").focus(function(){

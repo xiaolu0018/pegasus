@@ -132,9 +132,6 @@
 <script>
 	$(function(){	
 		UrlSearch();
-		for(var ind in request){
-			console.log(ind+"=="+request[ind]);
-		}
 		var telWidth=$(window).width();
 		$("div.phone").css('max-height',(3*telWidth)/2);
 		$("div.text>img").attr("src","img/"+(100+Number(request.declaration))+".png");
