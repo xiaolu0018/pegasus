@@ -3,6 +3,7 @@ package event
 import (
 	"errors"
 	"time"
+	"fmt"
 )
 
 var ErrEventNotFound error = errors.New("event not found")
@@ -81,8 +82,10 @@ func (m *EventManager) Handle(e *Event) *Action {
 	}
 
 	retAct.CreateTime = time.Now().Unix()
-	retAct.From, act.To = e.To, e.From
 
+	fmt.Println("-------------------------event. from", e.From)
+	retAct.From, retAct.To = e.To, e.From
+	fmt.Println("-------------------------retAct. retActto ", retAct.To)
 	return &retAct
 }
 
