@@ -154,9 +154,9 @@
 		    var mykey=hrefarr[lg];
 		    var myrequest=request[mykey];
 		    if((mykey=="name")||(mykey=="company")){
-		        myrequest=encodeURIComponent(request[mykey]);
+		        myrequest=encodeURIComponent(myrequest);
             }
-            myhref+=hrefarr[lg]+"="+request[mykey];
+            myhref+=hrefarr[lg]+"="+myrequest;
         }
 		$.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+myhref,{},function(data){
 		   		if (typeof data === 'string') {
