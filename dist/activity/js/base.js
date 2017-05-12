@@ -29,10 +29,11 @@ function showAlert(aldata){
 };
 //获取url参数
 var request={};
-var hrefarr=[];
+var hrefarr="";
 function UrlSearch(){
    var name,value; 
    var str=location.href; //取得整个地址栏
+	   hrefarr=str;
    var num=str.indexOf("?") 
    str=str.substr(num+1); //取得所有参数   stringvar.substr(start [, length ]
 
@@ -43,14 +44,13 @@ function UrlSearch(){
 		    name=arr[i].substring(0,num);
 		    value=arr[i].substr(num+1);
 		    request[name]=value;
-			hrefarr.push(name);
 	    } 
     }
-   if(request.name){
-   		request.name=decodeURIComponent(request.name);
-   }
-   if(request.company){
-   		request.company=decodeURIComponent(request.company);
-   }
+   // if(request.name){
+   // 		request.name=decodeURIComponent(request.name);
+   // }
+   // if(request.company){
+   // 		request.company=decodeURIComponent(request.company);
+   // }
    
 }

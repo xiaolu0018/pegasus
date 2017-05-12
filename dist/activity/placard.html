@@ -107,6 +107,8 @@
 		}
 		}
     </style>
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="js/jweixin-1.0.0.js"></script>
 </head>
 <body>
 <div style="width:0px; height:0px; overflow:hidden">
@@ -145,20 +147,12 @@
 </body>
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/base.js"></script>
-<script id="and" type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script id="and" type="text/javascript" src="js/jweixin-1.0.0.js"></script>
 <script>
 	$(function(){	
-		UrlSearch();
-		var myhref="http://hd1.dahe100.cn/dist/activity/placard.html?";
-		for(var lg=0;lg<hrefarr.length;lg++){
-		    var mykey=hrefarr[lg];
-		    var myrequest=request[mykey];
-		    if((mykey=="name")||(mykey=="company")){
-		        myrequest=encodeURIComponent(myrequest);
-            }
-            myhref+=hrefarr[lg]+"="+myrequest;
-        }
-		$.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+myhref,{},function(data){
+
+        //自定义分享
+		$.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+window.location.href,{},function(data){
 		   		if (typeof data === 'string') {
 					    data = JSON.parse(data);
 				}
@@ -169,48 +163,56 @@
 						nonceStr:data.noncestr,
 						signature:data.signature,
 						jsApiList:['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage']
-				});			
-		   	});
-			wx.ready(function(){
-                //share to timeline
-                wx.onMenuShareTimeline({
-                    title: "你有与父母的合影吗？想让父母老得慢些吗？",
-                    desc:"晒与父母合影，赢取¥15800《衰老指数精准评估》，这绝对是母亲节最好的礼物",
-                    link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
-                    imgUrl: "http://hd1.dahe100.cn/dist/activity/img/logo.jpg",
-                    success: function () {},
-                    cancel: function () {
-                    }
-                });
+				});
+				wx.ready(function(){
+					//share to timeline
+					wx.onMenuShareTimeline({
+						title: "你有与父母的合影吗？想让父母老得慢些吗？",
+						desc:"晒与父母合影，赢取¥15800《衰老指数精准评估》，这绝对是母亲节最好的礼物",
+						link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
+						imgUrl: "http://hd1.dahe100.cn/dist/activity/img/logo.jpg",
+						success: function () {},
+						cancel: function () {
+						}
+					});
 
-                wx.onMenuShareAppMessage({
-                    desc:"晒与父母合影，赢取¥15800《衰老指数精准评估》，这绝对是母亲节最好的礼物",
-                    title: "你有与父母的合影吗？想让父母老得慢些吗？",
-                    link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
-                    imgUrl: "http://hd1.dahe100.cn/dist/activity/img/logo.jpg",
-                    type: 'link',
-                    success: function () {},
-                    cancel: function () {
-                    }
-                });
+					wx.onMenuShareAppMessage({
+						desc:"晒与父母合影，赢取¥15800《衰老指数精准评估》，这绝对是母亲节最好的礼物",
+						title: "你有与父母的合影吗？想让父母老得慢些吗？",
+						link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
+						imgUrl: "http://hd1.dahe100.cn/dist/activity/img/logo.jpg",
+						type: 'link',
+						success: function () {},
+						cancel: function () {
+						}
+					});
+				});
+		   	});
+
+			UrlSearch();
+			//高度自适应
+			var telWidth=$(window).width();
+			var telHeight=$(window).height();
+			var foot=$(".footer").height();
+			var slogan=$(".slogan").height();
+			$("div.phone").css('height',(telHeight-foot-slogan)+"px");
+			//页面数据
+			$.getJSON(baseUrl+"/api/base64/person",{"person":request.person},function(data){
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
+                $("div.text>img").attr("src","img/"+(100+Number(data.declaration))+".png");
+                $("#company").html(data.company);
+                $("#name").html(data.name);
+                $("#pictrue").attr("src","voterimages/"+data.image);
 			});
-			
-			
 
 
 
    
     
 
-		var telWidth=$(window).width();
-		var telHeight=$(window).height();
-		$("div.text>img").attr("src","img/"+(100+Number(request.declaration))+".png");
-		$("#company").html(request.company);
-		$("#name").html(request.name);
-		$("#pictrue").attr("src","voterimages/"+request.image);
-		var foot=$(".footer").height();
-		var slogan=$(".slogan").height();
-		$("div.phone").css('height',(telHeight-foot-slogan)+"px");
+
 //		$("div.phone").css('background-image',"voterimages/"+request.image)
 			
 	});
