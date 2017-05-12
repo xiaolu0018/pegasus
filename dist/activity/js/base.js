@@ -29,6 +29,7 @@ function showAlert(aldata){
 };
 //获取url参数
 var request={};
+var hrefarr=[];
 function UrlSearch(){
    var name,value; 
    var str=location.href; //取得整个地址栏
@@ -41,7 +42,8 @@ function UrlSearch(){
 	    if(num>0){ 
 		    name=arr[i].substring(0,num);
 		    value=arr[i].substr(num+1);
-		    request[name]=value;		    
+		    request[name]=value;
+			hrefarr.push(name);
 	    } 
     }
    if(request.name){

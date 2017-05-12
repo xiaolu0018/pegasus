@@ -149,8 +149,16 @@
 <script>
 	$(function(){	
 		UrlSearch();
-		var righref=window.location.href;
-		$.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+righref,{},function(data){
+		var myhref="http://hd1.dahe100.cn/dist/activity/placard.html?";
+		for(var lg=0;lg<hrefarr.length;lg++){
+		    var mykey=hrefarr[lg];
+		    var myrequest=request[mykey];
+		    if((mykey=="name")||(mykey=="company")){
+		        myrequest=encodeURIComponent(request[mykey]);
+            }
+            myhref+=hrefarr[lg]+"="+request[mykey];
+        }
+		$.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+myhref,{},function(data){
 		   		if (typeof data === 'string') {
 					    data = JSON.parse(data);
 				}
