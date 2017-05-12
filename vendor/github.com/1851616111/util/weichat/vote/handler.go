@@ -18,6 +18,8 @@ import (
 	"github.com/1851616111/util/weichat/util/sign"
 	"github.com/golang/glog"
 	"github.com/julienschmidt/httprouter"
+	"encoding/base64"
+	"bytes"
 )
 
 var DBI DBInterface
@@ -38,6 +40,8 @@ func AddRouter(r *httprouter.Router, dist string) {
 	r.GET("/api/ios/image", GetImageHandler)
 
 	r.GET("/api/activity/jsconfig", ExchangeJSConfigHandler)
+	r.POST("/api/base64/person", EncodingBase64Handler)
+	r.GET("/api/base64/person", DecodingBase64Handler)
 
 	var err error
 	dist, err = filepath.Abs(dist)
@@ -224,4 +228,56 @@ func GetVoterByOpenIDHandler(w http.ResponseWriter, r *http.Request, ps httprout
 
 func SetDB(i DBInterface) {
 	DBI = i
+}
+
+var baseEncoder = base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-")
+
+//curl http://127.0.0.1:8000/api/base64/person -d '{"name":"中国人", "age":10, "sex":"man"}'
+func EncodingBase64Handler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	data, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		httputil.Response(w, 400, err)
+		return
+	}
+	defer r.Body.Close()
+
+	m := map[string]interface{}{}
+	if err := json.Unmarshal(data, &m); err != nil {
+		httputil.Response(w, 400, "person data invalid")
+		return
+	}
+
+	dst := make([]byte, 2* len(data))
+	baseEncoder.Encode(dst, data)
+
+	ret := fmt.Sprintf("person=%s", string(dst))
+
+	httputil.Response(w, 200, ret)
+	return
+}
+
+//curl http://127.0.0.1:8000/api/base64/person?person=eyJuYW1lIjoi5Lit5Zu95Lq6IiwgImFnZSI6MTAsICJzZXgiOiJtYW4ifQ==
+func DecodingBase64Handler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	person := r.FormValue("person")
+	if len(person) == 0 {
+		httputil.Response(w, 400, "param person not found")
+		return
+	}
+
+	decodeBytes, err := baseEncoder.DecodeString(person)
+	if err != nil {
+		httputil.Response(w, 400, "param person not found")
+		return
+	}
+
+	dst := bytes.NewBuffer(decodeBytes)
+
+	m := map[string]interface{}{}
+	if err := json.NewDecoder(dst).Decode(&m); err != nil {
+		httputil.Response(w, 400, "parse data err")
+		return
+	}
+
+	httputil.ResponseJson(w, 200, m)
+	return
 }
