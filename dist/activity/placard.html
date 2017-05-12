@@ -184,6 +184,15 @@
                 }
             });
         });
+        $.getJSON(baseUrl+"/api/base64/person",{"person":request.person},function(data){
+            if (typeof data === 'string') {
+                data = JSON.parse(data);
+            }
+            $("div.text>img").attr("src","img/"+(100+Number(data.declaration))+".png");
+            $("#company").html(data.company);
+            $("#name").html(data.name);
+            $("#pictrue").attr("src","voterimages/"+data.image);
+        });
 			//高度自适应
 			var telWidth=$(window).width();
 			var telHeight=$(window).height();
@@ -192,15 +201,7 @@
 			$("div.phone").css('height',(telHeight-foot-slogan)+"px");
 			//页面数据
 
-			$.getJSON(baseUrl+"/api/base64/person",{"person":request.person},function(data){
-                if (typeof data === 'string') {
-                    data = JSON.parse(data);
-                }
-                $("div.text>img").attr("src","img/"+(100+Number(data.declaration))+".png");
-                $("#company").html(data.company);
-                $("#name").html(data.name);
-                $("#pictrue").attr("src","voterimages/"+data.image);
-			});
+
 
 
 
