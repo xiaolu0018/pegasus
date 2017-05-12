@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -14,7 +14,7 @@
 			html,body{
 				width:100%;
 				height:100%;
-				 -webkit-overflow-scrolling:touch;				
+				-webkit-overflow-scrolling:touch;				
 			}
 			ul,li{
 				list-style: none;
@@ -114,12 +114,14 @@
 			}
 			.panel-footer button{
 				float:right;
-				width:55%;
+				width:50%;
 				background:#B3D465;
 				white-space: nowrap;
 				text-overflow: clip;
 				padding-left:0;
 				padding-right:0;
+				font-size: 16px;
+				line-height: 2;
 			}
 			.panel-footer .active{
 				color: hsla(0,0%,100%,.4);
@@ -128,10 +130,11 @@
 			.panel-box>p.checkbox{
 				position:absolute;
 				padding:0 3px;
-				top:1em;
+				top:1.15em;
 				right:1em;
 				background:url(img/4.png) no-repeat;
 				background-size:cover;
+				font-size:14px;
 			}
 			.panel-box>p.checkbox:after{
 				content:"";
@@ -293,8 +296,8 @@
 			//页码变化时的ajax,并解析渲染
 			function ajaxPage(parameter){
 				
-				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
-//				$.getJSON("data/img.json",parameter,function(data){
+//				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
+				$.getJSON("data/img.json",parameter,function(data){
 					if(typeof data === 'string'){
 					    data = JSON.parse(data);
 					}
