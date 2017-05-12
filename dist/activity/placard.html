@@ -149,7 +149,8 @@
 <script>
 	$(function(){	
 		UrlSearch();
-		$.getJSON(baseUrl+'/api/activity/jsconfig',{"openid":request.openid,"reqpage":window.location.href},function(data){
+		var righref=window.location.href;
+		$.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+righref,{},function(data){
 		   		if (typeof data === 'string') {
 					    data = JSON.parse(data);
 				}
