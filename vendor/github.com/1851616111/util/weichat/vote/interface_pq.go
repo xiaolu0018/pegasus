@@ -35,19 +35,21 @@ CREATE OR REPLACE FUNCTION wc_Regist_Voter(p_openid varchar, p_name VARCHAR, p_i
   DECLARE
     b_followed BOOLEAN = NULL;
     b_registed BOOLEAN = FALSE;
+    maxVoterid integer = 0;
   BEGIN
     SELECT followed from go_weichat_activity_voter where openid = p_openid into b_followed;
     IF b_followed IS NULL THEN
-         RETURN 'notfound';
+         RETURN 'not found';
     ELSEIF b_followed = FALSE THEN
-         RETURN 'notfollow';
+         RETURN 'not follow';
     ELSE
         SELECT registed from go_weichat_activity_voter where openid = p_openid into b_registed;
         IF b_registed THEN
-              RETURN 'registed';
+              RETURN 'already regist';
         ELSE
+              SELECT MAX(voterid) from go_weichat_activity_voter into maxVoterid;
               UPDATE go_weichat_activity_voter SET
-                name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed=TRUE, imageCached=p_imageCached
+               voterid=maxVoterid+1, name=p_name, image=p_image, company=p_company, mobile=p_mobile, declaration=p_declaration, registed=TRUE , imageCached=p_imageCached
               WHERE openid = p_openid;
               RETURN 'ok';
         END IF;
