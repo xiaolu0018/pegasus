@@ -150,7 +150,9 @@
 <script>
 	$(function(){
 			UrlSearch();
-        $.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+window.location.href,{},function(data){
+			var myhref=baseUrl+"/dist/activity/placard.html?person="+request.person;
+
+        $.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+myhref,{},function(data){
             if (typeof data === 'string') {
                 data = JSON.parse(data);
             }
