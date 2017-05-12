@@ -230,7 +230,7 @@ func SetDB(i DBInterface) {
 	DBI = i
 }
 
-var baseEncoder = base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ab")
+var baseEncoder = base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")
 
 //curl http://127.0.0.1:8000/api/base64/person -d '{"name":"中国人", "age":10, "sex":"man"}'
 func EncodingBase64Handler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
