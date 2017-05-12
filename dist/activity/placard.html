@@ -107,12 +107,12 @@
 		}
 		}
     </style>
-	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="js/jweixin-1.0.0.js"></script>
+	<!--<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>-->
+	<!--<script type="text/javascript" src="js/jweixin-1.0.0.js"></script>-->
 
 </head>
 <body>
-	<img width="0" height="0" src="./dajj.jpg">
+	<img width="0" height="0" src="http://hd1.dahe100.cn/dist/activity/dajj.jpg">
 	<div id="mainbox">
 		<div class="phone">
 			<h1><img src="http://hd1.dahe100.cn/dist/activity/img/logo.png"/></h1>
@@ -150,6 +150,40 @@
 <script>
 	$(function(){
 			UrlSearch();
+        $.getJSON(baseUrl+'/api/activity/jsconfig?reqpage='+window.location.href,{},function(data){
+            if (typeof data === 'string') {
+                data = JSON.parse(data);
+            }
+            wx.config({
+                debug:false,
+                appId:data.appid,
+                timestamp:data.timestamp,
+                nonceStr:data.noncestr,
+                signature:data.signature,
+                jsApiList:['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage']
+            });
+        });
+        wx.ready(function(){
+            //share to timeline
+            wx.onMenuShareTimeline({
+                title: "你有与父母的合影吗？想让父母老得慢些吗？",
+                link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
+                imgUrl: "http://hd1.dahe100.cn/dist/activity/dajj.jpg",
+                success: function () {},
+                cancel: function () {
+                }
+            });
+
+            wx.onMenuShareAppMessage({
+                desc:"晒与父母合影，赢取¥15800《衰老指数精准评估》，这绝对是母亲节最好的礼物",
+                title: "你有与父母的合影吗？想让父母老得慢些吗？",
+                link: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxadb8865cdb995ded&redirect_uri=http://hd1.dahe100.cn/api/activity/index&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
+                imgUrl: "http://hd1.dahe100.cn/dist/activity/dajj.jpg",
+                success: function () {},
+                cancel: function () {
+                }
+            });
+        });
 			//高度自适应
 			var telWidth=$(window).width();
 			var telHeight=$(window).height();
@@ -157,6 +191,7 @@
 			var slogan=$(".slogan").height();
 			$("div.phone").css('height',(telHeight-foot-slogan)+"px");
 			//页面数据
+
 			$.getJSON(baseUrl+"/api/base64/person",{"person":request.person},function(data){
                 if (typeof data === 'string') {
                     data = JSON.parse(data);
