@@ -296,8 +296,8 @@
 			//页码变化时的ajax,并解析渲染
 			function ajaxPage(parameter){
 				
-//				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
-				$.getJSON("data/img.json",parameter,function(data){
+				$.getJSON(baseUrl+"/api/activity/voters",parameter,function(data){
+//				$.getJSON("data/img.json",parameter,function(data){
 					if(typeof data === 'string'){
 					    data = JSON.parse(data);
 					}
