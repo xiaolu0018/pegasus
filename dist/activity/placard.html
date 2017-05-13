@@ -95,7 +95,25 @@
 		div.text-content>.textbox{
 			font-size:1.4rem;
 		}
-		
+		#mask{
+			position:fixed;
+			top:0;
+			bottom:0;
+			right:0;
+			left:0;
+			z-index: 2000;
+			background-color:transparent;
+			margin: 0;
+			padding: 0;
+			width:100%;
+			height:100%;
+			border:none;
+		}
+		#mask>img{
+			width:100%;
+			height:100%;
+			opacity:0;
+		}
 		@media all and (min-width: 767px){
 			div.text-content>.textbox{
 			font-size:3.2rem;
@@ -142,7 +160,9 @@
 	        </div>
 	    </div>
 	</div>
-   
+   <div id="mask">
+	   <img src="" alt="">
+   </div>
 </body>
 <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="js/base.js"></script>
@@ -186,6 +206,14 @@
                 }
             });
         });
+        //高度自适应
+        var telWidth=$(window).width();
+        var telHeight=$(window).height();
+        var foot=$(".footer").height();
+        var slogan=$(".slogan").height();
+//        $("#mask").css("height",telHeight+"px");
+        $("div.phone").css('height',(telHeight-foot-slogan)+"px");
+        //页面数据
         $.getJSON(baseUrl+"/api/base64/person",{"person":request.person},function(data){
             if (typeof data === 'string') {
                 data = JSON.parse(data);
@@ -194,25 +222,33 @@
             $("#company").html(data.company);
             $("#name").html(data.name);
             $("#pictrue").attr("src","voterimages/"+data.image);
+            var mydata=data;
+            //页面转图片
+			$.ajax({
+				type:"post",
+				url:baseUrl+"/api/activity/regist/voter/gen/images",
+				data:JSON.stringify(mydata),
+				success:function(data,xhr){
+				    if(typeof data==='string'){
+				        data=JSON.parse(data);
+					}
+					$("#mask>img").css("src","img/voterimages/gen/"+data.image);
+				},
+				error:function(xhr,textStatus){
+                    alert(xhr.status+"=="+textStatus);
+				}
+			});
         });
-			//高度自适应
-			var telWidth=$(window).width();
-			var telHeight=$(window).height();
-			var foot=$(".footer").height();
-			var slogan=$(".slogan").height();
-			$("div.phone").css('height',(telHeight-foot-slogan)+"px");
-			//页面数据
-
-
-
-
-
-
-
-
-
-//		$("div.phone").css('background-image',"voterimages/"+request.image)
-			
+//        $("body").on("touchend","#mask",function(e){
+//            e.stopPropagation();
+//
+//            if($(e.target)==$("#mask")){
+//
+//			}else{
+//                e.preventDefault();
+//                return false;
+//			}
+//		});
 	});
 </script>
 </html>
