@@ -63,7 +63,16 @@ func genMyWords(company, name, target string) error {
 
 	pt := freetype.Pt(10, 10+int(c.PointToFixed(size)>>6))
 
-	word := fmt.Sprintf("                  我是%s的%s,         ", company, name)
+	word := fmt.Sprintf("我是%s的%s,", company, name)
+	leftWitheSpace := 24 - (len(word)/3 + len(word)%3)
+	var withSpace string
+	if  leftWitheSpace > 0 {
+		for i := 0 ; i < leftWitheSpace; i ++ {
+			withSpace += ` `
+		}
+
+		word = withSpace  + word
+	}
 
 	if _, err := c.DrawString(word, pt); err != nil {
 		return err

@@ -7,7 +7,7 @@ func TestGenMyWords(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := genMyWords("北京迪安开元", "大潘潘", "out.png"); err != nil {
+	if err := genMyWords("说的的的的的", "大的的水", "out.png"); err != nil {
 		t.Fatal(err)
 	}
 }

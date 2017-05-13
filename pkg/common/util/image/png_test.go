@@ -19,7 +19,7 @@ func TestGemPersonPic(t *testing.T) {
 	person := genVoterImagePath + "/" + "888.png"
 
 	var declarationFile string = fmt.Sprintf(`%s/img/10%d.png`, dist, 1)
-	path, err := GemPersonPngPic(dist + "voterimages/gen", "北京", "大大泡泡堂", person , comeOnFile, _2weimaFile,
+	path, err := GenPersonPngPic(dist + "voterimages/gen", "北京", "大大泡泡堂", person , comeOnFile, _2weimaFile,
 	yongFile, declarationFile, topFile)
 	if err != nil {
 		t.Fatal(err)
