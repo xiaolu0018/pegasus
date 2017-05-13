@@ -67,6 +67,8 @@
             text-align: center;
             height:81px;
             overflow: visible;
+			position:relative;
+			right:0.5em;
         }
         .footer{
             position: relative;
@@ -116,19 +118,18 @@
 		}
         #mytoast{
             position:absolute;
-            right:0;
-            bottom:0;
+           left:50%;
+			margin-left:-4.5em;
+            bottom:0.3em;
             text-align: right;
             background:transparent;
-            font-size:0.5em;
-            color:#Fff000;
-			border:1px solid #fff000;
-			border-radius:3px;
+            font-size:1.1em;
+            color:#Fff;
 		}
 		h1{
 			position: absolute;
 			top: 0;
-			left: 1em;
+			left:0.6em;
 		}
 		@media all and (min-width: 767px){
 			div.text-content>.textbox{
@@ -171,8 +172,8 @@
 	                <p>希望有机会为父母赢取15800元健康大奖</p>
 	                <p>让父母老得慢一些</p>
 	            </div>
-                <p id="mytoast">长按页面可保存图片</p>
 	        </div>
+			<p id="mytoast">长按保存图片到相册</p>
         </div>
 	</div>
    <div id="mask">
