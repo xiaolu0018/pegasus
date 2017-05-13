@@ -85,12 +85,12 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	var genImage string
 	var err error
 	if strings.HasSuffix(v.Image, "jpg") || strings.HasSuffix(v.Image, "jpeg") {
-		if genImage, err = genimage.GenPersonJpgPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile ); err != nil {
+		if genImage, err = genimage.GenPersonJpgPic(distPath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile ); err != nil {
 			httputil.Response(w, 400, err)
 			return
 		}
 	}else if strings.HasSuffix(v.Image, "png") {
-		if genImage, err = genimage.GenPersonPngPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile); err != nil {
+		if genImage, err = genimage.GenPersonPngPic(distPath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile); err != nil {
 			httputil.Response(w, 400, err)
 			return
 		}
