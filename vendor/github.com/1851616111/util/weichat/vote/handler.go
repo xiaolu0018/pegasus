@@ -99,7 +99,7 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 			return
 		}
 	}else if strings.HasSuffix(v.Image, "png") {
-		if genImage, err = genimage.GemPersonPngPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
+		if genImage, err = genimage.GenPersonPngPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
 			comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
 			httputil.Response(w, 400, err)
 			return
