@@ -20,11 +20,19 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"encoding/base64"
 	"bytes"
+	genimage "bjdaos/pegasus/pkg/common/util/image"
 )
 
 var DBI DBInterface
 var APPID string
-var iosImagePath string
+var voterImagesPath string
+var genVoterImagePath string
+var comeOnFile string
+var _2weimaFile string
+var yongFile string
+var topFile string
+
+var distPath string
 
 const DEFAULT_PAGE_SIZE = "100"
 
@@ -43,20 +51,59 @@ func AddRouter(r *httprouter.Router, dist string) {
 	r.POST("/api/base64/person", EncodingBase64Handler)
 	r.GET("/api/base64/person", DecodingBase64Handler)
 
+	r.POST("/api/activity/regist/voter/gen/images", GenVoterPicHandler)
+
 	var err error
 	dist, err = filepath.Abs(dist)
 	if err != nil {
 		panic(err)
 	}
 
-	iosImagePath = fmt.Sprintf("%s/voterimages", dist)
-
+	voterImagesPath = fmt.Sprintf("%s/voterimages", dist)
+	genVoterImagePath = fmt.Sprintf("%s/gen", voterImagesPath)
+	comeOnFile = fmt.Sprintf("%s/%s", dist, "img/11.png")
+	_2weimaFile = fmt.Sprintf("%s/%s", dist, "img/22_png.png")
+	yongFile = fmt.Sprintf("%s/%s", dist, "img/333.png")
+	topFile = fmt.Sprintf("%s/%s", dist, "img/topblock.png")
+	distPath = dist
 	r.ServeFiles("/dist/activity/*filepath", http.Dir(dist))
+}
+
+func init() {
+	if err := genimage.InitFont() ; err != nil {
+		panic(err)
+	}
+}
+
+func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	v := &imageVoter{}
+	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
+		glog.Errorf("register voter, decode json object err %v\n", err)
+		httputil.Response(w, 400, err)
+		return
+	}
+
+	if err := v.validate(); err != nil {
+		httputil.Response(w, 400, err)
+		return
+	}
+
+	var declarationFile string = fmt.Sprintf(`%s/img/10%d.png`, distPath, v.Declaration)
+
+	var genImage string
+	var err error
+	if genImage, err = genimage.GemPersonPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
+		comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
+		httputil.Response(w, 400, err)
+		return
+	}
+
+	httputil.Response(w, 200, fmt.Sprintf("image=%s", genImage))
 }
 
 func RegisterImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	imageName := fmt.Sprintf("%d_%s.jpg", time.Now().UnixNano(), rand.String(10))
-	imagePath := iosImagePath + "/" + imageName
+	imagePath := voterImagesPath + "/" + imageName
 	data := r.FormValue("data")
 
 	idx := strings.Index(data, ",")
@@ -78,7 +125,7 @@ func GetImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		return
 	}
 
-	target := fmt.Sprintf("%s/%s.jpg", iosImagePath, image)
+	target := fmt.Sprintf("%s/%s.jpg", voterImagesPath, image)
 	data, err := ioutil.ReadFile(target)
 	if err != nil {
 		httputil.Response(w, 400, err)
@@ -115,6 +162,7 @@ func ExchangeJSConfigHandler(w http.ResponseWriter, r *http.Request, ps httprout
 }
 
 func RegisterVoterHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
 	v := &Voter{}
 	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
 		glog.Errorf("register voter, decode json object err %v\n", err)

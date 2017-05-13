@@ -1,102 +1,97 @@
-package main
+package image
 
 import (
 	"bufio"
-	"flag"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/png"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/golang/freetype"
+	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
+	"fmt"
+	"path/filepath"
 )
 
-var (
-	dpi      = flag.Float64("dpi", 200, "screen resolution in Dots Per Inch")
-	fontfile = flag.String("fontfile", "../../testdata/luxisr.ttf", "filename of the ttf font")
-	hinting  = flag.String("hinting", "none", "none | full")
-	size     = flag.Float64("size", 10, "font size in points")
-	spacing  = flag.Float64("spacing", 1.5, "line spacing (e.g. 2 means double spaced)")
-	wonb     = flag.Bool("whiteonblack", false, "white text on a black background")
-)
+var dpi float64 = 100
+var fontfile string
+var size float64 = 10
+var spacing float64 = 1.5
 
+var f *truetype.Font
 var text = []string{
-	"                  我是北京的小潘,         ",
+	//"                  我是北京的小潘,         ",
 	"     我正在参加晒合影赢万元大奖活动,  ",
 	"                   请为我投一票,          ",
 	"希望有机会为父母赢取15800元健康大奖,",
 	"                 让服务老得慢一些        ",
 }
 
-func main() {
-	flag.Parse()
-
-	// Read the font data.
-	fontBytes, err := ioutil.ReadFile(*fontfile)
+func InitFont() error {
+	var  err  error
+	fontfile, err = filepath.Abs( "./" + "msyh.ttf")
 	if err != nil {
-		log.Println(err)
-		return
-	}
-	f, err := freetype.ParseFont(fontBytes)
-	if err != nil {
-		log.Println(err)
-		return
+		return err
 	}
 
-	// Initialize the context.
+	fontBytes, err := ioutil.ReadFile(fontfile)
+	if err != nil {
+		return err
+	}
+
+	f, err = freetype.ParseFont(fontBytes)
+	return err
+}
+
+func genMyWords(company, name, target string) error {
 	ruler := color.RGBA{103, 185, 140, 0xff}
 	fg, bg := image.White, image.NewUniform(ruler)
 
-
-	rgba := image.NewRGBA(image.Rect(0, 0, 600, 220))
+	rgba := image.NewRGBA(image.Rect(0, 0, 280, 110))
 	draw.Draw(rgba, rgba.Bounds(), bg, image.ZP, draw.Src)
 	c := freetype.NewContext()
-	c.SetDPI(*dpi)
+	c.SetDPI(dpi)
 	c.SetFont(f)
-	c.SetFontSize(*size)
+	c.SetFontSize(size)
 	c.SetClip(rgba.Bounds())
 	c.SetDst(rgba)
 	c.SetSrc(fg)
-	switch *hinting {
-	default:
-		c.SetHinting(font.HintingNone)
-	case "full":
-		c.SetHinting(font.HintingFull)
-	}
+	c.SetHinting(font.HintingNone)
 
-	// Draw the text.
-	pt := freetype.Pt(10, 10+int(c.PointToFixed(*size)>>6))
+	pt := freetype.Pt(10, 10+int(c.PointToFixed(size)>>6))
+
+	word := fmt.Sprintf("                  我是%s的%s,         ", company, name)
+
+	if _, err := c.DrawString(word, pt); err != nil {
+		return err
+	}
+	pt.Y += c.PointToFixed(size * spacing)
+
 	for _, s := range text {
-		_, err = c.DrawString(s, pt)
-		if err != nil {
-			log.Println(err)
-			return
+		if _, err := c.DrawString(s, pt); err != nil {
+			return err
 		}
-		pt.Y += c.PointToFixed(*size * *spacing)
+		pt.Y += c.PointToFixed(size * spacing)
 	}
 
-	// Save that RGBA image to disk.
-	outFile, err := os.Create("out.png")
+	outFile, err := os.Create(target)
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+		return err
 	}
 	defer outFile.Close()
+
 	b := bufio.NewWriter(outFile)
-	err = png.Encode(b, rgba)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+
+	if err = png.Encode(b, rgba); err != nil {
+		return err
 	}
-	err = b.Flush()
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+
+	if err = b.Flush(); err != nil {
+		return err
 	}
-	fmt.Println("Wrote out.png OK.")
+
+	return nil
 }
