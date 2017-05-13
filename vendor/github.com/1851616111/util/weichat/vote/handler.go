@@ -27,10 +27,6 @@ var DBI DBInterface
 var APPID string
 var voterImagesPath string
 var genVoterImagePath string
-var comeOnFile string
-var _2weimaFile string
-var yongFile string
-var topFile string
 
 var distPath string
 
@@ -61,10 +57,6 @@ func AddRouter(r *httprouter.Router, dist string) {
 
 	voterImagesPath = fmt.Sprintf("%s/voterimages", dist)
 	genVoterImagePath = fmt.Sprintf("%s/gen", voterImagesPath)
-	comeOnFile = fmt.Sprintf("%s/%s", dist, "img/11.png")
-	_2weimaFile = fmt.Sprintf("%s/%s", dist, "img/22_png.png")
-	yongFile = fmt.Sprintf("%s/%s", dist, "img/333.png")
-	topFile = fmt.Sprintf("%s/%s", dist, "img/topblock.png")
 	distPath = dist
 	r.ServeFiles("/dist/activity/*filepath", http.Dir(dist))
 }
@@ -93,14 +85,12 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	var genImage string
 	var err error
 	if strings.HasSuffix(v.Image, "jpg") || strings.HasSuffix(v.Image, "jpeg") {
-		if genImage, err = genimage.GenPersonJpgPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
-			comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
+		if genImage, err = genimage.GenPersonJpgPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile ); err != nil {
 			httputil.Response(w, 400, err)
 			return
 		}
 	}else if strings.HasSuffix(v.Image, "png") {
-		if genImage, err = genimage.GenPersonPngPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
-			comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
+		if genImage, err = genimage.GenPersonPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile); err != nil {
 			httputil.Response(w, 400, err)
 			return
 		}
@@ -108,7 +98,6 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		httputil.Response(w, 400, "pic format not allow")
 		return
 	}
-
 
 	httputil.Response(w, 200, fmt.Sprintf("{\"image\":\"%s\"}", genImage))
 }

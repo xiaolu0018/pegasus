@@ -16,7 +16,7 @@ import (
 	"path/filepath"
 )
 
-var dpi float64 = 100
+var dpi float64 = 150
 var fontfile string
 var size float64 = 10
 var spacing float64 = 1.5
@@ -50,7 +50,7 @@ func genMyWords(company, name, target string) error {
 	ruler := color.RGBA{103, 185, 140, 0xff}
 	fg, bg := image.White, image.NewUniform(ruler)
 
-	rgba := image.NewRGBA(image.Rect(0, 0, 280, 110))
+	rgba := image.NewRGBA(image.Rect(0, 0, 380, 180))
 	draw.Draw(rgba, rgba.Bounds(), bg, image.ZP, draw.Src)
 	c := freetype.NewContext()
 	c.SetDPI(dpi)
