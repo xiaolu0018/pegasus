@@ -114,6 +114,16 @@
 			height:100%;
 			opacity:0;
 		}
+        #mytoast{
+            position:absolute;
+            right:0;
+            bottom:0;
+            text-align: right;
+            background:transparent;
+            font-size:0.5em;
+            color:#F7926F;
+			border:1px solid #ccc;
+		}
 		@media all and (min-width: 767px){
 			div.text-content>.textbox{
 			font-size:3.2rem;
@@ -125,8 +135,6 @@
 		}
 		}
     </style>
-	<!--<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>-->
-	<!--<script type="text/javascript" src="js/jweixin-1.0.0.js"></script>-->
 
 </head>
 <body>
@@ -157,8 +165,9 @@
 	                <p>希望有机会为父母赢取15800元健康大奖</p>
 	                <p>让父母老得慢一些</p>
 	            </div>
+                <p id="mytoast">长按页面可保存图片</p>
 	        </div>
-	    </div>
+        </div>
 	</div>
    <div id="mask">
 	   <img src="" alt="">
