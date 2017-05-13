@@ -233,7 +233,7 @@
 				    if(typeof data==='string'){
 				        data=JSON.parse(data);
 					}
-					$("#mask>img").css("src","voterimages/gen/"+data.image);
+					$("#mask>img").attr("src","voterimages/gen/"+data.image);
 				},
 				error:function(xhr,textStatus){
                     alert(xhr.status+"=="+textStatus);
