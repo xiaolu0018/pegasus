@@ -223,6 +223,7 @@
             $("#name").html(data.name);
             $("#pictrue").attr("src","voterimages/"+data.image);
             var mydata=data;
+            mydata.declaration=Number(data.declaration);
             //页面转图片
 			$.ajax({
 				type:"post",
