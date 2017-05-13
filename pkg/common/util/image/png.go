@@ -16,12 +16,12 @@ const weight = 757
 
 func GenPersonPngPic(path, name, company, pic_person, pic_declaration string) ( string,  error) {
 	dist := path
-	path = dist + "/activity/voterimages/gen"
+	path = dist + "/voterimages/gen"
 
 	targetName  := fmt.Sprintf("%d_%s.png", time.Now().UnixNano(), rand.String(20))
 	target := fmt.Sprintf("%s/%s", path, targetName)
 
-	base, err := os.Open(dist + "/activity/img/base.png")
+	base, err := os.Open(dist + "/img/base.png")
 	if err != nil {
 		return "",fmt.Errorf(err.Error() + "基础图片")
 	}
