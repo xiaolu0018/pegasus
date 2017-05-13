@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/1851616111/util/validator/mobile"
 	"github.com/1851616111/util/validator/tel"
+	"errors"
 )
 
 func ParamNotFoundError(param string) error {
@@ -75,4 +76,27 @@ type VoterList struct {
 	Size       int     `json:"size"`
 	TotalPages int     `json:"total_pages"`
 	PageData   []Voter `json:"page_data"`
+}
+
+type imageVoter struct {
+	Name        string `json:"name"`
+	Image       string `json:"image"`
+	Company     string `json:"company"`
+	Declaration int    `json:"declaration"`
+}
+
+func (v imageVoter) validate() error {
+	if len(v.Name)  == 0 {
+		return errors.New("name not found")
+	}
+
+	if len(v.Image)  == 0 {
+		return errors.New("voter image not found")
+	}
+
+	if len(v.Company)  == 0 {
+		return errors.New("Company not found")
+	}
+
+	return nil
 }
