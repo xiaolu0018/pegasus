@@ -221,7 +221,8 @@
         var foot=$(".footer").height();
         var slogan=$(".slogan").height();
 //        $("#mask").css("height",telHeight+"px");
-        $("div.phone").css('height',(telHeight-foot-slogan)+"px");
+		var picheight=telHeight-foot-slogan;
+        $("div.phone").css('height',picheight+"px");
         //页面数据
         $.getJSON(baseUrl+"/api/base64/person",{"person":request.person},function(data){
             if (typeof data === 'string') {
@@ -233,6 +234,7 @@
             $("#pictrue").attr("src","voterimages/"+data.image);
             var mydata=data;
             mydata.declaration=Number(data.declaration);
+            mydata.height=picheight;
             //页面转图片
 			$.ajax({
 				type:"post",
