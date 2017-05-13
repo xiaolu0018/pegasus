@@ -110,7 +110,7 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 
 
-	httputil.Response(w, 200, fmt.Sprintf("image=%s", genImage))
+	httputil.Response(w, 200, fmt.Sprintf("{\"image\":\"%s\"}", genImage))
 }
 
 func RegisterImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

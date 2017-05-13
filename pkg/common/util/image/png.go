@@ -17,7 +17,7 @@ func GemPersonPngPic(path, name, company, pic_person, pic_comeon, pic_erweima, p
 		return "", err
 	}
 
-	target := fmt.Sprintf("%s/%d_%s.png", path, time.Now().UnixNano(), rand.String(20))
+	target := fmt.Sprintf("%d_%s.png", time.Now().UnixNano(), rand.String(20))
 	file, err := os.Create(target) //需生成的文件名
 	if err != nil {
 		return "",fmt.Errorf(err.Error() + "create err")
