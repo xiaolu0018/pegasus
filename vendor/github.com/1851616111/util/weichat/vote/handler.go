@@ -90,7 +90,7 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 			return
 		}
 	}else if strings.HasSuffix(v.Image, "png") {
-		if genImage, err = genimage.GenPersonPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile); err != nil {
+		if genImage, err = genimage.GenPersonPngPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image, declarationFile); err != nil {
 			httputil.Response(w, 400, err)
 			return
 		}
@@ -137,7 +137,6 @@ func GetImageHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	w.Write(data)
 	return
 }
-
 
 func ExchangeJSConfigHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	reqPage := r.FormValue("reqpage")

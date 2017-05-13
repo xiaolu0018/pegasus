@@ -87,7 +87,7 @@ func GenPersonJpgPic(path, name, company, pic_person, pic_declaration string) ( 
 	}
 	defer newPersonFile.Close()
 
-	newPersonPng, err := png.Decode(newPersonFile)
+	newPersonPng, err := jpeg.Decode(newPersonFile)
 	if err != nil {
 		return "", err
 	}

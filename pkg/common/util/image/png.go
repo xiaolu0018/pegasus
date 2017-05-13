@@ -15,7 +15,7 @@ const topHeight = 383
 const weight = 757
 const baseFile = "./base.png"
 
-func GenPersonPic(path, name, company, pic_person, pic_declaration string) ( string,  error) {
+func GenPersonPngPic(path, name, company, pic_person, pic_declaration string) ( string,  error) {
 	targetName  := fmt.Sprintf("%d_%s.png", time.Now().UnixNano(), rand.String(20))
 	target := fmt.Sprintf("%s/%s", path, targetName)
 
