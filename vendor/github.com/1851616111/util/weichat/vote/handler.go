@@ -92,11 +92,23 @@ func GenVoterPicHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 	var genImage string
 	var err error
-	if genImage, err = genimage.GemPersonPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
-		comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
-		httputil.Response(w, 400, err)
+	if strings.HasSuffix(v.Image, "jpg") || strings.HasSuffix(v.Image, "jpeg") {
+		if genImage, err = genimage.GenPersonJpgPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
+			comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
+			httputil.Response(w, 400, err)
+			return
+		}
+	}else if strings.HasSuffix(v.Image, "png") {
+		if genImage, err = genimage.GemPersonPngPic(genVoterImagePath, v.Name, v.Company, voterImagesPath+"/" + v.Image,
+			comeOnFile, _2weimaFile, yongFile, declarationFile, topFile); err != nil {
+			httputil.Response(w, 400, err)
+			return
+		}
+	} else {
+		httputil.Response(w, 400, "pic format not allow")
 		return
 	}
+
 
 	httputil.Response(w, 200, fmt.Sprintf("image=%s", genImage))
 }

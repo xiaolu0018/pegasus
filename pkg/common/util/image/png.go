@@ -11,13 +11,13 @@ import (
 	"github.com/1851616111/util/rand"
 )
 
-func GemPersonPic(path, name, company, pic_person, pic_comeon, pic_erweima, pic_same_yang, pic_declaration, pic_top string) ( string,  error) {
+func GemPersonPngPic(path, name, company, pic_person, pic_comeon, pic_erweima, pic_same_yang, pic_declaration, pic_top string) ( string,  error) {
 	myWords := fmt.Sprintf("%s/%d_%s.png", path, time.Now().UnixNano(), rand.String(20))
 	if err := genMyWords(company, name, myWords); err != nil {
 		return "", err
 	}
 
-	target := fmt.Sprintf("%s/%d_%s.png", "dist/activity/voterimages/gen", time.Now().UnixNano(), rand.String(20))
+	target := fmt.Sprintf("%s/%d_%s.png", path, time.Now().UnixNano(), rand.String(20))
 	file, err := os.Create(target) //需生成的文件名
 	if err != nil {
 		return "",fmt.Errorf(err.Error() + "create err")
@@ -58,6 +58,7 @@ func GemPersonPic(path, name, company, pic_person, pic_comeon, pic_erweima, pic_
 		return "",fmt.Errorf(err.Error() + "个人照片错误")
 	}
 	defer file4.Close()
+
 	png4, err := png.Decode(file4)
 	if err != nil {
 		return "",fmt.Errorf(err.Error() + "个人照片错误 decode")
